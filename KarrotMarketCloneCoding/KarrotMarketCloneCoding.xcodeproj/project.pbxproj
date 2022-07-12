@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		56BC395A9ADB51E880D921C7 /* Pods_KarrotMarketCloneCoding.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84FFF65EC2D21DA804E8D34F /* Pods_KarrotMarketCloneCoding.framework */; };
 		723FE608287D4EDA00A987E7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE607287D4EDA00A987E7 /* User.swift */; };
 		723FE60A287D4EEF00A987E7 /* Merchandise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE609287D4EEF00A987E7 /* Merchandise.swift */; };
 		723FE610287D649400A987E7 /* Constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE60F287D649400A987E7 /* Constraints.swift */; };
@@ -19,9 +20,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5B703E666055678C1B3B0DB9 /* Pods-KarrotMarketCloneCoding.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KarrotMarketCloneCoding.release.xcconfig"; path = "Target Support Files/Pods-KarrotMarketCloneCoding/Pods-KarrotMarketCloneCoding.release.xcconfig"; sourceTree = "<group>"; };
 		723FE607287D4EDA00A987E7 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		723FE609287D4EEF00A987E7 /* Merchandise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Merchandise.swift; sourceTree = "<group>"; };
 		723FE60F287D649400A987E7 /* Constraints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constraints.swift; sourceTree = "<group>"; };
+		84FFF65EC2D21DA804E8D34F /* Pods_KarrotMarketCloneCoding.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KarrotMarketCloneCoding.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3E122F5287BF66000A1EDC8 /* KarrotMarketCloneCoding.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KarrotMarketCloneCoding.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3E122F8287BF66000A1EDC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D3E122FA287BF66000A1EDC8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -30,6 +33,7 @@
 		D3E12301287BF66100A1EDC8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D3E12304287BF66100A1EDC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D3E12306287BF66100A1EDC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E9C03AEF92EC0A43D0E03512 /* Pods-KarrotMarketCloneCoding.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KarrotMarketCloneCoding.debug.xcconfig"; path = "Target Support Files/Pods-KarrotMarketCloneCoding/Pods-KarrotMarketCloneCoding.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,12 +41,31 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				56BC395A9ADB51E880D921C7 /* Pods_KarrotMarketCloneCoding.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4ACAE6E7621865338BE67F04 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				84FFF65EC2D21DA804E8D34F /* Pods_KarrotMarketCloneCoding.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5BC1B9170393AB12FCFA3097 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E9C03AEF92EC0A43D0E03512 /* Pods-KarrotMarketCloneCoding.debug.xcconfig */,
+				5B703E666055678C1B3B0DB9 /* Pods-KarrotMarketCloneCoding.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		723FE606287D4ED300A987E7 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -65,6 +88,8 @@
 			children = (
 				D3E122F7287BF66000A1EDC8 /* KarrotMarketCloneCoding */,
 				D3E122F6287BF66000A1EDC8 /* Products */,
+				5BC1B9170393AB12FCFA3097 /* Pods */,
+				4ACAE6E7621865338BE67F04 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,9 +124,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = D3E12309287BF66100A1EDC8 /* Build configuration list for PBXNativeTarget "KarrotMarketCloneCoding" */;
 			buildPhases = (
+				479CC63048284AFAD802C1DE /* [CP] Check Pods Manifest.lock */,
 				D3E122F1287BF66000A1EDC8 /* Sources */,
 				D3E122F2287BF66000A1EDC8 /* Frameworks */,
 				D3E122F3287BF66000A1EDC8 /* Resources */,
+				D672D276B0FEE9ABEC691572 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -157,6 +184,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		479CC63048284AFAD802C1DE /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-KarrotMarketCloneCoding-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D672D276B0FEE9ABEC691572 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KarrotMarketCloneCoding/Pods-KarrotMarketCloneCoding-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-KarrotMarketCloneCoding/Pods-KarrotMarketCloneCoding-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-KarrotMarketCloneCoding/Pods-KarrotMarketCloneCoding-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		D3E122F1287BF66000A1EDC8 /* Sources */ = {
@@ -312,6 +381,7 @@
 		};
 		D3E1230A287BF66100A1EDC8 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E9C03AEF92EC0A43D0E03512 /* Pods-KarrotMarketCloneCoding.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -340,6 +410,7 @@
 		};
 		D3E1230B287BF66100A1EDC8 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5B703E666055678C1B3B0DB9 /* Pods-KarrotMarketCloneCoding.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
