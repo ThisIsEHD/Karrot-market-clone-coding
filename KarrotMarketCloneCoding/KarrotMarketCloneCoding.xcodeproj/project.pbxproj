@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		723FE608287D4EDA00A987E7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE607287D4EDA00A987E7 /* User.swift */; };
+		723FE60A287D4EEF00A987E7 /* Merchandise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE609287D4EEF00A987E7 /* Merchandise.swift */; };
 		D3E122F9287BF66000A1EDC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E122F8287BF66000A1EDC8 /* AppDelegate.swift */; };
 		D3E122FB287BF66000A1EDC8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E122FA287BF66000A1EDC8 /* SceneDelegate.swift */; };
 		D3E122FD287BF66000A1EDC8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E122FC287BF66000A1EDC8 /* ViewController.swift */; };
@@ -16,6 +18,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		723FE607287D4EDA00A987E7 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		723FE609287D4EEF00A987E7 /* Merchandise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Merchandise.swift; sourceTree = "<group>"; };
 		D3E122F5287BF66000A1EDC8 /* KarrotMarketCloneCoding.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KarrotMarketCloneCoding.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3E122F8287BF66000A1EDC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D3E122FA287BF66000A1EDC8 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -37,6 +41,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		723FE606287D4ED300A987E7 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				723FE607287D4EDA00A987E7 /* User.swift */,
+				723FE609287D4EEF00A987E7 /* Merchandise.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		D3E122EC287BF66000A1EDC8 = {
 			isa = PBXGroup;
 			children = (
@@ -56,6 +69,7 @@
 		D3E122F7287BF66000A1EDC8 /* KarrotMarketCloneCoding */ = {
 			isa = PBXGroup;
 			children = (
+				723FE606287D4ED300A987E7 /* Model */,
 				D3E122F8287BF66000A1EDC8 /* AppDelegate.swift */,
 				D3E122FA287BF66000A1EDC8 /* SceneDelegate.swift */,
 				D3E122FC287BF66000A1EDC8 /* ViewController.swift */,
@@ -138,7 +152,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				723FE608287D4EDA00A987E7 /* User.swift in Sources */,
 				D3E122FD287BF66000A1EDC8 /* ViewController.swift in Sources */,
+				723FE60A287D4EEF00A987E7 /* Merchandise.swift in Sources */,
 				D3E122F9287BF66000A1EDC8 /* AppDelegate.swift in Sources */,
 				D3E122FB287BF66000A1EDC8 /* SceneDelegate.swift in Sources */,
 			);
