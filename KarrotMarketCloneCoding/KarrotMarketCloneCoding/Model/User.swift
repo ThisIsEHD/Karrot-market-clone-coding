@@ -18,6 +18,3 @@ struct User: Codable {
         case profileImageUrl = "profileImage"
     }
 }
-//
-//
-//

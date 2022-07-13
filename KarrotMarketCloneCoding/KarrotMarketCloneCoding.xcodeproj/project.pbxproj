@@ -17,6 +17,8 @@
 		D3E12300287BF66000A1EDC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3E122FE287BF66000A1EDC8 /* Main.storyboard */; };
 		D3E12302287BF66100A1EDC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3E12301287BF66100A1EDC8 /* Assets.xcassets */; };
 		D3E12305287BF66100A1EDC8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3E12303287BF66100A1EDC8 /* LaunchScreen.storyboard */; };
+		D3E12313287D9AF800A1EDC8 /* UserCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E12312287D9AF800A1EDC8 /* UserCheckViewController.swift */; };
+		D3E12315287DB48800A1EDC8 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E12314287DB48800A1EDC8 /* Color.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +35,8 @@
 		D3E12301287BF66100A1EDC8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D3E12304287BF66100A1EDC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D3E12306287BF66100A1EDC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D3E12312287D9AF800A1EDC8 /* UserCheckViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCheckViewController.swift; sourceTree = "<group>"; };
+		D3E12314287DB48800A1EDC8 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		E9C03AEF92EC0A43D0E03512 /* Pods-KarrotMarketCloneCoding.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KarrotMarketCloneCoding.debug.xcconfig"; path = "Target Support Files/Pods-KarrotMarketCloneCoding/Pods-KarrotMarketCloneCoding.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -62,7 +66,6 @@
 				E9C03AEF92EC0A43D0E03512 /* Pods-KarrotMarketCloneCoding.debug.xcconfig */,
 				5B703E666055678C1B3B0DB9 /* Pods-KarrotMarketCloneCoding.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -79,6 +82,7 @@
 			isa = PBXGroup;
 			children = (
 				723FE60F287D649400A987E7 /* Constraints.swift */,
+				D3E12314287DB48800A1EDC8 /* Color.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -104,17 +108,42 @@
 		D3E122F7287BF66000A1EDC8 /* KarrotMarketCloneCoding */ = {
 			isa = PBXGroup;
 			children = (
-				723FE606287D4ED300A987E7 /* Model */,
 				D3E122F8287BF66000A1EDC8 /* AppDelegate.swift */,
 				D3E122FA287BF66000A1EDC8 /* SceneDelegate.swift */,
 				D3E122FC287BF66000A1EDC8 /* ViewController.swift */,
 				D3E122FE287BF66000A1EDC8 /* Main.storyboard */,
+				D3E12311287D71B500A1EDC8 /* ViewModel */,
+				D3E12310287D71AD00A1EDC8 /* View */,
+				D3E1230F287D719100A1EDC8 /* ViewController */,
+				723FE606287D4ED300A987E7 /* Model */,
 				723FE611287D64BF00A987E7 /* Extensions */,
 				D3E12301287BF66100A1EDC8 /* Assets.xcassets */,
 				D3E12303287BF66100A1EDC8 /* LaunchScreen.storyboard */,
 				D3E12306287BF66100A1EDC8 /* Info.plist */,
 			);
 			path = KarrotMarketCloneCoding;
+			sourceTree = "<group>";
+		};
+		D3E1230F287D719100A1EDC8 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				D3E12312287D9AF800A1EDC8 /* UserCheckViewController.swift */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		D3E12310287D71AD00A1EDC8 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		D3E12311287D71B500A1EDC8 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -237,6 +266,8 @@
 				723FE60A287D4EEF00A987E7 /* Merchandise.swift in Sources */,
 				723FE610287D649400A987E7 /* Constraints.swift in Sources */,
 				D3E122F9287BF66000A1EDC8 /* AppDelegate.swift in Sources */,
+				D3E12315287DB48800A1EDC8 /* Color.swift in Sources */,
+				D3E12313287D9AF800A1EDC8 /* UserCheckViewController.swift in Sources */,
 				D3E122FB287BF66000A1EDC8 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
