@@ -16,7 +16,7 @@ extension UIColor {
     static func appColor(_ name: AssetColor) -> UIColor {
         switch name {
         case .carrot:
-            return UIColor(red: 256, green: 126, blue: 54, alpha: 1)
+            return UIColor(red: 255/255, green: 126/255, blue: 54/255, alpha: 1)
         }
     }
 }

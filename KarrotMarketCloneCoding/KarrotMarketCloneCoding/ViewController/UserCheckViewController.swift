@@ -92,23 +92,41 @@ final class UserCheckViewController: UIViewController {
     }
 
     private func setLogoImageViewLayout() {
-        logoImageView.anchor(top: view.topAnchor, topConstant: deviceHeight / 5, leading: view.leadingAnchor, leadingConstant: (deviceWidth - 200) / 2, trailing: view.trailingAnchor, trailingConstant: (deviceWidth - 200) / 2, width: 200, height: 200)
+        logoImageView.anchor(top: view.topAnchor,
+                             topConstant: CGFloat.getSize(of: .deviceHeight) / 5,
+                             leading: view.leadingAnchor,
+                             leadingConstant: (CGFloat.getSize(of: .deviceWidth) - 200) / 2,
+                             trailing: view.trailingAnchor,
+                             trailingConstant: (CGFloat.getSize(of: .deviceWidth) - 200) / 2,
+                             width: 200, height: 200)
     }
     
     private func setAppDescriptionLabelLayout() {
-        appDescriptionLabel.centerX(inView: view, topAnchor: logoImageView.bottomAnchor, topConstant: 5)
+        appDescriptionLabel.centerX(inView: view,
+                                    topAnchor: logoImageView.bottomAnchor,
+                                    topConstant: 5)
     }
     
     private func setAppDetailLabelLayout() {
-        appDetailLabel.centerX(inView: view, topAnchor: appDescriptionLabel.bottomAnchor, topConstant: 10)
+        appDetailLabel.centerX(inView: view,
+                               topAnchor: appDescriptionLabel.bottomAnchor,
+                               topConstant: 10)
     }
     
     private func setSignUpButtonLayout() {
-        signUpButton.anchor(top: appDetailLabel.bottomAnchor, topConstant: deviceHeight / 4, leading: view.leadingAnchor, leadingConstant: 5, trailing: view.trailingAnchor, trailingConstant: 10, height: 50)
+        signUpButton.anchor(top: appDetailLabel.bottomAnchor,
+                            topConstant: CGFloat.getSize(of: .deviceHeight) / 4,
+                            leading: view.leadingAnchor,
+                            leadingConstant: 5,
+                            trailing: view.trailingAnchor,
+                            trailingConstant: 10,
+                            height: 50)
     }
     
     private func setStackViewLayout() {
-        stackView.centerX(inView: view, topAnchor: signUpButton.bottomAnchor, topConstant: 15)
+        stackView.centerX(inView: view,
+                          topAnchor: signUpButton.bottomAnchor,
+                          topConstant: 15)
     }
     
     private func setupGestureRecognizer() {
