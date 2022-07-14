@@ -1,14 +1,13 @@
 //
-//  SignUpViewController.swift
+//  SignInViewController.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 신동훈 on 2022/07/14.
 //
 
-import Foundation
 import UIKit
 
-class SignUpViewController: UIViewController {
+class SignInViewController: UIViewController {
     
     let realView = ReusableSignView(frame: .zero)
     
@@ -20,6 +19,9 @@ class SignUpViewController: UIViewController {
         realView.emailTextField.delegate = self
         realView.passwordTextField.delegate = self
         
+        realView.helloLabel.text = "안녕하세요!,\n이메일로 로그인해주세요."
+        realView.signUpButton.setTitle("로그인", for: .normal)
+        
         realView.signUpButton.addTarget(self, action: #selector(signUp), for: .touchUpInside)
     }
     
@@ -28,7 +30,7 @@ class SignUpViewController: UIViewController {
     }
 }
 
-extension SignUpViewController: UITextFieldDelegate {
+extension SignInViewController: UITextFieldDelegate {
   func textFieldShouldReturn(_ textField: UITextField) -> Bool {
       if textField == realView.emailTextField {
           realView.passwordTextField.becomeFirstResponder()
