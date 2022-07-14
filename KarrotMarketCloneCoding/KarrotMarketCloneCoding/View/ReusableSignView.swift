@@ -52,7 +52,6 @@ class ReusableSignView: UIView {
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
         button.backgroundColor = UIColor.appColor(.carrot)
         button.layer.cornerRadius = 10
-//        button.addTarget(self, action: #selector(signUp), for: .touchUpInside)
         
         return button
     }()
@@ -73,8 +72,4 @@ class ReusableSignView: UIView {
     private func setStackViewLayout() {
         stackView.anchor(top: helloLabel.bottomAnchor, topConstant: 25, leading: self.leadingAnchor, leadingConstant: 10, trailing: self.trailingAnchor, trailingConstant: 10)
     }
-    
-//    @objc func signUp() {
-//        print("signup")
-//    }
 }
