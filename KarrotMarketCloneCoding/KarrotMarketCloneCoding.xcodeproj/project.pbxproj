@@ -17,6 +17,7 @@
 		D3E12300287BF66000A1EDC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3E122FE287BF66000A1EDC8 /* Main.storyboard */; };
 		D3E12302287BF66100A1EDC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3E12301287BF66100A1EDC8 /* Assets.xcassets */; };
 		D3E12305287BF66100A1EDC8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3E12303287BF66100A1EDC8 /* LaunchScreen.storyboard */; };
+		D3E1232328816AF500A1EDC8 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E1232128816AF500A1EDC8 /* Color.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,7 @@
 		D3E12301287BF66100A1EDC8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D3E12304287BF66100A1EDC8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D3E12306287BF66100A1EDC8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D3E1232128816AF500A1EDC8 /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		E9C03AEF92EC0A43D0E03512 /* Pods-KarrotMarketCloneCoding.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KarrotMarketCloneCoding.debug.xcconfig"; path = "Target Support Files/Pods-KarrotMarketCloneCoding/Pods-KarrotMarketCloneCoding.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -62,7 +64,6 @@
 				E9C03AEF92EC0A43D0E03512 /* Pods-KarrotMarketCloneCoding.debug.xcconfig */,
 				5B703E666055678C1B3B0DB9 /* Pods-KarrotMarketCloneCoding.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
