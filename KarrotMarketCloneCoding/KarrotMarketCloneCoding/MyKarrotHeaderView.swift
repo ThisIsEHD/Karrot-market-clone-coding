@@ -1,5 +1,5 @@
 //
-//  ProfileTableHeaderView.swift
+//  MyKarrotHeaderView.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/07/14.
@@ -7,31 +7,17 @@
 
 import UIKit
 
-class ProfileTableHeaderView: UIView {
+final class MyKarrotHeaderView: UIView {
 // MARK: Properties
     
     weak var delegate: ProfileViewDelegate?
     
     private lazy var profileView: UIView = {
-        let v = UIView()
+        let v = ReusableProfileView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: 100))
         v.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(profileViewDidTapped)))
         return v
     }()
     
-    private let profileImageView: UIImageView = {
-        let iv = UIImageView(image: UIImage(named: "defaultProfileImage"))
-        iv.clipsToBounds = true
-        iv.layer.cornerRadius = 70 / 2
-        iv.layer.borderWidth = 0.1
-        return iv
-    }()
-    
-    private let nickNameLabel: UILabel = {
-        let lbl = UILabel()
-        lbl.text = "욘듀"
-        lbl.font = UIFont.boldSystemFont(ofSize: 19)
-        return lbl
-    }()
     
     private let indicatorImageView: UIImageView = {
         let iv = UIImageView(image: UIImage(named: "indicator"))
@@ -57,6 +43,7 @@ class ProfileTableHeaderView: UIView {
         let sv = UIStackView(arrangedSubviews: [soldListImageView, soldListLabel])
         sv.axis = .vertical
         sv.spacing = 10
+        sv.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(stackViewDidTapped)))
         return sv
     }()
     
@@ -78,7 +65,9 @@ class ProfileTableHeaderView: UIView {
     private lazy var purchaseListStackView: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [purchaseListImageView, purchaseListLabel])
         sv.axis = .vertical
+        sv.isUserInteractionEnabled = true
         sv.spacing = 10
+        sv.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(stackViewDidTapped)))
         return sv
     }()
     
@@ -100,14 +89,21 @@ class ProfileTableHeaderView: UIView {
     private lazy var wishListStackView: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [wishListImageView, wishListLabel])
         sv.axis = .vertical
+        sv.isUserInteractionEnabled = true
         sv.spacing = 10
+        sv.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(stackViewDidTapped)))
         return sv
     }()
     
 // MARK: Actions
     
     @objc func profileViewDidTapped() {
-        self.delegate?.goToMyProfile()
+        self.delegate?.goToMyProfileVC()
+        print(#function)
+    }
+    
+    @objc func stackViewDidTapped() {
+        self.delegate?.goToDetailVC()
     }
     
 // MARK: - Life Cycle
@@ -120,8 +116,6 @@ class ProfileTableHeaderView: UIView {
         addSubview(purchaseListStackView)
         addSubview(wishListStackView)
         
-        profileView.addSubview(profileImageView)
-        profileView.addSubview(nickNameLabel)
         profileView.addSubview(indicatorImageView)
         
         configureUI()
@@ -139,32 +133,26 @@ class ProfileTableHeaderView: UIView {
 
 // MARK: Configure UI
 
-extension ProfileTableHeaderView {
+extension MyKarrotHeaderView {
     
     func configureUI() {
         setProfileViewConstraints()
-        setProfileImageViewConstraints()
-        setNickNameLabelConstraints()
         setIndicatorViewConstraints()
         setProfileStackViewConstraints()
     }
     
     func setProfileViewConstraints() {
-        profileView.anchor(top: self.safeAreaLayoutGuide.topAnchor, leading: self.safeAreaLayoutGuide.leadingAnchor, trailing: self.safeAreaLayoutGuide.trailingAnchor)
-    }
-    
-    func setProfileImageViewConstraints() {
-        profileImageView.anchor(top: profileView.topAnchor, topConstant: 20, leading: profileView.leadingAnchor, leadingConstant: 20, width: 70, height: 70)
-    }
-    
-    func setNickNameLabelConstraints() {
-        nickNameLabel.centerY(inView: profileImageView)
-        nickNameLabel.anchor(leading: profileImageView.trailingAnchor, leadingConstant: 15)
+        profileView.anchor(top: self.safeAreaLayoutGuide.topAnchor,
+                           leading: self.safeAreaLayoutGuide.leadingAnchor,
+                           trailing: self.safeAreaLayoutGuide.trailingAnchor,
+                           height: 100)
     }
     
     func setIndicatorViewConstraints() {
-        indicatorImageView.anchor(trailing: profileView.trailingAnchor, trailingConstant: 20, width: 15, height: 15)
-        indicatorImageView.centerY(inView: profileImageView)
+        indicatorImageView.anchor(trailing: profileView.trailingAnchor,
+                                  trailingConstant: 20,
+                                  width: 15, height: 15)
+        indicatorImageView.centerY(inView: profileView)
     }
     
     func setProfileStackViewConstraints() {
@@ -173,21 +161,37 @@ extension ProfileTableHeaderView {
         soldListImageView.centerX(inView: soldListStackView)
         soldListImageView.anchor(height: 60)
         soldListLabel.centerX(inView: soldListImageView)
-        soldListStackView.anchor(top: profileView.bottomAnchor, topConstant: 30, bottom: self.safeAreaLayoutGuide.bottomAnchor, bottomConstant: 15, leading: self.safeAreaLayoutGuide.leadingAnchor, leadingConstant: width, width: 60)
+        soldListStackView.anchor(top: profileView.bottomAnchor, topConstant: 15,
+                                 bottom: self.safeAreaLayoutGuide.bottomAnchor,
+                                 bottomConstant: 15,
+                                 leading: self.safeAreaLayoutGuide.leadingAnchor,
+                                 leadingConstant: width,
+                                 width: 60)
         
         purchaseListImageView.centerX(inView: purchaseListStackView)
         purchaseListImageView.anchor(height: 60)
         purchaseListLabel.centerX(inView: purchaseListImageView)
-        purchaseListStackView.anchor(top: soldListImageView.topAnchor, bottom: self.safeAreaLayoutGuide.bottomAnchor, bottomConstant: 20, leading: soldListStackView.trailingAnchor, leadingConstant: width, width: 60)
+        purchaseListStackView.anchor(top: soldListImageView.topAnchor,
+                                     bottom: self.safeAreaLayoutGuide.bottomAnchor,
+                                     bottomConstant: 20,
+                                     leading: soldListStackView.trailingAnchor,
+                                     leadingConstant: width,
+                                     width: 60)
         
         wishListImageView.centerX(inView: wishListStackView)
         wishListImageView.anchor(height: 60)
         wishListLabel.centerX(inView: wishListImageView)
-        wishListStackView.anchor(top: soldListImageView.topAnchor, bottom: self.safeAreaLayoutGuide.bottomAnchor, bottomConstant: 20, leading: purchaseListStackView.trailingAnchor, leadingConstant: width, width: 60)
+        wishListStackView.anchor(top: soldListImageView.topAnchor,
+                                 bottom: self.safeAreaLayoutGuide.bottomAnchor,
+                                 bottomConstant: 20,
+                                 leading: purchaseListStackView.trailingAnchor,
+                                 leadingConstant: width,
+                                 width: 60)
     }
 }
 
 // MARK: - ProfileViewDelegate
 protocol ProfileViewDelegate: AnyObject {
-    func goToMyProfile()
+    func goToMyProfileVC()
+    func goToDetailVC()
 }

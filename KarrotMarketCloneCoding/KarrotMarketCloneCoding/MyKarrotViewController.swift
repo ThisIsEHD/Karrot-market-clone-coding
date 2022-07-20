@@ -1,20 +1,18 @@
 //
-//  ProfileViewController.swift
+//  MyKarrotViewController.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/07/15.
 //
 
 import UIKit
+import Alamofire
 
-class ProfileViewController: UIViewController {
+final class MyKarrotViewController: UIViewController {
     
 // MARK: - Properties
-    
     private var user: User? {
-        didSet {
-            
-        }
+        return User(id: "kk@kk.com", nickName: "조각가", phone: "01038281234", name: "케이")
     }
     
     private let tableView = UITableView(frame: .zero, style: .grouped)
@@ -27,7 +25,15 @@ class ProfileViewController: UIViewController {
                                            ["shop", "speaker"],
                                            ["email", "microphone", "headphone", "setting"]]
     
-    private lazy var profileView = ProfileTableHeaderView(width: self.view.bounds.width, height: 230)
+    private lazy var profileView = MyKarrotHeaderView(width: self.view.bounds.width, height: 230)
+    
+    private let titleLabel: UILabel = {
+       let lbl = UILabel()
+        lbl.text = "나의 당근"
+        lbl.font = UIFont.boldSystemFont(ofSize: 20)
+        lbl.textColor = .black
+        return lbl
+    }()
     
 // MARK: - Actions
  
@@ -35,6 +41,10 @@ class ProfileViewController: UIViewController {
    
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationController?.title = "나의 당근"
+//        navigationController.
+//        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleLabel)
+//        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "setting"), style: .plain, target: self, action: nil)
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -48,11 +58,11 @@ class ProfileViewController: UIViewController {
 
 // MARK: - Configure UI
    
-extension ProfileViewController {
+extension MyKarrotViewController {
     private func configureTableView() {
-        tableView.register(ProfileTableViewCell.self, forCellReuseIdentifier: "Cell")
-        tableView.register(ProfileTableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "Header")
-        tableView.separatorStyle = .none
+        tableView.register(MyKarrotTableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(MyKarrotTableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "Header")
+//        tableView.separatorStyle = .none
         tableView.tableHeaderView = profileView
         
         setTableViewConstraints()
@@ -65,7 +75,7 @@ extension ProfileViewController {
 
 //MARK: - UITableViewDataSource
 
-extension ProfileViewController: UITableViewDataSource {
+extension MyKarrotViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 5
@@ -88,8 +98,6 @@ extension ProfileViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-//            case 0:
-//                return 3
             case 1:
                 return 6
             case 2:
@@ -104,23 +112,18 @@ extension ProfileViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        if indexPath.section == 0 {
-//            guard let cell = tableView.dequeueReusableCell(withIdentifier: "aCell") else { return UITableViewCell() }
-//            cell.accessoryType = indexPath.row == 0 ? .disclosureIndicator : .none
-//            return cell
-//        } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-            let targetImage = myProfileTableImageList[indexPath.section - 1][indexPath.row]
-            let targetText = myProfileTableList[indexPath.section - 1][indexPath.row]
-            cell.imageView?.image = UIImage(named: targetImage)
-            cell.textLabel?.text = targetText
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let targetImage = myProfileTableImageList[indexPath.section - 1][indexPath.row]
+        let targetText = myProfileTableList[indexPath.section - 1][indexPath.row]
+       
+        cell.imageView?.image = UIImage(named: targetImage)
+        cell.textLabel?.text = targetText
         return cell
-//        }
     }
 }
 
 //MARK: - UITableViewDelegate
-extension ProfileViewController: UITableViewDelegate {
+extension MyKarrotViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
@@ -140,27 +143,20 @@ extension ProfileViewController: UITableViewDelegate {
         return header
     }
     
-    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        if indexPath == IndexPath(row: 1, section: 0) && indexPath == IndexPath(row: 2, section: 0) {
-            return nil
-        }
-        return indexPath
-    }
-    
-//    func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
-//        //첫번째 cell에만 효과 미적용
-//        return indexPath.section != 0
-//    }
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = UIViewController()
+        navigationController?.pushViewController(vc, animated: false)
+        tableView.deselectRow(at: indexPath, animated: false)
     }
 }
 
 
-extension ProfileViewController: ProfileViewDelegate {
-    func goToMyProfile() {
-        let vc = UIViewController()
-        vc.view.backgroundColor = .red
-        present(vc, animated: true, completion: nil)
+extension MyKarrotViewController: ProfileViewDelegate {
+    
+    func goToMyProfileVC() {
     }
+    
+    func goToDetailVC() {
+    }
+    
 }

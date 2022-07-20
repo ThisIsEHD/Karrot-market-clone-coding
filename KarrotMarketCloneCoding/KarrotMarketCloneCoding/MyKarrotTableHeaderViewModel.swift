@@ -1,5 +1,5 @@
 //
-//  ProfileHeaderViewModel.swift
+//  MyKarrotTableHeaderViewModel.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/07/12.
@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-//struct ProfileHeaderViewModel {
+//struct MyPageTableHeaderViewModel {
 //    let user: User
 //
 ////    var profileImage: UIImage { return user.profileImageUrl } // url to Image
