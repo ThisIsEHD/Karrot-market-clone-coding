@@ -20,7 +20,7 @@ class ReusableProfileView: UIView {
     private let nickNameLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = "욘듀"
-        lbl.font = UIFont.boldSystemFont(ofSize: 19)
+        lbl.font = UIFont.boldSystemFont(ofSize: 18)
         return lbl
     }()
     
@@ -28,9 +28,12 @@ class ReusableProfileView: UIView {
         super.init(frame: frame)
         self.addSubview(profileImageView)
         self.addSubview(nickNameLabel)
-        
-        setProfileImageViewConstraints(size: frame.height)
         setNickNameLabelConstraints()
+    }
+    
+    convenience init(imageSize: CGFloat) {
+        self.init()
+        setProfileImageViewConstraints(size: imageSize)
     }
     
     required init?(coder: NSCoder) {
@@ -41,15 +44,15 @@ class ReusableProfileView: UIView {
 // MARK: - configureUI
 extension ReusableProfileView {
     
-    func setProfileImageViewConstraints(size: CGFloat) {
-        profileImageView.anchor(leading: self.safeAreaLayoutGuide.leadingAnchor,
+    private func setProfileImageViewConstraints(size: CGFloat) {
+        profileImageView.anchor(leading: self.leadingAnchor,
                                 leadingConstant: 15,
-                                width: size - 30, height: size - 30)
+                                width: size - 10, height: size - 10)
         profileImageView.centerY(inView: self)
-        profileImageView.layer.cornerRadius = (size - 30) / 2
+        profileImageView.layer.cornerRadius = (size - 10) / 2
     }
     
-    func setNickNameLabelConstraints() {
+    private func setNickNameLabelConstraints() {
         nickNameLabel.centerY(inView: profileImageView)
         nickNameLabel.anchor(leading: profileImageView.trailingAnchor,
                              leadingConstant: 15)

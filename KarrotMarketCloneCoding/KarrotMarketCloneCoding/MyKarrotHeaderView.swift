@@ -13,7 +13,7 @@ final class MyKarrotHeaderView: UIView {
     weak var delegate: ProfileViewDelegate?
     
     private lazy var profileView: UIView = {
-        let v = ReusableProfileView(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: 100))
+        let v = ReusableProfileView(imageSize: 80)
         v.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(profileViewDidTapped)))
         return v
     }()
@@ -118,7 +118,7 @@ final class MyKarrotHeaderView: UIView {
         
         profileView.addSubview(indicatorImageView)
         
-        configureUI()
+        setupConstraints()
     }
     
     convenience init(width: Double, height: Double) {
@@ -135,27 +135,26 @@ final class MyKarrotHeaderView: UIView {
 
 extension MyKarrotHeaderView {
     
-    func configureUI() {
-        setProfileViewConstraints()
-        setIndicatorViewConstraints()
-        setProfileStackViewConstraints()
+    private func setupConstraints() {
+        setupProfileViewConstraints()
+        setupIndicatorViewConstraints()
+        setupProfileStackViewConstraints()
     }
     
-    func setProfileViewConstraints() {
+    private func setupProfileViewConstraints() {
         profileView.anchor(top: self.safeAreaLayoutGuide.topAnchor,
                            leading: self.safeAreaLayoutGuide.leadingAnchor,
-                           trailing: self.safeAreaLayoutGuide.trailingAnchor,
-                           height: 100)
+                           trailing: self.safeAreaLayoutGuide.trailingAnchor)
     }
     
-    func setIndicatorViewConstraints() {
+    private func setupIndicatorViewConstraints() {
         indicatorImageView.anchor(trailing: profileView.trailingAnchor,
                                   trailingConstant: 20,
                                   width: 15, height: 15)
         indicatorImageView.centerY(inView: profileView)
     }
     
-    func setProfileStackViewConstraints() {
+    private func setupProfileStackViewConstraints() {
         let width = (self.frame.width - (60 * 3)) / 4
         
         soldListImageView.centerX(inView: soldListStackView)
