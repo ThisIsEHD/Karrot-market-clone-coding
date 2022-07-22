@@ -2,7 +2,7 @@
 //  TitleTableViewCell.swift
 //  KarrotMarketCloneCoding
 //
-//  Created by 신동훈 on 2022/07/17.
+//  Created by EHDOMB on 2022/07/17.
 //
 
 import UIKit
@@ -27,7 +27,7 @@ class TitleTableViewCell: UITableViewCell {
         return UINib(nibName: "TitleTableViewCell", bundle: nil)
     }
     
-    func setTitleTextField() {
+    private func setTitleTextField() {
         
         title.autocorrectionType = .no
         title.autocapitalizationType = .none

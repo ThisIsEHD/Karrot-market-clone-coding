@@ -2,7 +2,7 @@
 //  PriceTableViewCell.swift
 //  KarrotMarketCloneCoding
 //
-//  Created by 신동훈 on 2022/07/17.
+//  Created by EHDOMB on 2022/07/17.
 //
 
 import UIKit
@@ -15,6 +15,7 @@ class PriceTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        priceTextField.delegate = self
         setPriceTextField()
     }
     
@@ -26,7 +27,7 @@ class PriceTableViewCell: UITableViewCell {
         return UINib(nibName: "PriceTableViewCell", bundle: nil)
     }
     
-    func setPriceTextField() {
+    private func setPriceTextField() {
         
         priceTextField.autocorrectionType = .no
         priceTextField.autocapitalizationType = .none
@@ -38,8 +39,6 @@ class PriceTableViewCell: UITableViewCell {
 
 extension PriceTableViewCell: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        if textField.text == "₩ 가격 (선택사항)" {
-//            textField.text.
-        }
+        textField.text = "₩ "
     }
 }

@@ -2,34 +2,49 @@
 //  PhotosSelectingTableViewCell.swift
 //  KarrotMarketCloneCoding
 //
-//  Created by 신동훈 on 2022/07/17.
+//  Created by EHDOMB on 2022/07/17.
 //
 
 import UIKit
+import PhotosUI
 
 class PhotosSelectingTableViewCell: UITableViewCell {
-
+    
     static let identifier = "PhotosSelectingTableViewCell"
-    var selectedPhotosNumber = 0
-    @IBOutlet weak var photoPicekrButton: UIButton!
     
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    let collectionView: photosCollectionView = {
+        let flowLayout = UICollectionViewFlowLayout()
         
-        photoPicekrButton.setTitle("\(selectedPhotosNumber)/10", for: .normal)
-        photoPicekrButton.tintColor = .label
-    }
+        flowLayout.scrollDirection = .horizontal
+        flowLayout.itemSize = CGSize(width: 60, height: 60)
+        flowLayout.minimumLineSpacing = 20
+        flowLayout.minimumInteritemSpacing = 20
+        
+        let cv = photosCollectionView(frame: .zero, collectionViewLayout: flowLayout)
+        cv.showsHorizontalScrollIndicator = false
+        
+        return cv
+    }()
     
     static func nib() -> UINib {
         
         return UINib(nibName: "PhotosSelectingTableViewCell", bundle: nil)
     }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        
+        addSubview(collectionView)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        collectionView.anchor(top: self.topAnchor, bottom: self.bottomAnchor, leading: self.layoutMarginsGuide.leadingAnchor, trailing: self.trailingAnchor)
+    }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
-        // Configure the view for the selected state
     }
-
 }

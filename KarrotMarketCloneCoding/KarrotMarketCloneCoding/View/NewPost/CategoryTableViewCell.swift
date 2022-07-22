@@ -2,7 +2,7 @@
 //  CategoryTableViewCell.swift
 //  KarrotMarketCloneCoding
 //
-//  Created by 신동훈 on 2022/07/17.
+//  Created by EHDOMB on 2022/07/17.
 //
 
 import UIKit

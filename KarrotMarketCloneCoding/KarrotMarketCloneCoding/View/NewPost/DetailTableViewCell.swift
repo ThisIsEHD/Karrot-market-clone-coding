@@ -2,7 +2,7 @@
 //  DetailTableViewCell.swift
 //  KarrotMarketCloneCoding
 //
-//  Created by 신동훈 on 2022/07/18.
+//  Created by EHDOMB on 2022/07/18.
 //
 
 import UIKit
@@ -10,9 +10,13 @@ import UIKit
 class DetailTableViewCell: UITableViewCell {
 
     static let identifier = "DetailTableViewCell"
-    let textViewPlaceHolder = "게시글 내용을 작성해주세요. (가품 및 판매금지품목은 게시가 제한될 수 있어요.)"
     
+    private let textViewPlaceHolder = "게시글 내용을 작성해주세요. (가품 및 판매금지품목은 게시가 제한될 수 있어요.)"
     @IBOutlet weak var descriptionTextView: UITextView!
+    
+    static func nib() -> UINib {
+        return UINib(nibName: "DetailTableViewCell", bundle: nil)
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -27,8 +31,6 @@ class DetailTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    static func nib() -> UINib {
-        return UINib(nibName: "DetailTableViewCell", bundle: nil)
-    }
+    
 }
 

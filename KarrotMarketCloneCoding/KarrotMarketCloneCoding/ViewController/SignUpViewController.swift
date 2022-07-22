@@ -2,7 +2,7 @@
 //  SignUpViewController.swift
 //  KarrotMarketCloneCoding
 //
-//  Created by 신동훈 on 2022/07/14.
+//  Created by EHDOMB on 2022/07/14.
 //
 
 import Foundation
