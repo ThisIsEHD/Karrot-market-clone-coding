@@ -16,6 +16,7 @@ class TitleTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         title.borderStyle = .none
+        setTitleTextField()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -33,6 +34,6 @@ class TitleTableViewCell: UITableViewCell {
         title.autocapitalizationType = .none
         title.borderStyle = .none
         title.leftViewMode = .always
-        title.attributedPlaceholder = NSAttributedString(string: "₩ 가격 (선택사항)", attributes: [.foregroundColor : UIColor.systemGray])
+        title.attributedPlaceholder = NSAttributedString(string: "제목", attributes: [.foregroundColor : UIColor.systemGray])
     }
 }

@@ -8,21 +8,6 @@
 import UIKit
 
 class ReusableSignView: UIView {
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.backgroundColor = .systemBackground
-        
-        self.addSubview(helloLabel)
-        setHelloLabelLayout()
-        
-        self.addSubview(stackView)
-        setStackViewLayout()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     internal let helloLabel: UILabel = {
         let label = UILabel()
@@ -64,6 +49,21 @@ class ReusableSignView: UIView {
         
         return stackView
     }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.backgroundColor = .systemBackground
+        
+        self.addSubview(helloLabel)
+        setHelloLabelLayout()
+        
+        self.addSubview(stackView)
+        setStackViewLayout()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private func setHelloLabelLayout() {
         helloLabel.anchor(top: self.safeAreaLayoutGuide.topAnchor, topConstant: 30, leading: self.safeAreaLayoutGuide.leadingAnchor, leadingConstant: 10)

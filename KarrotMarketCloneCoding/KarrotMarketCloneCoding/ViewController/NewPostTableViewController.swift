@@ -10,9 +10,8 @@ import PhotosUI
 
 class NewPostTableViewController: UIViewController {
     
-    let detailTextViewPlaceHolder = "게시글 내용을 작성해주세요. (가품 및 판매금지품목은 게시가 제한될 수 있어요.)"
-    let navigationBar = CustomNavigationBar(navigationBarTitle: "중고거래 글쓰기", leftBarButtonImage: "xmark", rightBarButtonTitle: "완료", rightButtonColor: UIColor.appColor(.carrot))
-    var selectedImages = [UIImage?]() {
+    private let detailTextViewPlaceHolder = "게시글 내용을 작성해주세요. (가품 및 판매금지품목은 게시가 제한될 수 있어요.)"
+    private var selectedImages = [UIImage?]() {
         didSet {
             tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
         }
@@ -35,43 +34,39 @@ class NewPostTableViewController: UIViewController {
         super.viewDidLoad()
         
         view.addSubview(tableView)
-        view.addSubview(navigationBar)
         
         tableView.delegate = self
         tableView.dataSource = self
         
         NotificationCenter.default.addObserver(self, selector: #selector(removeImage), name: NotificationType.deleteButtonTapped.name, object: nil)
     }
-    
-    @objc func removeImage(_ notification: NSNotification) {
-        if let indexPath = notification.userInfo?[UserInfo.indexPath] as? IndexPath {
 
-            selectedImages.remove(at: indexPath.item - 1)
-        }
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
         view.backgroundColor = .systemBackground
-        
-        setNavigationBar()
-        tableView.anchor(top: navigationBar.bottomAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
+        setupNaviBar()
+        setupTableView()
     }
     
-    private func setNavigationBar() {
-        navigationBar.anchor(top: view.safeAreaLayoutGuide.topAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor, height: 50)
-    }
+    private func setupNaviBar() {
 
-    @objc func close() {
-        dismiss(animated: true, completion: nil)
+        let appearance = UINavigationBarAppearance()
+        
+        appearance.configureWithDefaultBackground()
+        navigationController?.navigationBar.tintColor = .label
+        title = "중고거래 글쓰기"
+
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .plain, target: nil, action: #selector(close))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: nil, action: #selector(post))
+        navigationItem.rightBarButtonItem?.tintColor = UIColor.appColor(.carrot)
     }
     
-    @objc func post() {
-        dismiss(animated: true, completion: nil)
+    private func setupTableView() {
+        tableView.anchor(top: navigationController?.navigationBar.bottomAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
     }
     
-    func setupImagePicker() {
+    private func setupImagePicker() {
         print(#function)
         var configuration = PHPickerConfiguration()
         
@@ -82,6 +77,25 @@ class NewPostTableViewController: UIViewController {
         
         picker.delegate = self
         present(picker, animated: true, completion: nil)
+    }
+}
+
+extension NewPostTableViewController {
+    
+    @objc func removeImage(_ notification: NSNotification) {
+        
+        if let indexPath = notification.userInfo?[UserInfo.indexPath] as? IndexPath {
+
+            selectedImages.remove(at: indexPath.item - 1)
+        }
+    }
+    
+    @objc func close() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func post() {
+        dismiss(animated: true, completion: nil)
     }
 }
 
@@ -109,7 +123,6 @@ extension NewPostTableViewController: UITableViewDataSource {
         if indexPath.row == 0 {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: PhotosSelectingTableViewCell.identifier, for: indexPath) as! PhotosSelectingTableViewCell
-            
             
             cell.collectionView.photoPickerCellTapped = { [weak self] sender in
                 self?.setupImagePicker()
@@ -161,6 +174,27 @@ extension NewPostTableViewController: UITableViewDataSource {
 
 extension NewPostTableViewController: UITableViewDelegate {
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+
+        
+        if indexPath.row == 2 {
+            
+            if let cell = tableView.cellForRow(at: indexPath) as? CategoryTableViewCell {
+                
+                let vc = CategoryTableViewController()
+                
+                vc.cellTapped = { sender in
+                    
+                    cell.textLabel?.text = "\(vc.selectedCategory)"
+                    vc.tableView.reloadRows(at: [indexPath], with: .fade)
+                }
+                navigationController?.pushViewController(vc, animated: true)
+            }
+            
+            
+        }
+    }
 }
 
 extension NewPostTableViewController: UITextViewDelegate {
@@ -189,6 +223,7 @@ extension NewPostTableViewController: UITextViewDelegate {
 }
 
 extension NewPostTableViewController: PHPickerViewControllerDelegate {
+    
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         
         picker.dismiss(animated: true)
