@@ -10,33 +10,21 @@ import PhotosUI
 
 class NewPostTableViewController: UIViewController {
     
-    private let detailTextViewPlaceHolder = "게시글 내용을 작성해주세요. (가품 및 판매금지품목은 게시가 제한될 수 있어요.)"
     private var selectedImages = [UIImage?]() {
         didSet {
-            tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
+            newPostTableView.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
         }
     }
     
-    private let tableView: UITableView = {
-        
-       let tableView = UITableView()
-        
-        tableView.register(PhotosSelectingTableViewCell.nib() , forCellReuseIdentifier: PhotosSelectingTableViewCell.identifier)
-        tableView.register(TitleTableViewCell.nib(), forCellReuseIdentifier: TitleTableViewCell.identifier)
-        tableView.register(CategoryTableViewCell.self, forCellReuseIdentifier: CategoryTableViewCell.identifier)
-        tableView.register(PriceTableViewCell.nib(), forCellReuseIdentifier: PriceTableViewCell.identifier)
-        tableView.register(DetailTableViewCell.nib(), forCellReuseIdentifier: DetailTableViewCell.identifier)
-        
-        return tableView
-    }()
+    private let newPostTableView = NewPostTableView(frame: .zero)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(tableView)
+        view.addSubview(newPostTableView)
         
-        tableView.delegate = self
-        tableView.dataSource = self
+        newPostTableView.tableView.delegate = self
+        newPostTableView.tableView.dataSource = self
         
         NotificationCenter.default.addObserver(self, selector: #selector(removeImage), name: NotificationType.deleteButtonTapped.name, object: nil)
     }
@@ -46,7 +34,7 @@ class NewPostTableViewController: UIViewController {
         
         view.backgroundColor = .systemBackground
         setupNaviBar()
-        setupTableView()
+        setupNewPostTableView()
     }
     
     private func setupNaviBar() {
@@ -62,8 +50,8 @@ class NewPostTableViewController: UIViewController {
         navigationItem.rightBarButtonItem?.tintColor = UIColor.appColor(.carrot)
     }
     
-    private func setupTableView() {
-        tableView.anchor(top: navigationController?.navigationBar.bottomAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
+    private func setupNewPostTableView() {
+        newPostTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
     }
     
     private func setupImagePicker() {
@@ -165,7 +153,7 @@ extension NewPostTableViewController: UITableViewDataSource {
             
             cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 999)
             cell.selectionStyle = .none
-            cell.descriptionTextView.delegate = self
+            cell.descriptionTextView.delegate = newPostTableView
             
             return cell
         }
@@ -194,31 +182,6 @@ extension NewPostTableViewController: UITableViewDelegate {
             
             
         }
-    }
-}
-
-extension NewPostTableViewController: UITextViewDelegate {
-    
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        
-        if textView.text == detailTextViewPlaceHolder {
-            textView.text = nil
-            textView.textColor = .label
-        }
-    }
-    
-    func textViewDidEndEditing(_ textView: UITextView) {
-        
-        if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            textView.text = detailTextViewPlaceHolder
-            textView.textColor = .lightGray
-        }
-    }
-    
-    func textViewDidChange(_ textView: UITextView) {
-        
-        tableView.beginUpdates()
-        tableView.endUpdates()
     }
 }
 

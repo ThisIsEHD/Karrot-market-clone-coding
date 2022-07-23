@@ -9,20 +9,20 @@ import UIKit
 
 class SignInViewController: UIViewController {
     
-    let realView = ReusableSignView(frame: .zero)
+    let signInView = ReusableSignView(frame: .zero)
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view = realView
+        view = signInView
         
-        realView.emailTextField.delegate = self
-        realView.passwordTextField.delegate = self
+        signInView.emailTextField.delegate = self
+        signInView.passwordTextField.delegate = self
         
-        realView.helloLabel.text = "안녕하세요!,\n이메일로 로그인해주세요."
-        realView.signUpButton.setTitle("로그인", for: .normal)
+        signInView.helloLabel.text = "안녕하세요!,\n이메일로 로그인해주세요."
+        signInView.signUpButton.setTitle("로그인", for: .normal)
         
-        realView.signUpButton.addTarget(self, action: #selector(signUp), for: .touchUpInside)
+        signInView.signUpButton.addTarget(self, action: #selector(signUp), for: .touchUpInside)
     }
     
     @objc func signUp() {
@@ -32,8 +32,8 @@ class SignInViewController: UIViewController {
 
 extension SignInViewController: UITextFieldDelegate {
   func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-      if textField == realView.emailTextField {
-          realView.passwordTextField.becomeFirstResponder()
+      if textField == signInView.emailTextField {
+          signInView.passwordTextField.becomeFirstResponder()
     } else {
         signUp()
     }

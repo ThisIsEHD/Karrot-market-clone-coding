@@ -85,19 +85,3 @@ class CustomNavigationBar: UINavigationBar {
         fatalError("init(coder:) has not been implemented")
     }
 }
-
-//private lazy var navigationBar: UINavigationBar = {
-//    let navigationItem = UINavigationItem(title: "중고거래 글쓰기")
-//
-//    navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .plain, target: nil, action: #selector(close))
-//    navigationItem.leftBarButtonItem?.tintColor = .label
-//
-//    navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: nil, action: #selector(post))
-//    navigationItem.rightBarButtonItem?.tintColor = UIColor.appColor(.carrot)
-//    navigationItem.rightBarButtonItem?.title = "완료"
-//
-//    navigationBar.barTintColor = .systemBackground
-//    navigationBar.setItems([navigationItem], animated: true)
-//
-//    return navigationBar
-//}()

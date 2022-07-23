@@ -10,28 +10,44 @@ import UIKit
 
 class SignUpViewController: UIViewController {
     
-    let realView = ReusableSignView(frame: .zero)
+    let signUpView = ReusableSignView(frame: .zero)
+    
+    override func loadView() {
+        view = signUpView
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        view = realView
         
-        realView.emailTextField.delegate = self
-        realView.passwordTextField.delegate = self
+        signUpView.emailTextField.delegate = self
+        signUpView.passwordTextField.delegate = self
         
-        realView.signUpButton.addTarget(self, action: #selector(signUp), for: .touchUpInside)
+        signUpView.signUpButton.addTarget(self, action: #selector(signUp), for: .touchUpInside)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        setupNaviBar()
     }
     
     @objc func signUp() {
         print("signup")
     }
+    
+    private func setupNaviBar() {
+
+        let appearance = UINavigationBarAppearance()
+        
+        appearance.configureWithDefaultBackground()
+        appearance.setBackIndicatorImage(UIImage(systemName: "arrow.left"), transitionMaskImage: nil)
+        navigationController?.navigationBar.tintColor = .label
+        navigationItem.backBarButtonItem?.title = "dk"
+    }
 }
 
 extension SignUpViewController: UITextFieldDelegate {
   func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-      if textField == realView.emailTextField {
-          realView.passwordTextField.becomeFirstResponder()
+      if textField == signUpView.emailTextField {
+          signUpView.passwordTextField.becomeFirstResponder()
     } else {
         signUp()
     }

@@ -11,6 +11,8 @@
 		723FE608287D4EDA00A987E7 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE607287D4EDA00A987E7 /* User.swift */; };
 		723FE60A287D4EEF00A987E7 /* Merchandise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE609287D4EEF00A987E7 /* Merchandise.swift */; };
 		723FE610287D649400A987E7 /* Constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE60F287D649400A987E7 /* Constraints.swift */; };
+		D347FE84288BE8A100EF06B5 /* UserCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE83288BE8A100EF06B5 /* UserCheckView.swift */; };
+		D347FE86288BF1CA00EF06B5 /* NewPostTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE85288BF1CA00EF06B5 /* NewPostTableView.swift */; };
 		D3DF365E2884282C00F20065 /* NewPostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF365D2884282C00F20065 /* NewPostTableViewController.swift */; };
 		D3DF36602884299500F20065 /* PhotosSelectingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF365F2884299500F20065 /* PhotosSelectingTableViewCell.swift */; };
 		D3DF366328842A7300F20065 /* TitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF366128842A7300F20065 /* TitleTableViewCell.swift */; };
@@ -50,6 +52,8 @@
 		723FE609287D4EEF00A987E7 /* Merchandise.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Merchandise.swift; sourceTree = "<group>"; };
 		723FE60F287D649400A987E7 /* Constraints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constraints.swift; sourceTree = "<group>"; };
 		84FFF65EC2D21DA804E8D34F /* Pods_KarrotMarketCloneCoding.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KarrotMarketCloneCoding.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D347FE83288BE8A100EF06B5 /* UserCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCheckView.swift; sourceTree = "<group>"; };
+		D347FE85288BF1CA00EF06B5 /* NewPostTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPostTableView.swift; sourceTree = "<group>"; };
 		D3DF365D2884282C00F20065 /* NewPostTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPostTableViewController.swift; sourceTree = "<group>"; };
 		D3DF365F2884299500F20065 /* PhotosSelectingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosSelectingTableViewCell.swift; sourceTree = "<group>"; };
 		D3DF366128842A7300F20065 /* TitleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleTableViewCell.swift; sourceTree = "<group>"; };
@@ -137,7 +141,7 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		D3DF36692884491F00F20065 /* NewPost */ = {
+		D3DF36692884491F00F20065 /* NewPostViews */ = {
 			isa = PBXGroup;
 			children = (
 				D3DF367E28894FB400F20065 /* Xibs */,
@@ -150,7 +154,7 @@
 				D3DF366E288457FD00F20065 /* PriceTableViewCell.swift */,
 				D3DF36722884601600F20065 /* DetailTableViewCell.swift */,
 			);
-			path = NewPost;
+			path = NewPostViews;
 			sourceTree = "<group>";
 		};
 		D3DF367E28894FB400F20065 /* Xibs */ = {
@@ -218,8 +222,10 @@
 		D3E12310287D71AD00A1EDC8 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				D3DF36692884491F00F20065 /* NewPost */,
+				D3DF36692884491F00F20065 /* NewPostViews */,
 				D3E1231C28800E5700A1EDC8 /* ReusableSignView.swift */,
+				D347FE83288BE8A100EF06B5 /* UserCheckView.swift */,
+				D347FE85288BF1CA00EF06B5 /* NewPostTableView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -352,6 +358,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D347FE86288BF1CA00EF06B5 /* NewPostTableView.swift in Sources */,
+				D347FE84288BE8A100EF06B5 /* UserCheckView.swift in Sources */,
 				D3DF36742884601600F20065 /* DetailTableViewCell.swift in Sources */,
 				D3DF367C2887AF3C00F20065 /* PhotoPickerCollectionViewCell.swift in Sources */,
 				D3DF3686288A888400F20065 /* Enum.swift in Sources */,

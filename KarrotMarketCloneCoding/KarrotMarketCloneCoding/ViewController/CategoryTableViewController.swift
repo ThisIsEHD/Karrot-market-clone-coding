@@ -13,7 +13,6 @@ class CategoryTableViewController: UITableViewController {
     var cellTapped: (CategoryTableViewController) -> () = { sender in }
     var selectedCategory = ""
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
