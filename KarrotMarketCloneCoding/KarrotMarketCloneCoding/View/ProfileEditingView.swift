@@ -9,16 +9,6 @@ import UIKit
 
 class ProfileEditingView: UIView {
     
-    internal lazy var navigationBar: UINavigationBar = {
-        let navigationBar = UINavigationBar(frame: .zero)
-        navigationBar.barTintColor = .systemBackground
-        navigationBar.setItems([navigationItem], animated: true)
-        
-        return navigationBar
-    }()
-    
-    let navigationItem = UINavigationItem(title: "프로필 수정")
-    
     internal let imagePickerView: UIImageView = {
         let imageView = UIImageView()
         imageView.backgroundColor = .lightGray
@@ -65,10 +55,8 @@ class ProfileEditingView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .systemBackground
         
-        addSubview(navigationBar)
-        setNavigationBar()
+        backgroundColor = .systemBackground
         
         addSubview(imagePickerView)
         setImagePickerViewLayout()
@@ -90,14 +78,8 @@ class ProfileEditingView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func setNavigationBar() {
-        navigationBar.anchor(top: self.safeAreaLayoutGuide.topAnchor, leading: self.leadingAnchor, trailing: self.trailingAnchor, height: 50)
-        
-        navigationItem.leftBarButtonItem?.tintColor = .label
-    }
-    
     private func setImagePickerViewLayout() {
-        imagePickerView.anchor(top: navigationBar.bottomAnchor  , topConstant: 30, width: 150, height: 150)
+        imagePickerView.anchor(top: safeAreaLayoutGuide.topAnchor, topConstant: 30, width: 150, height: 150)
         imagePickerView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
     }
     
@@ -115,5 +97,13 @@ class ProfileEditingView: UIView {
     
     private func setEditingDoneButtonLayout() {
         editingDoneButton.anchor(bottom: self.bottomAnchor, leading: self.leadingAnchor, trailing: self.trailingAnchor, height: 75)
+    }
+    
+    func setupTapGestures(target: UIViewController, selector: Selector) {
+        
+        let tapGesture = UITapGestureRecognizer(target: target, action: selector)
+        
+        imagePickerView.addGestureRecognizer(tapGesture)
+        imagePickerView.isUserInteractionEnabled = true
     }
 }

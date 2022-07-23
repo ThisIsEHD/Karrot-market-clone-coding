@@ -24,7 +24,7 @@ class SignUpViewController: UIViewController {
     }
     
     @objc func signUp() {
-        print("signup")
+        navigationController?.pushViewController(ProfileEditingViewController(), animated: true)
     }
 }
 

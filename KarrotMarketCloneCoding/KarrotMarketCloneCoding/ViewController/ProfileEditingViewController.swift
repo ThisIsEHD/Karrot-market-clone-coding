@@ -11,35 +11,40 @@ import PhotosUI
 final class ProfileEditingViewController: UIViewController {
     
     let member = User(id: 1, nickName: "욘두", profileImageUrl: nil)
-    let realView = ProfileEditingView(frame: .zero)
+    let profileEditingView = ProfileEditingView(frame: .zero)
     
     override func loadView() {
-        view = realView
+        
+        view = profileEditingView
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        realView.nickNameTextField.delegate = self
-        realView.nickNameTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
-        
-        setupTapGestures()
-        
-        realView.navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "clear"), style: .plain, target: nil, action: #selector(close))
-        realView.navigationItem.leftBarButtonItem?.tintColor = .label
+        title = "프로필 수정"
+        profileEditingView.nickNameTextField.delegate = self
+        profileEditingView.nickNameTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        profileEditingView.setupTapGestures(target: self, selector: #selector(touchUpImageView))
     }
     
-    func setupTapGestures() {
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(touchUpImageView))
-        realView.imagePickerView.addGestureRecognizer(tapGesture)
-        realView.imagePickerView.isUserInteractionEnabled = true
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        setupNaviBar()
     }
     
     @objc func touchUpImageView() {
-        
         setupImagePicker()
     }
     
+    private func setupNaviBar() {
+
+        let appearance = UINavigationBarAppearance()
+        
+        appearance.configureWithDefaultBackground()
+        appearance.setBackIndicatorImage(UIImage(systemName: "arrow.left"), transitionMaskImage: nil)
+        navigationController?.navigationBar.tintColor = .label
+    }
     
     func setupImagePicker() {
         
@@ -56,19 +61,22 @@ final class ProfileEditingViewController: UIViewController {
     }
     
     @objc func textFieldDidChange() {
-        
         constrainWrongNaming()
     }
     
     func constrainWrongNaming() {
-        if let nickName = realView.nickNameTextField.text, nickName != member.nickName {
+        
+        if let nickName = profileEditingView.nickNameTextField.text, nickName != member.nickName {
+            
             if nickName.count >= 2 {
-                realView.editingDoneButton.isEnabled = true
-                realView.editingDoneButton.backgroundColor = UIColor.appColor(.carrot)
+                
+                profileEditingView.editingDoneButton.isEnabled = true
+                profileEditingView.editingDoneButton.backgroundColor = UIColor.appColor(.carrot)
             }
         } else {
-            realView.editingDoneButton.isEnabled = false
-            realView.editingDoneButton.backgroundColor = UIColor.systemGray
+            
+            profileEditingView.editingDoneButton.isEnabled = false
+            profileEditingView.editingDoneButton.backgroundColor = UIColor.systemGray
         }
     }
     
@@ -78,6 +86,7 @@ final class ProfileEditingViewController: UIViewController {
 }
 
 extension ProfileEditingViewController: UITextFieldDelegate {
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         let currentText = NSString(string: textField.text ?? "")
@@ -100,9 +109,10 @@ extension ProfileEditingViewController: PHPickerViewControllerDelegate {
         let itemProvider = results.first?.itemProvider
         
         if let itemProvider = itemProvider, itemProvider.canLoadObject(ofClass: UIImage.self) {
+            
             itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
                 DispatchQueue.main.async {
-                    self.realView.imagePickerView.image = image as? UIImage
+                    self.profileEditingView.imagePickerView.image = image as? UIImage
                 }
             }
         } else {
