@@ -9,9 +9,9 @@ import UIKit
 
 class MerchandiseDetailViewOtherPostsCell: UITableViewCell {
     
-// MARK: - Properties
+    // MARK: - Properties
     let tableTitlelabel: UILabel = {
-       let lbl = UILabel()
+        let lbl = UILabel()
         lbl.font = UIFont.boldSystemFont(ofSize: 19)
         return lbl
     }()
@@ -21,12 +21,12 @@ class MerchandiseDetailViewOtherPostsCell: UITableViewCell {
         cv.register(OtherPostsCollectionViewCell.self, forCellWithReuseIdentifier: "PostCell")
         return cv
     }()
-
-// MARK: - Actions
+    
+    // MARK: - Actions
     
     
-// MARK: - Life Cycle
-
+    // MARK: - Life Cycle
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubview(tableTitlelabel)
@@ -44,11 +44,8 @@ class MerchandiseDetailViewOtherPostsCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
-
-}
-
-// MARK: - Configure UI
-extension MerchandiseDetailViewOtherPostsCell {
+    
+    // MARK: - Set Constraints
     private func setupConstraints() {
         tableTitlelabel.anchor(top: topAnchor, topConstant: 20, leading: leadingAnchor, leadingConstant: 15)
         postsCollectionView.anchor(top: tableTitlelabel.bottomAnchor, topConstant: 15, bottom: self.bottomAnchor, bottomConstant: 20, leading: tableTitlelabel.leadingAnchor, trailing: self.trailingAnchor, trailingConstant: 20, height: 230)
@@ -67,6 +64,8 @@ extension MerchandiseDetailViewOtherPostsCell: UICollectionViewDataSource {
         return cell
     }
 }
+
+// MARK: - UICollectionViewDelegateFlowLayout
 
 extension MerchandiseDetailViewOtherPostsCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {

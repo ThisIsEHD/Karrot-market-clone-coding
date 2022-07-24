@@ -8,7 +8,7 @@
 import UIKit
 
 class MerchandiseDescriptionCell: UITableViewCell {
-// MARK: - Properties
+    // MARK: - Properties
     private let merchandiseNameLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = "애플 충전기"
@@ -25,7 +25,7 @@ class MerchandiseDescriptionCell: UITableViewCell {
     }()
     
     private let merchandiseDescriptionTextView: UITextView = {
-       let tv = UITextView()
+        let tv = UITextView()
         tv.text = "미개봉 새제품입니다\n거래가능하시면 연락주세요\n장소는 아무데나 가능합니다."
         tv.font = UIFont.systemFont(ofSize: 16)
         tv.isEditable = false
@@ -42,17 +42,14 @@ class MerchandiseDescriptionCell: UITableViewCell {
         lbl.textColor = .systemGray2
         return lbl
     }()
-// MARK: - Actions
+    // MARK: - Actions
     
-// MARK: - Life Cycle
+    // MARK: - Life Cycle
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        self.addSubview(merchandiseNameLabel)
-        self.addSubview(merchandiseCategoryButton)
-        self.addSubview(merchandiseDescriptionTextView)
-        self.addSubview(extraInfoLabel)
-        
-        setupConstraints()
+        configureViews()
+        setConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -61,18 +58,22 @@ class MerchandiseDescriptionCell: UITableViewCell {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
     }
-
-}
-
-// MARK: - Configure UI
-extension MerchandiseDescriptionCell {
-    private func setupConstraints() {
+    
+    private func configureViews() {
+        addSubview(merchandiseNameLabel)
+        addSubview(merchandiseCategoryButton)
+        addSubview(merchandiseDescriptionTextView)
+        addSubview(extraInfoLabel)
+    }
+    
+    // MARK: - Set Constraints
+    
+    private func setConstraints() {
         merchandiseNameLabel.anchor(top: self.topAnchor, topConstant: 20, leading: self.leadingAnchor, leadingConstant: 15)
         merchandiseCategoryButton.anchor(top: merchandiseNameLabel.bottomAnchor, topConstant: 15, leading: merchandiseNameLabel.leadingAnchor)
         merchandiseDescriptionTextView.anchor(top: merchandiseCategoryButton.bottomAnchor, topConstant: 15, leading: merchandiseCategoryButton.leadingAnchor, trailing: self.trailingAnchor, trailingConstant: 20)
         extraInfoLabel.anchor(top: merchandiseDescriptionTextView.bottomAnchor, topConstant: 15, bottom: self.bottomAnchor, bottomConstant: 30, leading: merchandiseCategoryButton.leadingAnchor)
     }
 }
-

@@ -8,7 +8,8 @@
 import UIKit
 
 final class MyKarrotHeaderView: UIView {
-// MARK: Properties
+    
+    // MARK: Properties
     
     weak var delegate: ProfileViewDelegate?
     
@@ -95,7 +96,7 @@ final class MyKarrotHeaderView: UIView {
         return sv
     }()
     
-// MARK: Actions
+    // MARK: Actions
     
     @objc func profileViewDidTapped() {
         self.delegate?.goToMyProfileVC()
@@ -106,19 +107,12 @@ final class MyKarrotHeaderView: UIView {
         self.delegate?.goToDetailVC()
     }
     
-// MARK: - Life Cycle
+    // MARK: - Life Cycle
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .systemBackground
-        addSubview(profileView)
-        addSubview(soldListStackView)
-        addSubview(purchaseListStackView)
-        addSubview(wishListStackView)
-        
-        profileView.addSubview(indicatorImageView)
-        
-        setupConstraints()
+        configureViews()
+        setConstraints()
     }
     
     convenience init(width: Double, height: Double) {
@@ -129,32 +123,40 @@ final class MyKarrotHeaderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-}
-
-// MARK: Configure UI
-
-extension MyKarrotHeaderView {
+    // MARK: - Configure Views
     
-    private func setupConstraints() {
-        setupProfileViewConstraints()
-        setupIndicatorViewConstraints()
-        setupProfileStackViewConstraints()
+    private func configureViews() {
+        backgroundColor = .systemBackground
+        addSubview(profileView)
+        addSubview(soldListStackView)
+        addSubview(purchaseListStackView)
+        addSubview(wishListStackView)
+        
+        profileView.addSubview(indicatorImageView)
     }
     
-    private func setupProfileViewConstraints() {
+    // MARK: Set Constraints
+    
+    private func setConstraints() {
+        setProfileViewConstraints()
+        setIndicatorViewConstraints()
+        setProfileStackViewConstraints()
+    }
+    
+    private func setProfileViewConstraints() {
         profileView.anchor(top: self.safeAreaLayoutGuide.topAnchor,
                            leading: self.safeAreaLayoutGuide.leadingAnchor,
                            trailing: self.safeAreaLayoutGuide.trailingAnchor)
     }
     
-    private func setupIndicatorViewConstraints() {
+    private func setIndicatorViewConstraints() {
         indicatorImageView.anchor(trailing: profileView.trailingAnchor,
                                   trailingConstant: 20,
                                   width: 15, height: 15)
         indicatorImageView.centerY(inView: profileView)
     }
     
-    private func setupProfileStackViewConstraints() {
+    private func setProfileStackViewConstraints() {
         let width = (self.frame.width - (60 * 3)) / 4
         
         soldListImageView.centerX(inView: soldListStackView)
@@ -186,9 +188,9 @@ extension MyKarrotHeaderView {
                                  leading: purchaseListStackView.trailingAnchor,
                                  leadingConstant: width,
                                  width: 60)
+        
     }
 }
-
 // MARK: - ProfileViewDelegate
 protocol ProfileViewDelegate: AnyObject {
     func goToMyProfileVC()

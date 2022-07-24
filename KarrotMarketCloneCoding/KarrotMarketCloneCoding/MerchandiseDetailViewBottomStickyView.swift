@@ -10,55 +10,72 @@ import UIKit
 class MerchandiseDetailViewBottomStickyView: UIView {
 // MARK: - Properties
     
-    let separaterLine = UIView()
-    let wishButton = UIButton()
-    lazy var stackView = UIStackView(arrangedSubviews: [priceLabel, priceOfferButton])
-    let priceLabel = UILabel()
-    let priceOfferButton = UIButton()
-    let chatButton = UIButton()
+    private let separaterLine: UIView = {
+        let v = UIView()
+        v.backgroundColor = .systemGray
+        return v
+    }()
+    
+    private let wishButton: UIButton = {
+        let btn = UIButton()
+        btn.setImage(UIImage(named: "logo"), for: .normal)
+        return btn
+    }()
+    
+    private lazy var stackView: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [priceLabel, priceOfferButton])
+        sv.contentMode = .left
+        sv.axis = .vertical
+        sv.distribution = .fillEqually
+        sv.spacing = 2
+        return sv
+    }()
+    
+    private let priceLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.text = "0원"
+        lbl.font = UIFont.boldSystemFont(ofSize: 16)
+        return lbl
+    }()
+    
+    private let priceOfferButton: UIButton = {
+        let btn = UIButton()
+        btn.setTitle("가격제안불가", for: .normal)
+        btn.setTitleColor(.systemGray2, for: .normal)
+        return btn
+    }()
+    
+    private let chatButton: UIButton = {
+        let btn = UIButton()
+        btn.setTitle("채팅하기", for: .normal)
+        btn.backgroundColor = .orange
+        btn.layer.cornerRadius = 10
+        return btn
+    }()
     
 // MARK: - Life Cycle
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setupViews()
-        setupConstraints()
+        configureViews()
+        setConstraints()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-//  MARK: - Setup Views
-    func setupViews() {
+//  MARK: - configure Views
+    func configureViews() {
         self.backgroundColor = .systemBackground
         self.addSubview(separaterLine)
         self.addSubview(wishButton)
         self.addSubview(stackView)
         self.addSubview(chatButton)
-        
-        separaterLine.backgroundColor = .systemGray
-        wishButton.setImage(UIImage(named: "logo"), for: .normal)
-        
-        priceLabel.text = "0원"
-        priceLabel.font = UIFont.boldSystemFont(ofSize: 16)
-        
-        priceOfferButton.setTitle("가격제안불가", for: .normal)
-        priceOfferButton.setTitleColor(.systemGray2, for: .normal)
-        
-        stackView.contentMode = .left
-        stackView.axis = .vertical
-        stackView.distribution = .fillEqually
-        stackView.spacing = 2
-        
-        chatButton.setTitle("채팅하기", for: .normal)
-        chatButton.backgroundColor = .orange
-        chatButton.layer.cornerRadius = 10
-        
     }
     
-// MARK: - Setup Constraints
-    func setupConstraints() {
+// MARK: - Setting Constraints
+    func setConstraints() {
         separaterLine.anchor(top: self.topAnchor, leading: self.leadingAnchor, trailing: self.trailingAnchor, height: 1)
         wishButton.anchor(leading: self.leadingAnchor, leadingConstant: 20, width: 30, height: 30)
         wishButton.centerY(inView: stackView)

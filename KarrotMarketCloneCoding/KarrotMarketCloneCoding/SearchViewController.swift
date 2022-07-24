@@ -23,34 +23,32 @@ class SearchViewController: UIViewController{
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
         configureSearchController()
-        setUpConstraints()
+        setConstraints()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         navigationBottomView.removeFromSuperview()
+        tabBarController?.tabBar.isHidden = false
     }
     
     // MARK: - Actions
     
     
-    // MARK: - Configure UI
+    // MARK: - Configure Search View Controller
     func configureSearchController() {
-        
         navigationController?.navigationBar.addSubview(navigationBottomView)
-        
+        view.backgroundColor = .systemBackground
         searchBar.delegate = self
         searchBar.autocapitalizationType = .none
         searchBar.placeholder = "검색"
+        tabBarController?.tabBar.isHidden = true
         navigationItem.setRightBarButtonItems([UIBarButtonItem(customView: searchBar)], animated: true)
         definesPresentationContext = false
     }
-}
-
-// MARK: - Setup Constraints
-extension SearchViewController {
-    private func setUpConstraints() {
+    // MARK: - Setting Constraints
+    
+    private func setConstraints() {
         navigationBottomView.anchor(top: navigationController?.navigationBar.bottomAnchor, leading: navigationController?.navigationBar.leadingAnchor, trailing: navigationController?.navigationBar.trailingAnchor, height: 60)
     }
 }
@@ -58,4 +56,7 @@ extension SearchViewController {
 // MARK: - UISearchBarDelegate
     
 extension SearchViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        
+    }
 }

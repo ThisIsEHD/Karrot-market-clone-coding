@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MerchandiseDetailViewController: UIViewController {
+class MerchandiseDetailViewController: UIViewController, UITableViewDelegate {
 // MARK: - Properties
     
     private let list = [UIColor.red, UIColor.green, UIColor.blue, UIColor.gray, UIColor.black]
@@ -26,6 +26,7 @@ class MerchandiseDetailViewController: UIViewController {
     private lazy var imageListpageControl: UIPageControl = {
         let pc = UIPageControl()
         pc.numberOfPages = list.count
+        pc.currentPage = 0
         pc.pageIndicatorTintColor = .systemGray5
         pc.currentPageIndicatorTintColor = .white
         return pc
@@ -36,73 +37,112 @@ class MerchandiseDetailViewController: UIViewController {
         tv.register(MerchandiseDetailViewProfileCell.self, forCellReuseIdentifier: "ProfileCell")
         tv.register(MerchandiseDescriptionCell.self, forCellReuseIdentifier: "DescriptionCell")
         tv.register(MerchandiseDetailViewOtherPostsCell.self, forCellReuseIdentifier: "PostCell")
-        tv.rowHeight = UITableView.automaticDimension
-        tv.estimatedRowHeight = 200
+//        tv.rowHeight = UITableView.automaticDimension
+//        tv.estimatedRowHeight = 200
+        // contentInset이 조정되지 않아 테이블뷰의 topAnchor가 superview의 topAnchor와 같아짐
+        tv.contentInsetAdjustmentBehavior = .never
         tv.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         return tv
+    }()
+    
+    private lazy var merchandiseDetailTableHeaderView: UIView = {
+        let v = MerchandiseDetailTableHeaderView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.width))
+        v.addSubview(imageListCollectionView)
+        v.addSubview(imageListpageControl)
+        return v
     }()
     
     private let merchandiseDetailViewBottomStickyView = MerchandiseDetailViewBottomStickyView()
     
 // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        configureViews()
+        setConstraints()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = true
+        
+        setNavigationColorByHeight(contentListView)
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tabBarController?.tabBar.isHidden = false
+        navigationController?.navigationBar.barStyle = .default
+        navigationController?.navigationBar.backgroundColor = .systemBackground
+        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.isTranslucent = false
+    }
+    
+    // MARK: - Configure Views
+    private func configureViews() {
         contentListView.dataSource = self
+        // ScrollviewDelegate 사용을 위해
+        contentListView.delegate = self
+        contentListView.tableHeaderView = merchandiseDetailTableHeaderView
+        
         imageListCollectionView.dataSource = self
         imageListCollectionView.delegate = self
         
         view.addSubview(contentListView)
         view.addSubview(merchandiseDetailViewBottomStickyView)
-        
-        let headerView = MerchandiseDetailTableHeaderView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.width))
-        
-        headerView.addSubview(imageListCollectionView)
-        headerView.addSubview(imageListpageControl)
-        
-        contentListView.tableHeaderView = headerView
-        imageListpageControl.currentPage = 0
-        setupConstraints()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        self.navigationController?.navigationBar.shadowImage = UIImage()
-        self.navigationController?.navigationBar.isTranslucent = true
-        self.navigationController?.navigationBar.tintColor = .white
-        self.navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-    }
-}
-
-// MARK: - Configure UI
-
-extension MerchandiseDetailViewController {
-    private func setupConstraints() {
-        setupImageListCollectionViewConstraints()
-        setupImageListpageControlConstraints()
-        setupContentListConstraints()
-        setupBottomStickyViewConstraints()
+    // MARK: - Set Constraints
+    
+    private func setConstraints() {
+        setImageListCollectionViewConstraints()
+        setImageListpageControlConstraints()
+        setContentListConstraints()
+        setBottomStickyViewConstraints()
     }
     
-    private func setupImageListCollectionViewConstraints() {
+    private func setImageListCollectionViewConstraints() {
         imageListCollectionView.anchor(top: contentListView.tableHeaderView?.topAnchor, bottom: contentListView.tableHeaderView?.bottomAnchor, leading: contentListView.tableHeaderView?.leadingAnchor, trailing: contentListView.tableHeaderView?.trailingAnchor)
     }
     
-    private func setupImageListpageControlConstraints() {
+    private func setImageListpageControlConstraints() {
         imageListpageControl.anchor(bottom: imageListCollectionView.bottomAnchor)
         imageListpageControl.centerX(inView: imageListCollectionView)
     }
     
-    private func setupContentListConstraints() {
+    private func setContentListConstraints() {
         contentListView.anchor(top: view.topAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
     }
     
-    private func setupBottomStickyViewConstraints() {
+    private func setBottomStickyViewConstraints() {
         merchandiseDetailViewBottomStickyView.anchor(bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor, height: 120)
         
     }
+    
+    func setNavigationColorByHeight(_ sender: UIScrollView) {
+        if sender.contentOffset.y > 280 {
+            navigationController?.navigationBar.barStyle = .default
+            navigationController?.navigationBar.backgroundColor = .systemBackground
+            navigationController?.navigationBar.tintColor = .black
+            navigationController?.navigationBar.shadowImage = .none
+            navigationController?.navigationBar.isHidden = false
+            navigationController?.navigationBar.isTranslucent = false
+            
+        }
+        else {
+            navigationController?.navigationBar.barStyle = .black
+            navigationController?.navigationBar.backgroundColor = .clear
+            navigationController?.navigationBar.tintColor = .white
+            navigationController?.navigationBar.shadowImage = UIImage()
+            navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+            navigationController?.navigationBar.isTranslucent = true
+        }
+    }
 }
 // MARK: - UICollectionViewDataSource
+
 extension MerchandiseDetailViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return list.count
@@ -117,6 +157,7 @@ extension MerchandiseDetailViewController: UICollectionViewDataSource {
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
+
 extension MerchandiseDetailViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return collectionView.bounds.size
@@ -124,6 +165,7 @@ extension MerchandiseDetailViewController: UICollectionViewDelegateFlowLayout {
 }
 
 // MARK: - UITableViewDataSource
+
 extension MerchandiseDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 4
@@ -161,5 +203,8 @@ extension MerchandiseDetailViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let headerView = self.contentListView.tableHeaderView as! MerchandiseDetailTableHeaderView
         headerView.scrollViewDidScroll(scrollView: scrollView, pageControl: imageListpageControl)
+        print(#function)
+        
+        setNavigationColorByHeight(scrollView)
     }
 }

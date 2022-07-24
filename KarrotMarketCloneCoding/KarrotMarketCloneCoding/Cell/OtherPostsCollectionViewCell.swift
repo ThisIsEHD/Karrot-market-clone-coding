@@ -8,7 +8,7 @@
 import UIKit
 
 class OtherPostsCollectionViewCell: UICollectionViewCell {
-//MARK: - Properties
+    // MARK: - Properties
     
     private let postImageView: UIImageView = {
         let iv = UIImageView()
@@ -32,26 +32,23 @@ class OtherPostsCollectionViewCell: UICollectionViewCell {
         return lbl
     }()
     
-//MARK: - Life Cycle
+    // MARK: - Life Cycle
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(postImageView)
         addSubview(postNameLabel)
         addSubview(priceLabel)
         
-        setupConstraints()
+        setConstraints()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Set Constraints
     
-}
-
-// MARK: - Configure UI
-extension OtherPostsCollectionViewCell {
-    private func setupConstraints() {
+    private func setConstraints() {
         postImageView.anchor(top: topAnchor, leading: leadingAnchor, trailing: trailingAnchor, height: 150)
         postNameLabel.anchor(top: postImageView.bottomAnchor, topConstant: 15, leading: postImageView.leadingAnchor, trailing: postImageView.trailingAnchor)
         priceLabel.anchor(top: postNameLabel.bottomAnchor, topConstant: 10, bottom: bottomAnchor, leading: postNameLabel.leadingAnchor, trailing: postNameLabel.trailingAnchor)

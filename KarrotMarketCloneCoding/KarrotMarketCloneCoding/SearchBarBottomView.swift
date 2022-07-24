@@ -17,17 +17,17 @@ class SearchBarBottomView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        setupViews()
-        setUpConstraints()
+        configureViews()
+        setConstraints()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Setup Views
+    // MARK: - configure Views
     
-    private func setupViews() {
+    private func configureViews() {
         addSubview(sortButton)
         
         sortButton.setTitle("정확도순", for: .normal)
@@ -37,9 +37,9 @@ class SearchBarBottomView: UIView {
         sortButton.layer.cornerRadius = 30 / 2
     }
     
-// MARK: - Setup Constraints
+// MARK: - Set Constraints
     
-    private func setUpConstraints() {
+    private func setConstraints() {
         sortButton.anchor(trailing: self.trailingAnchor, trailingConstant: 20,width: 80, height: 30)
         sortButton.centerY(inView: self)
     }

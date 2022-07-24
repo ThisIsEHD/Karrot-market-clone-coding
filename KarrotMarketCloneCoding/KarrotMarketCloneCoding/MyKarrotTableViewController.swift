@@ -10,9 +10,12 @@ import Alamofire
 
 final class MyKarrotTableViewController: UIViewController {
     
-// MARK: - Properties
-    private let user = User(id: "kk@kk.com", nickName: "조각가", phone: "01038281234", name: "케이")
-    
+    // MARK: - Properties
+    private var user: [User]? {
+        didSet {
+            print(user)
+        }
+    }
     private let tableView = UITableView(frame: .zero, style: .grouped)
     private let myProfileTableList = [["내 동네 설정", "동네인증하기", "키워드 알림", "모아보기", "당근가계부", "관심 카테고리 설정"],
                                       ["동네생활 글/댓글", "동네홍보 글", "동네 가게 후기", "저장한 장소", "내 단골가게", "받은 쿠폰함"],
@@ -33,37 +36,39 @@ final class MyKarrotTableViewController: UIViewController {
         return lbl
     }()
     
-// MARK: - Actions
+    // MARK: - Actions
  
-// MARK: - LifeCycle
+    // MARK: - LifeCycle
    
     override func viewDidLoad() {
         super.viewDidLoad()
+        profileView.delegate = self
+        
+        setupNavigationItems()
+        configureTableView()
+        setTableViewConstraints()
+    }
+    
+    // MARK: - Setup NavigationItems
+    private func setupNavigationItems() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleLabel)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "setting"), style: .plain, target: self, action: nil)
+    }
+    
+    // MARK: - Configure TableView
+    private func configureTableView() {
+        view.addSubview(tableView)
         
         tableView.delegate = self
         tableView.dataSource = self
-        profileView.delegate = self
-        
-        view.addSubview(tableView)
-        
-        configureTableView()
-        setupTableViewConstraints()
-    }
-}
-
-// MARK: - Configure UI
-   
-extension MyKarrotTableViewController {
-    private func configureTableView() {
         tableView.register(MyKarrotTableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.register(MyKarrotTableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "Header")
         tableView.separatorStyle = .none
         tableView.tableHeaderView = profileView
     }
     
-    private func setupTableViewConstraints() {
+    // MARK: - Setting TableView Constraints
+    private func setTableViewConstraints() {
         tableView.anchor(top: view.topAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
     }
 }
@@ -140,7 +145,8 @@ extension MyKarrotTableViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = UIViewController()
-        navigationController?.pushViewController(vc, animated: false)
+        vc.view.backgroundColor = .systemBackground
+        navigationController?.pushViewController(vc, animated: true)
         tableView.deselectRow(at: indexPath, animated: false)
     }
 }
@@ -149,6 +155,9 @@ extension MyKarrotTableViewController: UITableViewDelegate {
 extension MyKarrotTableViewController: ProfileViewDelegate {
     
     func goToMyProfileVC() {
+        user = [User(id: "kk@kk.com", nickName: "조각가", phone: "01038281234", name: "케이"),
+                User(id: "kk@kk.com", nickName: "조각가", phone: "01038281234", name: "케이"),
+                User(id: "kk@kk.com", nickName: "조각가", phone: "01038281234", name: "케이")]
     }
     
     func goToDetailVC() {

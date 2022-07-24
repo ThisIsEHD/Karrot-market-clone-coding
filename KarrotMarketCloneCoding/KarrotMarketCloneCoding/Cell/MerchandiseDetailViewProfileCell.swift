@@ -8,20 +8,20 @@
 import UIKit
 
 class MerchandiseDetailViewProfileCell: UITableViewCell {
-// MARK: - Properties
+    // MARK: - Properties
     
     private lazy var profileView: UIView = {
         let v = ReusableProfileView(imageSize: 50)
         return v
     }()
     
-// MARK: - Actions
+    // MARK: - Actions
     
-// MARK: - Life Cycle
+    // MARK: - Life Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.addSubview(profileView)
-        setupConstraints()
+        setConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -31,14 +31,9 @@ class MerchandiseDetailViewProfileCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
-}
-// MARK: - configure UI
-extension MerchandiseDetailViewProfileCell {
-    private func setupConstraints() {
-        setupProfileViewConstraints()
-    }
     
-    private func setupProfileViewConstraints() {
+    //  MARK: - Set Constraints
+    private func setConstraints() {
         profileView.anchor(top: topAnchor, topConstant: 40, bottom: bottomAnchor, bottomConstant: 40, leading: leadingAnchor, trailing: trailingAnchor)
     }
 }

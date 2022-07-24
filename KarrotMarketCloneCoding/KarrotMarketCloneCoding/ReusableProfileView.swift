@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 
 class ReusableProfileView: UIView {
+
+    // MARK: - Properties
     
     private let profileImageView: UIImageView = {
         let iv = UIImageView(image: UIImage(named: "defaultProfileImage"))
@@ -24,10 +26,11 @@ class ReusableProfileView: UIView {
         return lbl
     }()
     
+    // MARK: - Life Cycle
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.addSubview(profileImageView)
-        self.addSubview(nickNameLabel)
+        confifureViews()
         setNickNameLabelConstraints()
     }
     
@@ -40,9 +43,14 @@ class ReusableProfileView: UIView {
         super.init(coder: coder)
     }
     
-}
-// MARK: - configureUI
-extension ReusableProfileView {
+    // MARK: - Configure Views
+    
+    private func confifureViews() {
+        self.addSubview(profileImageView)
+        self.addSubview(nickNameLabel)
+    }
+    
+    // MARK: - Set Constraints
     
     private func setProfileImageViewConstraints(size: CGFloat) {
         profileImageView.anchor(leading: self.leadingAnchor,
@@ -57,4 +65,5 @@ extension ReusableProfileView {
         nickNameLabel.anchor(leading: profileImageView.trailingAnchor,
                              leadingConstant: 15)
     }
+    
 }
