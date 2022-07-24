@@ -30,11 +30,9 @@
 		723FE6962889085400A987E7 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE6952889085400A987E7 /* SearchViewController.swift */; };
 		723FE6982889091D00A987E7 /* TabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE6972889091D00A987E7 /* TabbarController.swift */; };
 		723FE69A2889341000A987E7 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE6992889341000A987E7 /* HomeViewController.swift */; };
-		723FE69C28893CD900A987E7 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE69B28893CD900A987E7 /* ChatViewController.swift */; };
 		723FE69E2889484700A987E7 /* Copyright.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE69D2889484700A987E7 /* Copyright.swift */; };
 		723FE6A02889523800A987E7 /* SearchBarBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE69F2889523800A987E7 /* SearchBarBottomView.swift */; };
 		723FE6A2288AC87C00A987E7 /* MerchandiseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE6A1288AC87C00A987E7 /* MerchandiseTableViewCell.swift */; };
-		723FE6A4288D667D00A987E7 /* FloatingPlusButtonController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE6A3288D667D00A987E7 /* FloatingPlusButtonController.swift */; };
 		D3E122F9287BF66000A1EDC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E122F8287BF66000A1EDC8 /* AppDelegate.swift */; };
 		D3E122FB287BF66000A1EDC8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E122FA287BF66000A1EDC8 /* SceneDelegate.swift */; };
 		D3E12300287BF66000A1EDC8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3E122FE287BF66000A1EDC8 /* Main.storyboard */; };
@@ -66,11 +64,9 @@
 		723FE6952889085400A987E7 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		723FE6972889091D00A987E7 /* TabbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarController.swift; sourceTree = "<group>"; };
 		723FE6992889341000A987E7 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
-		723FE69B28893CD900A987E7 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		723FE69D2889484700A987E7 /* Copyright.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Copyright.swift; sourceTree = "<group>"; };
 		723FE69F2889523800A987E7 /* SearchBarBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarBottomView.swift; sourceTree = "<group>"; };
 		723FE6A1288AC87C00A987E7 /* MerchandiseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchandiseTableViewCell.swift; sourceTree = "<group>"; };
-		723FE6A3288D667D00A987E7 /* FloatingPlusButtonController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPlusButtonController.swift; sourceTree = "<group>"; };
 		84FFF65EC2D21DA804E8D34F /* Pods_KarrotMarketCloneCoding.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KarrotMarketCloneCoding.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3E122F5287BF66000A1EDC8 /* KarrotMarketCloneCoding.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KarrotMarketCloneCoding.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3E122F8287BF66000A1EDC8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -172,8 +168,6 @@
 				723FE612287D837500A987E7 /* ViewController.swift */,
 				723FE6972889091D00A987E7 /* TabbarController.swift */,
 				723FE6992889341000A987E7 /* HomeViewController.swift */,
-				723FE6A3288D667D00A987E7 /* FloatingPlusButtonController.swift */,
-				723FE69B28893CD900A987E7 /* ChatViewController.swift */,
 				723FE62A2880F64C00A987E7 /* MyKarrotTableViewController.swift */,
 				723FE68728853E0800A987E7 /* MerchandiseDetailViewController.swift */,
 				723FE6932888488600A987E7 /* MerchandiseDetailViewBottomStickyView.swift */,
@@ -326,14 +320,12 @@
 				723FE69A2889341000A987E7 /* HomeViewController.swift in Sources */,
 				723FE68A2887A3FA00A987E7 /* Network.swift in Sources */,
 				723FE619287D852C00A987E7 /* MyKarrotTableHeaderViewModel.swift in Sources */,
-				723FE69C28893CD900A987E7 /* ChatViewController.swift in Sources */,
 				723FE69E2889484700A987E7 /* Copyright.swift in Sources */,
 				723FE67D2885385000A987E7 /* MerchandiseDetailViewProfileCell.swift in Sources */,
 				723FE610287D649400A987E7 /* Constraints.swift in Sources */,
 				723FE681288539A900A987E7 /* MerchandiseDetailViewOtherPostsCell.swift in Sources */,
 				D3E122F9287BF66000A1EDC8 /* AppDelegate.swift in Sources */,
 				723FE692288806CB00A987E7 /* OtherPostsCollectionViewCell.swift in Sources */,
-				723FE6A4288D667D00A987E7 /* FloatingPlusButtonController.swift in Sources */,
 				723FE6A02889523800A987E7 /* SearchBarBottomView.swift in Sources */,
 				D3E122FB287BF66000A1EDC8 /* SceneDelegate.swift in Sources */,
 				723FE6A2288AC87C00A987E7 /* MerchandiseTableViewCell.swift in Sources */,
