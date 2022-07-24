@@ -105,38 +105,6 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
-		723FE606287D4ED300A987E7 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				723FE607287D4EDA00A987E7 /* User.swift */,
-				723FE609287D4EEF00A987E7 /* Merchandise.swift */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		723FE611287D64BF00A987E7 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				723FE60F287D649400A987E7 /* Constraints.swift */,
-				723FE69D2889484700A987E7 /* Copyright.swift */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
-		723FE68428853A3500A987E7 /* Cell */ = {
-			isa = PBXGroup;
-			children = (
-				723FE67C2885385000A987E7 /* MerchandiseDetailViewProfileCell.swift */,
-				723FE682288539F200A987E7 /* MerchandiseDetailViewDescriptionCell.swift */,
-				723FE680288539A900A987E7 /* MerchandiseDetailViewOtherPostsCell.swift */,
-				723FE691288806CA00A987E7 /* OtherPostsCollectionViewCell.swift */,
-				723FE61E287DACA100A987E7 /* MyKarrotTableViewCell.swift */,
-				723FE68F2887E4AE00A987E7 /* MerchandiseDetailViewImageCell.swift */,
-				723FE6A1288AC87C00A987E7 /* MerchandiseTableViewCell.swift */,
-			);
-			path = Cell;
-			sourceTree = "<group>";
-		};
 		D3E122EC287BF66000A1EDC8 = {
 			isa = PBXGroup;
 			children = (
@@ -158,7 +126,6 @@
 		D3E122F7287BF66000A1EDC8 /* KarrotMarketCloneCoding */ = {
 			isa = PBXGroup;
 			children = (
-				723FE606287D4ED300A987E7 /* Model */,
 				D3E122F8287BF66000A1EDC8 /* AppDelegate.swift */,
 				D3E122FA287BF66000A1EDC8 /* SceneDelegate.swift */,
 				D3E122FE287BF66000A1EDC8 /* Main.storyboard */,
@@ -170,13 +137,22 @@
 				723FE6932888488600A987E7 /* MerchandiseDetailViewBottomStickyView.swift */,
 				723FE6952889085400A987E7 /* SearchViewController.swift */,
 				723FE69F2889523800A987E7 /* SearchBarBottomView.swift */,
-				723FE68428853A3500A987E7 /* Cell */,
 				723FE67A288531F300A987E7 /* ReusableProfileView.swift */,
 				723FE62628801F1600A987E7 /* MyKarrotHeaderView.swift */,
 				723FE68B2887B3EF00A987E7 /* MerchandiseDetailTableHeaderView.swift */,
 				723FE628288044AB00A987E7 /* MyKarrotTableViewHeaderFooterView.swift */,
 				723FE618287D852C00A987E7 /* MyKarrotTableHeaderViewModel.swift */,
-				723FE611287D64BF00A987E7 /* Extensions */,
+				723FE607287D4EDA00A987E7 /* User.swift */,
+				723FE609287D4EEF00A987E7 /* Merchandise.swift */,
+				723FE67C2885385000A987E7 /* MerchandiseDetailViewProfileCell.swift */,
+				723FE682288539F200A987E7 /* MerchandiseDetailViewDescriptionCell.swift */,
+				723FE680288539A900A987E7 /* MerchandiseDetailViewOtherPostsCell.swift */,
+				723FE691288806CA00A987E7 /* OtherPostsCollectionViewCell.swift */,
+				723FE61E287DACA100A987E7 /* MyKarrotTableViewCell.swift */,
+				723FE68F2887E4AE00A987E7 /* MerchandiseDetailViewImageCell.swift */,
+				723FE6A1288AC87C00A987E7 /* MerchandiseTableViewCell.swift */,
+				723FE60F287D649400A987E7 /* Constraints.swift */,
+				723FE69D2889484700A987E7 /* Copyright.swift */,
 				D3E12301287BF66100A1EDC8 /* Assets.xcassets */,
 				D3E12303287BF66100A1EDC8 /* LaunchScreen.storyboard */,
 				D3E12306287BF66100A1EDC8 /* Info.plist */,
