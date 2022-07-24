@@ -155,9 +155,6 @@ extension MyKarrotTableViewController: UITableViewDelegate {
 extension MyKarrotTableViewController: ProfileViewDelegate {
     
     func goToMyProfileVC() {
-        user = [User(id: "kk@kk.com", nickName: "조각가", phone: "01038281234", name: "케이"),
-                User(id: "kk@kk.com", nickName: "조각가", phone: "01038281234", name: "케이"),
-                User(id: "kk@kk.com", nickName: "조각가", phone: "01038281234", name: "케이")]
     }
     
     func goToDetailVC() {
