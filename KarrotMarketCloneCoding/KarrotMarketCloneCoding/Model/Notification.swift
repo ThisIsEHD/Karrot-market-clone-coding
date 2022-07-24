@@ -11,7 +11,6 @@ enum NotificationType: String
 {
     case deleteButtonTapped = "deleteButtonTapped"
 
-    // Computed property which returns notification name
     var name: Notification.Name
     {
         return Notification.Name(self.rawValue)

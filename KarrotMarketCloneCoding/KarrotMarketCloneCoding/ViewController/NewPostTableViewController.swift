@@ -27,6 +27,10 @@ final class NewPostTableViewController: UIViewController {
         newPostTableView.tableView.dataSource = self
         
         NotificationCenter.default.addObserver(self, selector: #selector(removeImage), name: NotificationType.deleteButtonTapped.name, object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handle(keyboardShowNotification:)),
+                                               name: UIResponder.keyboardDidShowNotification,
+                                               object: nil)
     }
 
     override func viewDidLayoutSubviews() {
@@ -51,11 +55,12 @@ final class NewPostTableViewController: UIViewController {
     }
     
     private func setupNewPostTableView() {
+        
         newPostTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
     }
     
     private func setupImagePicker() {
-        print(#function)
+        
         var configuration = PHPickerConfiguration()
         
         configuration.selectionLimit = 10
@@ -65,6 +70,18 @@ final class NewPostTableViewController: UIViewController {
         
         picker.delegate = self
         present(picker, animated: true, completion: nil)
+    }
+    
+    @objc private func handle(keyboardShowNotification notification: Notification) {
+        // 1
+        print("Keyboard show notification")
+        
+        // 2
+        if let userInfo = notification.userInfo,
+            // 3
+            let keyboardRectangle = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+            print(keyboardRectangle.width)
+        }
     }
 }
 

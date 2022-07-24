@@ -12,9 +12,7 @@ final class photosCollectionView: UICollectionView {
     
     var images: [UIImage?] = [] {
         didSet {
-
-//            reloadData()
-            print("images didset - tableview reload")
+            reloadData()
         }
     }
     var photoPickerCellTapped: (photosCollectionView) -> () = { sender in }
