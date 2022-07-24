@@ -8,6 +8,7 @@
 import Foundation
 
 struct Merchandise: Codable {
+    
     let ownerId: Int
     let id: Int
     let name: String

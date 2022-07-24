@@ -5,7 +5,9 @@
 
 import UIKit
 
+
 extension UIView {
+    
     func anchor(top: NSLayoutYAxisAnchor? = nil,
                 topConstant: CGFloat = 0,
                 bottom: NSLayoutYAxisAnchor? = nil,
@@ -65,6 +67,27 @@ extension UIView {
         
         if let leadingAnchor = leadingAnchor {
             self.leadingAnchor.constraint(equalTo: leadingAnchor, constant: leadingConstant!).isActive = true
+        }
+    }
+}
+
+
+<<<<<<< HEAD
+enum DeviceSize {
+    case deviceHeight
+    case deviceWidth
+}
+
+=======
+>>>>>>> develop-ehd
+extension CGFloat {
+    
+    static func getSize(of device: DeviceSize) -> CGFloat {
+        switch device {
+        case .deviceHeight:
+            return UIScreen.main.bounds.height
+        case .deviceWidth:
+            return UIScreen.main.bounds.width
         }
     }
 }
