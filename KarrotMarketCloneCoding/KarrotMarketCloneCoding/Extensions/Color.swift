@@ -2,7 +2,7 @@
 //  Color.swift
 //  KarrotMarketCloneCoding
 //
-//  Created by 신동훈 on 2022/07/12.
+//  Created by EHDOMB on 2022/07/12.
 //
 
 import Foundation
@@ -13,6 +13,7 @@ enum AssetColor {
 }
 
 extension UIColor {
+    
     static func appColor(_ name: AssetColor) -> UIColor {
         switch name {
         case .carrot:
