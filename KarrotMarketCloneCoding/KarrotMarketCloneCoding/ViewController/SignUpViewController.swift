@@ -30,7 +30,7 @@ class SignUpViewController: UIViewController {
     }
     
     @objc func signUp() {
-        navigationController?.pushViewController(ProfileEditingViewController(), animated: true)
+        navigationController?.pushViewController(NotificationViewController(), animated: true)
     }
     
     private func setupNaviBar() {
