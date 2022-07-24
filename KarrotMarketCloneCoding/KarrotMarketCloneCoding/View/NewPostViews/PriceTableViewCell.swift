@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PriceTableViewCell: UITableViewCell {
+final class PriceTableViewCell: UITableViewCell {
 
     static let identifier = "PriceTableViewCell"
     

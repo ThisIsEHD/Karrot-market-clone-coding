@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ReusableSignView: UIView {
+final class ReusableSignView: UIView {
     
     internal let helloLabel: UILabel = {
         let label = UILabel()

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class NotificationViewController: UIViewController {
+final class NotificationViewController: UIViewController {
     
     var images = [UIImage(named: "logo"), UIImage(named: "logo"), UIImage(named: "logo"), UIImage(named: "logo"), UIImage(named: "logo")]
     var descriptions = ["아아아아", "어어어어어", "이이이이", "유유유유", "듀듀듀듀"]

@@ -13,6 +13,7 @@ enum AssetColor {
 }
 
 extension UIColor {
+    
     static func appColor(_ name: AssetColor) -> UIColor {
         switch name {
         case .carrot:

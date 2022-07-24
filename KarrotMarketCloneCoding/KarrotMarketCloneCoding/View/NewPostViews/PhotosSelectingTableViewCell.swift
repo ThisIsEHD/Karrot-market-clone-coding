@@ -8,7 +8,7 @@
 import UIKit
 import PhotosUI
 
-class PhotosSelectingTableViewCell: UITableViewCell {
+final class PhotosSelectingTableViewCell: UITableViewCell {
     
     static let identifier = "PhotosSelectingTableViewCell"
     

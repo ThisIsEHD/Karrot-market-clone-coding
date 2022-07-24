@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PhotosCollectionViewCell: UICollectionViewCell {
+final class PhotosCollectionViewCell: UICollectionViewCell {
 
     internal var indexPath = IndexPath(item: 0, section: 0)
     

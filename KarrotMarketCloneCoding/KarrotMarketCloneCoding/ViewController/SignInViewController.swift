@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SignInViewController: UIViewController {
+final class SignInViewController: UIViewController {
     
     let signInView = ReusableSignView(frame: .zero)
     

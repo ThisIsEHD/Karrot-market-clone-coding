@@ -8,7 +8,7 @@
 import UIKit
 import PhotosUI
 
-class NewPostTableViewController: UIViewController {
+final class NewPostTableViewController: UIViewController {
     
     private var selectedImages = [UIImage?]() {
         didSet {
@@ -198,6 +198,7 @@ extension NewPostTableViewController: PHPickerViewControllerDelegate {
             if itemProvider.canLoadObject(ofClass: UIImage.self) {
 
                 itemProvider.loadObject(ofClass: UIImage.self) { image, error in
+                    
                     
                     DispatchQueue.main.async {
                         

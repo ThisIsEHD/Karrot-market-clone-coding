@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ProfileEditingView: UIView {
+final class ProfileEditingView: UIView {
     
     internal let imagePickerView: UIImageView = {
         let imageView = UIImageView()

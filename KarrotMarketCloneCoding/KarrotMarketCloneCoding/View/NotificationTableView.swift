@@ -7,7 +7,7 @@
 
 import UIKit
 
-class NotificationTableView: UIView {
+final class NotificationTableView: UIView {
     
     internal let tableView: UITableView = {
         

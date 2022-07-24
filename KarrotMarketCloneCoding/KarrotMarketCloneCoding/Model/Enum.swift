@@ -10,3 +10,8 @@ import Foundation
 enum UserInfo {
     case indexPath
 }
+
+enum DeviceSize {
+    case deviceHeight
+    case deviceWidth
+}

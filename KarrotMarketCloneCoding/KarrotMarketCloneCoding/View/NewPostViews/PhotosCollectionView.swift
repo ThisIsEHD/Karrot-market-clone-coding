@@ -8,13 +8,13 @@
 import Foundation
 import UIKit
 
-class photosCollectionView: UICollectionView {
+final class photosCollectionView: UICollectionView {
     
     var images: [UIImage?] = [] {
         didSet {
 
-            reloadData()
-            print(#function)
+//            reloadData()
+            print("images didset - tableview reload")
         }
     }
     var photoPickerCellTapped: (photosCollectionView) -> () = { sender in }

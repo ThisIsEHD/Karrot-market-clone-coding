@@ -7,7 +7,7 @@
 
 import UIKit
 
-class NotificationTableViewCell: UITableViewCell {
+final class NotificationTableViewCell: UITableViewCell {
     
     static let identifier = "NotificationTableViewCell"
     let imgView: UIImageView = {

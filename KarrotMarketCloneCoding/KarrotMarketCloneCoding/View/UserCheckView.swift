@@ -7,7 +7,7 @@
 
 import UIKit
 
-class UserCheckView: UIView {
+final class UserCheckView: UIView {
 
     private let logoImageView: UIImageView = {
         

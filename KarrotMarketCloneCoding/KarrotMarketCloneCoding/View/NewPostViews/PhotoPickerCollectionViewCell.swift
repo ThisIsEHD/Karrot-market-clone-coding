@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PhotoPickerCollectionViewCell: UICollectionViewCell {
+final class PhotoPickerCollectionViewCell: UICollectionViewCell {
 
     var selectedPhotosNumber = 0
     
