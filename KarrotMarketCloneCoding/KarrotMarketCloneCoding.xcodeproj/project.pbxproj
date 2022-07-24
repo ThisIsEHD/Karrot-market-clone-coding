@@ -22,7 +22,6 @@
 		723FE681288539A900A987E7 /* MerchandiseDetailViewOtherPostsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE680288539A900A987E7 /* MerchandiseDetailViewOtherPostsCell.swift */; };
 		723FE683288539F200A987E7 /* MerchandiseDetailViewDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE682288539F200A987E7 /* MerchandiseDetailViewDescriptionCell.swift */; };
 		723FE68828853E0800A987E7 /* MerchandiseDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE68728853E0800A987E7 /* MerchandiseDetailViewController.swift */; };
-		723FE68A2887A3FA00A987E7 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE6892887A3FA00A987E7 /* Network.swift */; };
 		723FE68C2887B3EF00A987E7 /* MerchandiseDetailTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE68B2887B3EF00A987E7 /* MerchandiseDetailTableHeaderView.swift */; };
 		723FE6902887E4AE00A987E7 /* MerchandiseDetailViewImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE68F2887E4AE00A987E7 /* MerchandiseDetailViewImageCell.swift */; };
 		723FE692288806CB00A987E7 /* OtherPostsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE691288806CA00A987E7 /* OtherPostsCollectionViewCell.swift */; };
@@ -56,7 +55,6 @@
 		723FE680288539A900A987E7 /* MerchandiseDetailViewOtherPostsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchandiseDetailViewOtherPostsCell.swift; sourceTree = "<group>"; };
 		723FE682288539F200A987E7 /* MerchandiseDetailViewDescriptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchandiseDetailViewDescriptionCell.swift; sourceTree = "<group>"; };
 		723FE68728853E0800A987E7 /* MerchandiseDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchandiseDetailViewController.swift; sourceTree = "<group>"; };
-		723FE6892887A3FA00A987E7 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		723FE68B2887B3EF00A987E7 /* MerchandiseDetailTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchandiseDetailTableHeaderView.swift; sourceTree = "<group>"; };
 		723FE68F2887E4AE00A987E7 /* MerchandiseDetailViewImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchandiseDetailViewImageCell.swift; sourceTree = "<group>"; };
 		723FE691288806CA00A987E7 /* OtherPostsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherPostsCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -120,7 +118,6 @@
 			isa = PBXGroup;
 			children = (
 				723FE60F287D649400A987E7 /* Constraints.swift */,
-				723FE6892887A3FA00A987E7 /* Network.swift */,
 				723FE69D2889484700A987E7 /* Copyright.swift */,
 			);
 			path = Extensions;
@@ -318,7 +315,6 @@
 				723FE6962889085400A987E7 /* SearchViewController.swift in Sources */,
 				723FE62B2880F64C00A987E7 /* MyKarrotTableViewController.swift in Sources */,
 				723FE69A2889341000A987E7 /* HomeViewController.swift in Sources */,
-				723FE68A2887A3FA00A987E7 /* Network.swift in Sources */,
 				723FE619287D852C00A987E7 /* MyKarrotTableHeaderViewModel.swift in Sources */,
 				723FE69E2889484700A987E7 /* Copyright.swift in Sources */,
 				723FE67D2885385000A987E7 /* MerchandiseDetailViewProfileCell.swift in Sources */,
