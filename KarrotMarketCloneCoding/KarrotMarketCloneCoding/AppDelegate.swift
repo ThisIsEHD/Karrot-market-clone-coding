@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 //
 //  AppDelegate.swift
 //  KarrotMarketCloneCoding
@@ -32,4 +33,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
+=======
+>>>>>>> develop-domb
 
