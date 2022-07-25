@@ -155,9 +155,11 @@ extension MyKarrotTableViewController: UITableViewDelegate {
 extension MyKarrotTableViewController: ProfileViewDelegate {
     
     func goToMyProfileVC() {
+        let profileEditingVC = ProfileEditingViewController()
+        profileEditingVC.modalPresentationStyle = .fullScreen
+        present(profileEditingVC, animated: true, completion: nil)
     }
     
-    func goToDetailVC() {
+    func selectedMerchandiseTableVC() {
     }
-    
 }

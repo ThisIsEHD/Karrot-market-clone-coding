@@ -50,7 +50,7 @@ class ReusableProfileView: UIView {
         self.addSubview(nickNameLabel)
     }
     
-    // MARK: - Set Constraints
+    // MARK: - Setting Constraints
     
     private func setProfileImageViewConstraints(size: CGFloat) {
         profileImageView.anchor(leading: self.leadingAnchor,

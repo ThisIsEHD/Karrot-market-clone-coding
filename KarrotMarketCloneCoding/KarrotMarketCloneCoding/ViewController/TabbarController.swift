@@ -24,7 +24,7 @@ final class TabbarController: UITabBarController {
     }
     
     
-    // MARK: - Configure Tabbar View Controller
+    // MARK: - Configure TabbarViewController
     
     private func configureTabbarController() {
         tabBar.tintColor = .black

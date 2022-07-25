@@ -8,12 +8,12 @@
 import UIKit
 
 class SearchBarBottomView: UIView {
-// MARK: - Properties
+    // MARK: - Properties
     
     let sortButton = UIButton()
     
-// MARK: - Life Cycle
-
+    // MARK: - Life Cycle
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -37,7 +37,7 @@ class SearchBarBottomView: UIView {
         sortButton.layer.cornerRadius = 30 / 2
     }
     
-// MARK: - Set Constraints
+    // MARK: - Setting Constraints
     
     private func setConstraints() {
         sortButton.anchor(trailing: self.trailingAnchor, trailingConstant: 20,width: 80, height: 30)

@@ -60,7 +60,7 @@ class MerchandiseDescriptionCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
         
     }
-    
+    // MARK: - Configure Views
     private func configureViews() {
         addSubview(merchandiseNameLabel)
         addSubview(merchandiseCategoryButton)
@@ -68,7 +68,7 @@ class MerchandiseDescriptionCell: UITableViewCell {
         addSubview(extraInfoLabel)
     }
     
-    // MARK: - Set Constraints
+    // MARK: - Setting Constraints
     
     private func setConstraints() {
         merchandiseNameLabel.anchor(top: self.topAnchor, topConstant: 20, leading: self.leadingAnchor, leadingConstant: 15)

@@ -152,7 +152,7 @@ class MerchandiseTableViewCell: UITableViewCell {
         }
     }
 
-    // MARK: - Set Constraints
+    // MARK: - Setting Constraints
     
     private func setConstraints() {
         setIconStackViewConstraints()
@@ -170,7 +170,7 @@ class MerchandiseTableViewCell: UITableViewCell {
     }
     
     private func setContentViewConstraints() {
-        thumbnailImageView.anchor(top: topAnchor, topConstant: 18, bottom: iconStackView.topAnchor, bottomConstant: 18 ,leading: leadingAnchor, leadingConstant: 18, width: 114)
+        thumbnailImageView.anchor(top: topAnchor, topConstant: 18, bottom: bottomAnchor, bottomConstant: 18 ,leading: leadingAnchor, leadingConstant: 18, width: 114)
         //width를 동적으로 가져오지 못함 해결해야함.
         
         nameLabel.anchor(top: thumbnailImageView.topAnchor, leading: thumbnailImageView.trailingAnchor, leadingConstant: 15, trailing: trailingAnchor, trailingConstant: 15)

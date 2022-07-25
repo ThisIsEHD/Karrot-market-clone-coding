@@ -45,7 +45,7 @@ class MerchandiseDetailViewOtherPostsCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    // MARK: - Set Constraints
+    // MARK: - Setting Constraints
     private func setupConstraints() {
         tableTitlelabel.anchor(top: topAnchor, topConstant: 20, leading: leadingAnchor, leadingConstant: 15)
         postsCollectionView.anchor(top: tableTitlelabel.bottomAnchor, topConstant: 15, bottom: self.bottomAnchor, bottomConstant: 20, leading: tableTitlelabel.leadingAnchor, trailing: self.trailingAnchor, trailingConstant: 20, height: 230)

@@ -10,7 +10,7 @@ import PhotosUI
 
 final class ProfileEditingViewController: UIViewController {
     
-    let member = User(id: 1, nickName: "욘두", profileImageUrl: nil)
+    let member = User(id: "1", nickName: "욘두",name: "욘두", phone: "3030", profileImageUrl: nil)
     let profileEditingView = ProfileEditingView(frame: .zero)
     
     override func loadView() {
@@ -79,6 +79,8 @@ final class ProfileEditingViewController: UIViewController {
             profileEditingView.editingDoneButton.backgroundColor = UIColor.systemGray
         }
     }
+    // domb: 완료버튼 눌렀을때 처리
+    // domb: close버튼 없음
     
     @objc func close() {
         self.dismiss(animated: true, completion: nil)

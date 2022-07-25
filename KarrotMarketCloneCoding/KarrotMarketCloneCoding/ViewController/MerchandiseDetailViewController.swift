@@ -71,6 +71,8 @@ class MerchandiseDetailViewController: UIViewController, UITableViewDelegate {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        // domb: status bar 사라지는 문제 해결필요.
+        
         super.viewWillDisappear(animated)
         tabBarController?.tabBar.isHidden = false
         navigationController?.navigationBar.barStyle = .default
@@ -94,7 +96,7 @@ class MerchandiseDetailViewController: UIViewController, UITableViewDelegate {
         view.addSubview(merchandiseDetailViewBottomStickyView)
     }
     
-    // MARK: - Set Constraints
+    // MARK: - Setting Constraints
     
     private func setConstraints() {
         setImageListCollectionViewConstraints()
@@ -198,6 +200,7 @@ extension MerchandiseDetailViewController: UITableViewDataSource {
     }
 }
 
+// MARK: - UIScrollViewDelegate
 
 extension MerchandiseDetailViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

@@ -6,13 +6,14 @@
 //
 
 import UIKit
+import Alamofire
 
 final class HomeViewController: UIViewController {
     // MARK: - Properties
     
-    private let MerchandiseTable : UITableView = {
+    private let MerchandiseTableView : UITableView = {
         let tv = UITableView(frame:CGRect.zero, style: .plain)
-        tv.register(MerchandiseTableViewCell.self, forCellReuseIdentifier: "HomeCell")
+        tv.register(MerchandiseTableViewCell.self, forCellReuseIdentifier: "MerchandiseTableViewCell")
         tv.separatorColor = .systemGray5
         tv.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         return tv
@@ -25,6 +26,8 @@ final class HomeViewController: UIViewController {
     }
     
     @objc func notiButtonDidTapped() {
+        let notiVC = NotificationViewController()
+        navigationController?.pushViewController(notiVC, animated: true)
     }
     
     // MARK: - Life Cycle
@@ -32,7 +35,7 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         configureViews()
         setupNavigationItems()
-        setMerchandiseTable()
+        configureMerchandiseTableView()
         setConstraints()
     }
     
@@ -41,11 +44,12 @@ final class HomeViewController: UIViewController {
         view.backgroundColor = .systemBackground
     }
     
-    private func setMerchandiseTable() {
-        MerchandiseTable.delegate = self
-        MerchandiseTable.dataSource = self
+    // MARK: - Configure MerchandiseTableView
+    private func configureMerchandiseTableView() {
+        MerchandiseTableView.delegate = self
+        MerchandiseTableView.dataSource = self
                
-        view.addSubview(MerchandiseTable)
+        view.addSubview(MerchandiseTableView)
     }
     
     // MARK: - Setup NavigationItems
@@ -55,9 +59,9 @@ final class HomeViewController: UIViewController {
             UIBarButtonItem(image: UIImage(named: "bell"), style: .plain, target: self, action: #selector(notiButtonDidTapped))]
     }
     
-    // MARK: - Set Constraints
+    // MARK: - Setting Constraints
     private func setConstraints() {
-        MerchandiseTable.anchor(top: view.topAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
+        MerchandiseTableView.anchor(top: view.topAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
     }
 }
 
@@ -72,7 +76,7 @@ extension HomeViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "HomeCell", for: indexPath) as! MerchandiseTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MerchandiseTableViewCell", for: indexPath) as! MerchandiseTableViewCell
         cell.selectionStyle = .none
         return cell
     }
@@ -82,6 +86,7 @@ extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = MerchandiseDetailViewController()
         self.navigationController?.pushViewController(vc, animated: true)
+        tableView.deselectRow(at: indexPath, animated: false)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

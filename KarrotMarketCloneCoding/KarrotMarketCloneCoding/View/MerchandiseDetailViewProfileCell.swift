@@ -32,7 +32,7 @@ class MerchandiseDetailViewProfileCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    //  MARK: - Set Constraints
+    //  MARK: - Setting Constraints
     private func setConstraints() {
         profileView.anchor(top: topAnchor, topConstant: 40, bottom: bottomAnchor, bottomConstant: 40, leading: leadingAnchor, trailing: trailingAnchor)
     }

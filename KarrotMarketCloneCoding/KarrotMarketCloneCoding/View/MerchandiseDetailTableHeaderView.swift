@@ -37,7 +37,7 @@ class MerchandiseDetailTableHeaderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         configureViews()
-        setupConstraints()
+        setConstraints()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -50,9 +50,9 @@ class MerchandiseDetailTableHeaderView: UIView {
         //        containerView.addSubview(imageCollectionView)
     }
     
-    // MARK: - Set Constraints
+    // MARK: - Setting Constraints
     
-    private func setupConstraints() {
+    private func setConstraints() {
         containerView.anchor(top: self.topAnchor, bottom: self.bottomAnchor, leading: self.leadingAnchor, trailing: self.trailingAnchor)
         
         //        imageCollectionView.anchor(top: containerView.topAnchor, bottom: containerView.bottomAnchor, leading: containerView.leadingAnchor, trailing: containerView.trailingAnchor)
