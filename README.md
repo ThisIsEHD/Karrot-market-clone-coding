@@ -5,9 +5,9 @@
 <!-- <img src="https://img.shields.io/badge/기술명-색상코드?style=flat-square&logo=기술명&logoColor=색상"/></a> -->
 
 ## 프로젝트 멤버
-EHD - iOS;
-domb - iOS;
-myeolinmalchi - 백엔드;
+EHD - iOS. 
+domb - iOS. 
+myeolinmalchi - 백엔드. 
 
 ## 프로젝트 기간
 22.07.10 ~
