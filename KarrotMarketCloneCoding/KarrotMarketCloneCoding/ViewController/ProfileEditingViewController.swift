@@ -10,6 +10,8 @@ import PhotosUI
 
 final class ProfileEditingViewController: UIViewController {
     
+    // profile update기능
+    
     let member = User(id: "1", nickName: "욘두",name: "욘두", phone: "3030", profileImageUrl: nil)
     let profileEditingView = ProfileEditingView(frame: .zero)
     

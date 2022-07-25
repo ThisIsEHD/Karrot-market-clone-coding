@@ -11,7 +11,17 @@ import Alamofire
 struct Network {
     
     static let shared = Network()
+    // EHD: 네트워크 함수 구현
+    // fetch(Merchandise)
+    // post(Merchandise)
+    // fetch(User)
+    // register(User)
+    // url  string으로 ㅅ하지않고 enum으로 구현
     
+    
+    
+    // 엑세스토큰 영구저장소에 저장 및 불러오기
+    //
     func post(imageData: UIImage?) {
         
         let URL = ""

@@ -21,7 +21,7 @@ class MerchandiseTableViewCell: UITableViewCell {
         return iv
     }()
     
-    private  let nameLabel: UILabel = {
+    let nameLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 2
         lbl.text = "당근마켓 상품의 이름은 여기에 입력하시오"

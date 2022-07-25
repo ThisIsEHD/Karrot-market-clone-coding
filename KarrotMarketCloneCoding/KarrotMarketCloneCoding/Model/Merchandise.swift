@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Merchandise: Codable {
+struct Merchandise: Codable, Hashable {
     
     let ownerId: Int
     let id: Int

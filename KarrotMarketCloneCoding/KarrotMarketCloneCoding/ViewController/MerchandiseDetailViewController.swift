@@ -67,7 +67,6 @@ class MerchandiseDetailViewController: UIViewController, UITableViewDelegate {
         tabBarController?.tabBar.isHidden = true
         
         setNavigationColorByHeight(contentListView)
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
