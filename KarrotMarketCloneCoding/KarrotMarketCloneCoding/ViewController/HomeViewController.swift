@@ -17,6 +17,11 @@ typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Merchandise>
 
 final class HomeViewController: UIViewController {
     // MARK: - Properties
+    var viewModel: HomeViewModel? {
+        didSet {
+            print("셀 구성하기")
+        }
+    }
     
     var dummy = [
         Merchandise(ownerId: 1, id: 2, name: UUID().uuidString, imageUrl: nil, price: 10000, wishCount: nil, category: nil, views: nil, content: nil),
@@ -33,6 +38,19 @@ final class HomeViewController: UIViewController {
         tv.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         
         return tv
+    }()
+    
+    private lazy var addPostButton: UIButton = {
+        
+        let btn = UIButton(type: .system)
+        
+        btn.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+        btn.clipsToBounds = true
+        btn.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
+        btn.tintColor = UIColor.appColor(.carrot)
+        btn.addTarget(self, action: #selector(addButtonDidTapped), for: .touchUpInside)
+
+        return btn
     }()
     
     private var dataSource: DataSource!
@@ -57,27 +75,44 @@ final class HomeViewController: UIViewController {
         dummy.append(contentsOf: items)
         snapshot.appendItems(items)
         dataSource.apply(snapshot)
+        Network.shared.UserUpload(user: User(id: "sdsdsd", nickName: "sdsdsd", name: "sdsdsd", phone: "qweqwe", profileImageUrl: nil))
+    }
+    
+    @objc func addButtonDidTapped() {
+        let newPostVC = NewPostTableViewController()
+        newPostVC.modalPresentationStyle  = .fullScreen
+        present(newPostVC, animated: true, completion: nil)
     }
     
     // MARK: - Life Cycle
+    private func configureAddButton() {
+        view.addSubview(addPostButton)
+    }
+    
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         configureViews()
         setupNavigationItems()
         configureMerchandiseTableView()
         configureTableViewDiffableDataSource()
+        configureAddButton()
         reloadTableViewData()
-        
         setConstraints()
     }
     // MARK: - DiffableDataSource
     
     func configureTableViewDiffableDataSource() {
-        dataSource = UITableViewDiffableDataSource(tableView: self.MerchandiseTableView, cellProvider: { tableView, indexPath, merchandise in
+        dataSource = UITableViewDiffableDataSource(tableView: self.MerchandiseTableView, cellProvider: { [weak self] tableView, indexPath, merchandise in
             let cell = tableView.dequeueReusableCell(withIdentifier: "MerchandiseTableViewCell", for: indexPath) as! MerchandiseTableViewCell
-            cell.nameLabel.text = self.dummy[indexPath.row].name
+            
+            self?.viewModel?.loadImage(for: merchandise)
+            cell.merchandise = merchandise
+            
+            
             return cell
         })
+        viewModel?.loadData()
     }
     
     func reloadTableViewData() {
@@ -98,6 +133,7 @@ final class HomeViewController: UIViewController {
     private func configureMerchandiseTableView() {
         MerchandiseTableView.delegate = self
         MerchandiseTableView.dataSource = dataSource
+        MerchandiseTableView.prefetchDataSource = self
                
         view.addSubview(MerchandiseTableView)
     }
@@ -112,6 +148,7 @@ final class HomeViewController: UIViewController {
     // MARK: - Setting Constraints
     private func setConstraints() {
         MerchandiseTableView.anchor(top: view.topAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
+        addPostButton.anchor(bottom: view.bottomAnchor, bottomConstant: 100, trailing: view.trailingAnchor, trailingConstant: 20)
     }
 }
 
@@ -132,21 +169,29 @@ final class HomeViewController: UIViewController {
 //    }
 //}
 
+// MARK: - UITableViewDelegate
+
 extension HomeViewController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         let vc = MerchandiseDetailViewController()
+        
         self.navigationController?.pushViewController(vc, animated: true)
         tableView.deselectRow(at: indexPath, animated: false)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
         return CGFloat(150.0)
     }
 }
 
+// MARK: - UITableViewDataSourcePrefetching
+
 extension HomeViewController: UITableViewDataSourcePrefetching {
+    
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        indexPaths.forEach { viewModel?.prefetchImage(at: $0)}
     }
-    
-    
 }

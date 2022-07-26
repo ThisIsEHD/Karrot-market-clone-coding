@@ -11,6 +11,12 @@ class MerchandiseTableViewCell: UITableViewCell {
     
     // MARK: - Properties
     
+    var merchandise: Merchandise? {
+        didSet {
+            loadData()
+        }
+    }
+    
     private let thumbnailImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
@@ -43,7 +49,7 @@ class MerchandiseTableViewCell: UITableViewCell {
     //            return lb
     //        }()
     
-    private let priceLabel: UILabel = {
+    let priceLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
         lbl.text = "150,000원"
@@ -59,10 +65,10 @@ class MerchandiseTableViewCell: UITableViewCell {
         return btn
     }()
     
-    private let wishLabel: UILabel = {
+    let wishLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
-        lbl.text = "3"
+        lbl.text = ""
         lbl.font = UIFont.systemFont(ofSize: 15)
         return lbl
     }()
@@ -102,15 +108,15 @@ class MerchandiseTableViewCell: UITableViewCell {
     
     private lazy var wishView: UIView = {
         let view = UIView()
-        view.addSubview(wishIcon)
         view.addSubview(wishLabel)
+        view.addSubview(wishIcon)
         return view
     }()
     
     private lazy var chatView: UIView = {
         let view = UIView()
-        view.addSubview(chatIcon)
         view.addSubview(chatLabel)
+        view.addSubview(chatIcon)
         return view
     }()
     
@@ -128,6 +134,13 @@ class MerchandiseTableViewCell: UITableViewCell {
         sv.isUserInteractionEnabled = false
         return sv
     }()
+    
+    // MARK: - Actions
+    
+    private func loadData() {
+        //thumbnailImageView.image = merchandise.imageUrl 이미지로 변경
+        nameLabel.text = merchandise?.name
+    }
     
     // MARK: - Life Cycle
     

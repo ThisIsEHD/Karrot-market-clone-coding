@@ -32,6 +32,7 @@
 		723FE6A02889523800A987E7 /* SearchBarBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE69F2889523800A987E7 /* SearchBarBottomView.swift */; };
 		723FE6A2288AC87C00A987E7 /* MerchandiseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE6A1288AC87C00A987E7 /* MerchandiseTableViewCell.swift */; };
 		7248CA45288E57BB00DDF939 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7248CA44288E57BB00DDF939 /* Network.swift */; };
+		7248CA47288F5CED00DDF939 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7248CA46288F5CED00DDF939 /* HomeViewModel.swift */; };
 		D347FE84288BE8A100EF06B5 /* UserCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE83288BE8A100EF06B5 /* UserCheckView.swift */; };
 		D347FE86288BF1CA00EF06B5 /* NewPostTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE85288BF1CA00EF06B5 /* NewPostTableView.swift */; };
 		D347FE88288C2FC700EF06B5 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE87288C2FC700EF06B5 /* NotificationViewController.swift */; };
@@ -98,6 +99,7 @@
 		723FE69F2889523800A987E7 /* SearchBarBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarBottomView.swift; sourceTree = "<group>"; };
 		723FE6A1288AC87C00A987E7 /* MerchandiseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchandiseTableViewCell.swift; sourceTree = "<group>"; };
 		7248CA44288E57BB00DDF939 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
+		7248CA46288F5CED00DDF939 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		84FFF65EC2D21DA804E8D34F /* Pods_KarrotMarketCloneCoding.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KarrotMarketCloneCoding.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D347FE83288BE8A100EF06B5 /* UserCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCheckView.swift; sourceTree = "<group>"; };
 		D347FE85288BF1CA00EF06B5 /* NewPostTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPostTableView.swift; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 				D3A2158E288D90E800D06AD3 /* ChatViewController.swift */,
 				723FE6972889091D00A987E7 /* TabbarController.swift */,
 				723FE6992889341000A987E7 /* HomeViewController.swift */,
+				7248CA46288F5CED00DDF939 /* HomeViewModel.swift */,
 				723FE62A2880F64C00A987E7 /* MyKarrotTableViewController.swift */,
 				723FE68728853E0800A987E7 /* MerchandiseDetailViewController.swift */,
 				723FE6952889085400A987E7 /* SearchViewController.swift */,
@@ -477,6 +480,7 @@
 				D3A2158C288D905400D06AD3 /* UserInterfaceObjects.swift in Sources */,
 				723FE60A287D4EEF00A987E7 /* Merchandise.swift in Sources */,
 				723FE6962889085400A987E7 /* SearchViewController.swift in Sources */,
+				7248CA47288F5CED00DDF939 /* HomeViewModel.swift in Sources */,
 				723FE62B2880F64C00A987E7 /* MyKarrotTableViewController.swift in Sources */,
 				723FE69A2889341000A987E7 /* HomeViewController.swift in Sources */,
 				723FE619287D852C00A987E7 /* MyKarrotTableHeaderViewModel.swift in Sources */,
@@ -633,7 +637,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 887U9L3L57;
+				DEVELOPMENT_TEAM = G8228CR939;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KarrotMarketCloneCoding/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

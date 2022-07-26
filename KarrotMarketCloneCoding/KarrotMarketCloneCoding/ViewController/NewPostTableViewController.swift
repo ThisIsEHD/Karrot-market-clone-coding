@@ -18,6 +18,8 @@ final class NewPostTableViewController: UIViewController {
     
     private let newPostTableView = NewPostTableView(frame: .zero)
     
+    private let navibar = CustomNavigationBar(navigationBarTitle: "중고거래 글쓰기",  leftBarButtonImage: "xmark", leftButtonColor: .label, rightBarButtonTitle: "완료", rightButtonColor: UIColor.appColor(.carrot), lefeButtonAction: #selector(close), rightButtonAction: #selector(post))
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -42,21 +44,14 @@ final class NewPostTableViewController: UIViewController {
     }
     
     private func setupNaviBar() {
-
-        let appearance = UINavigationBarAppearance()
         
-        appearance.configureWithDefaultBackground()
-        navigationController?.navigationBar.tintColor = .label
-        title = "중고거래 글쓰기"
-
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .plain, target: nil, action: #selector(close))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: nil, action: #selector(post))
-        navigationItem.rightBarButtonItem?.tintColor = UIColor.appColor(.carrot)
+        view.addSubview(navibar)
+        navibar.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: newPostTableView.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, trailing: view.trailingAnchor)
     }
     
     private func setupNewPostTableView() {
         
-        newPostTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
+        newPostTableView.anchor(top: self.navibar.bottomAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
     }
     
     private func setupImagePicker() {

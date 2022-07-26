@@ -6,13 +6,14 @@
 //
 
 import Foundation
+import UIKit
 
 struct Merchandise: Codable, Hashable {
     
     let ownerId: Int
     let id: Int
     let name: String
-    let imageUrl: URL?
+    let imageUrl: String?
     let price: Int
     let wishCount: Int?
 //    let chatCount: Int?

@@ -22,25 +22,37 @@ struct Network {
     
     // 엑세스토큰 영구저장소에 저장 및 불러오기
     //
-    func post(imageData: UIImage?) {
-        
-        let URL = ""
-        let header : HTTPHeaders = [
-            "Content-Type" : "multipart/form-data",
-            "token" : "토큰"]
-        
-        let userData = User(id: "a@gmail.com", nickName: "di", name: "foi", phone: "0239", profileImageUrl: nil)
-        let jsonData = try? JSONEncoder().encode(userData)
-        AF.upload(multipartFormData: { multipartFormData in
-            multipartFormData.append(jsonData!, withName: "json", fileName: "json", mimeType: nil)
-            
-            if let image = imageData?.pngData() {
-                multipartFormData.append(image, withName: "activityImage", fileName: "\(image).png", mimeType: "image/png")
+    let url = "http://ec2-43-200-120-225.ap-northeast-2.compute.amazonaws.com/api/v1/users"
+
+    let header: HTTPHeaders = ["Content-Type": "multipart/form-data"]
+    
+    func UserUpload(user: User) {
+        AF.upload(multipartFormData: { multipartformData in
+            if let imageData = UIImage(named: "defaultProfileImage")?.jpegData(compressionQuality: 1) {
+                multipartformData.append(imageData, withName: "file", fileName: "profileImage.png", mimeType: "profileImage.png")
             }
-        }, to: URL, usingThreshold: UInt64(), headers: header).response { response in
-            guard let statusCode = response.response?.statusCode,
-                  statusCode == 200
-            else { return }
+            
+            let jsonData = try? JSONEncoder().encode(user)
+            
+            if let jsonData = jsonData, let jsonString = String(data: jsonData, encoding: .utf8) {
+                print(jsonString)
+                multipartformData.append(jsonData, withName: "json")
+            }
+            
+        }, to: url, headers: header).response { response in
+            print(response)
+            
+            if let err = response.error{    //응답 에러
+                print(err)
+                return
+            }
+            if let data = response.data {
+                let json = String(data: data, encoding: String.Encoding.utf8)
+                print(response.response?.statusCode)
+                print("Failure Response: \(json)")
+            }
+            
+            print(response.response?.statusCode)
         }
     }
 }
