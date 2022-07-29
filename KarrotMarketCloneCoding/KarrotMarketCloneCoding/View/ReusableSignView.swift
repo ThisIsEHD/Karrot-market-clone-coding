@@ -28,7 +28,7 @@ final class ReusableSignView: UIView {
         
         return textField
     }()
-    internal let signUpButton: UIButton = {
+    internal let signButton: UIButton = {
         let button = UIButton(type: .system)
         
         button.setTitle("회원가입", for: .normal)
@@ -41,7 +41,7 @@ final class ReusableSignView: UIView {
         return button
     }()
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [emailTextField, passwordTextField, signUpButton])
+        let stackView = UIStackView(arrangedSubviews: [emailTextField, passwordTextField, signButton])
         
         stackView.spacing = 15
         stackView.distribution = .fillEqually

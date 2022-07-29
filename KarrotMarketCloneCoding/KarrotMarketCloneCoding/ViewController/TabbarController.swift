@@ -9,19 +9,58 @@ import UIKit
 
 final class TabbarController: UITabBarController {
     // MARK: - Properties
-    var user: User?
+    var user: User? {
+        willSet {
+            configureTabbarController()
+        }
+    }
+    var token: String?
 
     // MARK: - Actions
    
+    func presentUserCheckVC() {
+        DispatchQueue.main.async { [weak self] in
+            let userCheckVC = UserCheckViewController()
+            userCheckVC.authenticationDelegate = self
+            
+            let nav = UINavigationController(rootViewController: userCheckVC)
+            nav.modalPresentationStyle = .fullScreen
+            
+            self?.present(nav, animated: false, completion: nil)
+        }
+    }
+    
     private func checkIfUserIsLoggedIn() {
+        token = UserDefaults.standard.string(forKey: "AccessToken")
+        
+        guard let token = token else {
+            presentUserCheckVC()
+            return
+        }
+        presentUserCheckVC()
+//        fetchUser(token: token)
+    }
+    
+    private func fetchUser(token: Token) {
+        let userIdBase64 = token.components(separatedBy: ".")[1]
+        guard let data = Data(base64Encoded: userIdBase64) else { print("data is nil"); return }
+        if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] {
+            guard let userId = json["user_id"] as? String else { print("user_id is nil"); return }
+            Network.shared.fetch(user: userId, token: token) { [self] user in
+                guard let user = user else { return }
+                self.user = user
+            }
+        }
     }
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         checkIfUserIsLoggedIn()
-        configureTabbarController()
     }
+//    deinit {
+//        UserDefaults.standard.removeObject(forKey: "AccessToken")
+//    }
     
     
     // MARK: - Configure TabbarViewController
@@ -53,13 +92,16 @@ final class TabbarController: UITabBarController {
 // MARK: - AuthenticationDelegate
 
 protocol AuthenticationDelegate: AnyObject {
-    func authenticationDidComplete()
+    func authenticationDidComplete(token: Token)
 }
 
 extension TabbarController: AuthenticationDelegate {
     
-    func authenticationDidComplete() {
+    func authenticationDidComplete(token: Token) {
         self.dismiss(animated: false, completion: nil)
+        self.token = token
+        UserDefaults.standard.set(token, forKey: "AccessToken")
+        fetchUser(token: token)
     }
 }
 

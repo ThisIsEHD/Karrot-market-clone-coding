@@ -66,16 +66,16 @@ final class HomeViewController: UIViewController {
     }
     
     @objc func notiButtonDidTapped() {
-        var snapshot = dataSource.snapshot()
-        let items = [
-            Merchandise(ownerId: 4, id: 4, name: UUID().uuidString, imageUrl: nil, price: 10000, wishCount: nil, category: nil, views: nil, content: nil),
-            Merchandise(ownerId: 5, id: 4, name: UUID().uuidString, imageUrl: nil, price: 10000, wishCount: nil, category: nil, views: nil, content: nil),
-            Merchandise(ownerId: 6, id: 4, name: UUID().uuidString, imageUrl: nil, price: 10000, wishCount: nil, category: nil, views: nil, content: nil)
-        ]
-        dummy.append(contentsOf: items)
-        snapshot.appendItems(items)
-        dataSource.apply(snapshot)
-        Network.shared.UserUpload(user: User(id: "sdsdsd", nickName: "sdsdsd", name: "sdsdsd", phone: "qweqwe", profileImageUrl: nil))
+//        var snapshot = dataSource.snapshot()
+//        let items = [
+//            Merchandise(ownerId: 4, id: 4, name: UUID().uuidString, imageUrl: nil, price: 10000, wishCount: nil, category: nil, views: nil, content: nil),
+//            Merchandise(ownerId: 5, id: 4, name: UUID().uuidString, imageUrl: nil, price: 10000, wishCount: nil, category: nil, views: nil, content: nil),
+//            Merchandise(ownerId: 6, id: 4, name: UUID().uuidString, imageUrl: nil, price: 10000, wishCount: nil, category: nil, views: nil, content: nil)
+//        ]
+//        dummy.append(contentsOf: items)
+//        snapshot.appendItems(items)
+//        dataSource.apply(snapshot)
+        Network.shared.register(user: User(id: "domb@gmail.com", pw: "!Qwer1234", nickName: "sdsdsd", name: "돔브", phone: "010-1234-1234", profileImageUrl: nil))
     }
     
     @objc func addButtonDidTapped() {

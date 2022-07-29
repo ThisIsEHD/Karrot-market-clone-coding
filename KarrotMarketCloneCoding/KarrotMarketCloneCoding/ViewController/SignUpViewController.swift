@@ -22,7 +22,7 @@ final class SignUpViewController: UIViewController {
         signUpView.emailTextField.delegate = self
         signUpView.passwordTextField.delegate = self
         
-        signUpView.signUpButton.addTarget(self, action: #selector(signUp), for: .touchUpInside)
+        signUpView.signButton.addTarget(self, action: #selector(signUp), for: .touchUpInside)
     }
     
     override func viewDidLayoutSubviews() {
@@ -30,7 +30,11 @@ final class SignUpViewController: UIViewController {
     }
     
     @objc func signUp() {
-        navigationController?.pushViewController(NotificationViewController(), animated: true)
+        guard let email = signUpView.emailTextField.text else { return }
+        guard let password = signUpView.passwordTextField.text else { return }
+        let user = User(id: email, pw: password, nickName: "domb", name: "돔브", phone: "010-2222-2222", profileImageUrl: nil)
+        Network.shared.register(user: user)
+        navigationController?.popViewController(animated: true)
     }
     
     private func setupNaviBar() {

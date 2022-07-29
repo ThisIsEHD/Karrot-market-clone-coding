@@ -12,6 +12,8 @@ final class UserCheckViewController: UIViewController {
     
     let userCheckView = UserCheckView(frame: .zero)
     
+    weak var authenticationDelegate: AuthenticationDelegate?
+    
     override func loadView() {
         view = userCheckView
     }
@@ -28,11 +30,13 @@ final class UserCheckViewController: UIViewController {
     }
     
     @objc func signUp() {
-        navigationController?.pushViewController(SignUpViewController(), animated: true)
-        
+        let signUpVC = SignUpViewController()
+        navigationController?.pushViewController(signUpVC, animated: true)
     }
     
     @objc func logIn() {
-        navigationController?.pushViewController(SignInViewController(), animated: true)
+        let signInVC = SignInViewController()
+        signInVC.authenticationDelegate = authenticationDelegate
+        navigationController?.pushViewController(signInVC, animated: true)
     }
 }

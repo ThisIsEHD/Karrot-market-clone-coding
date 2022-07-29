@@ -33,6 +33,7 @@
 		723FE6A2288AC87C00A987E7 /* MerchandiseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE6A1288AC87C00A987E7 /* MerchandiseTableViewCell.swift */; };
 		7248CA45288E57BB00DDF939 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7248CA44288E57BB00DDF939 /* Network.swift */; };
 		7248CA47288F5CED00DDF939 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7248CA46288F5CED00DDF939 /* HomeViewModel.swift */; };
+		7248CA4F2893992100DDF939 /* Credential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7248CA4E2893992100DDF939 /* Credential.swift */; };
 		D347FE84288BE8A100EF06B5 /* UserCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE83288BE8A100EF06B5 /* UserCheckView.swift */; };
 		D347FE86288BF1CA00EF06B5 /* NewPostTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE85288BF1CA00EF06B5 /* NewPostTableView.swift */; };
 		D347FE88288C2FC700EF06B5 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE87288C2FC700EF06B5 /* NotificationViewController.swift */; };
@@ -100,6 +101,7 @@
 		723FE6A1288AC87C00A987E7 /* MerchandiseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchandiseTableViewCell.swift; sourceTree = "<group>"; };
 		7248CA44288E57BB00DDF939 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		7248CA46288F5CED00DDF939 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
+		7248CA4E2893992100DDF939 /* Credential.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credential.swift; sourceTree = "<group>"; };
 		84FFF65EC2D21DA804E8D34F /* Pods_KarrotMarketCloneCoding.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KarrotMarketCloneCoding.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D347FE83288BE8A100EF06B5 /* UserCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCheckView.swift; sourceTree = "<group>"; };
 		D347FE85288BF1CA00EF06B5 /* NewPostTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPostTableView.swift; sourceTree = "<group>"; };
@@ -252,6 +254,7 @@
 				D3E12310287D71AD00A1EDC8 /* View */,
 				D3E1230F287D719100A1EDC8 /* ViewController */,
 				723FE69D2889484700A987E7 /* Copyright.swift */,
+				7248CA4E2893992100DDF939 /* Credential.swift */,
 				D3E12301287BF66100A1EDC8 /* Assets.xcassets */,
 				D3E12303287BF66100A1EDC8 /* LaunchScreen.storyboard */,
 				D3E12306287BF66100A1EDC8 /* Info.plist */,
@@ -459,6 +462,7 @@
 				D3E12319287FF55E00A1EDC8 /* SignUpViewController.swift in Sources */,
 				D3DF366328842A7300F20065 /* TitleTableViewCell.swift in Sources */,
 				D3A2158A288D905400D06AD3 /* Notification.swift in Sources */,
+				7248CA4F2893992100DDF939 /* Credential.swift in Sources */,
 				D3DF368A288ACC0900F20065 /* CategoryTableViewController.swift in Sources */,
 				D3E12313287D9AF800A1EDC8 /* UserCheckViewController.swift in Sources */,
 				D3E122FB287BF66000A1EDC8 /* SceneDelegate.swift in Sources */,

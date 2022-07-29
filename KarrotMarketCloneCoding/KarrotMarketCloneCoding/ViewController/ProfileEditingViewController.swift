@@ -12,7 +12,6 @@ final class ProfileEditingViewController: UIViewController {
     
     // profile update기능
     
-    let member = User(id: "1", nickName: "욘두",name: "욘두", phone: "3030", profileImageUrl: nil)
     let profileEditingView = ProfileEditingView(frame: .zero)
     
     override func loadView() {
@@ -63,23 +62,23 @@ final class ProfileEditingViewController: UIViewController {
     }
     
     @objc func textFieldDidChange() {
-        constrainWrongNaming()
+//        constrainWrongNaming()
     }
     
     func constrainWrongNaming() {
         
-        if let nickName = profileEditingView.nickNameTextField.text, nickName != member.nickName {
-            
-            if nickName.count >= 2 {
-                
-                profileEditingView.editingDoneButton.isEnabled = true
-                profileEditingView.editingDoneButton.backgroundColor = UIColor.appColor(.carrot)
-            }
-        } else {
-            
-            profileEditingView.editingDoneButton.isEnabled = false
-            profileEditingView.editingDoneButton.backgroundColor = UIColor.systemGray
-        }
+//        if let nickName = profileEditingView.nickNameTextField.text, nickName != member.nickName {
+//            
+//            if nickName.count >= 2 {
+//                
+//                profileEditingView.editingDoneButton.isEnabled = true
+//                profileEditingView.editingDoneButton.backgroundColor = UIColor.appColor(.carrot)
+//            }
+//        } else {
+//            
+//            profileEditingView.editingDoneButton.isEnabled = false
+//            profileEditingView.editingDoneButton.backgroundColor = UIColor.systemGray
+//        }
     }
     // domb: 완료버튼 눌렀을때 처리
     // domb: close버튼 없음
