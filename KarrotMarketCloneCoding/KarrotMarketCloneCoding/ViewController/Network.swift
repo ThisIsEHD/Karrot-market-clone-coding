@@ -210,4 +210,220 @@ struct Network {
             }
         }
     }
+    
+//    func fetchMerchandises(keyword: String? = nil, number: Int? = nil, category: Int? = nil, sort: Sort? = nil, last: Int? = nil) -> Merchandises {
+//        
+//        let url = "http://ec2-43-200-120-225.ap-northeast-2.compute.amazonaws.com/api/v1/products"
+//        var merchandises = Merchandises(keyword: nil, category: nil, products: [], size: 0)
+//        
+//        AF.request(url).validate().validate(contentType: ["application/json"]).responseData { response in
+//            
+//            switch response.result {
+//                
+//            case .success(let data):
+//                do {
+//                    let jsonDecoder = JSONDecoder()
+//                    
+//                    jsonDecoder.dateDecodingStrategy = .formatted(DateFormatter.myDateFormatter)
+//                    
+//                    let decodedMerchandises = try jsonDecoder.decode(Merchandises.self, from: data)
+//                    
+//                    merchandises = decodedMerchandises
+//                    
+//                } catch(let error) {
+//                    print(error.localizedDescription)
+//                }
+//                
+//            case .failure(let error):
+//                print(error.localizedDescription)
+//            }
+//        }
+//        return merchandises
+//    }
+    
+    func httpGetJSON<T: Codable>(url: String, in type: T.Type, completion: @escaping ((T)?) -> (Void)) {
+        
+        AF.request(url).validate().validate(contentType: ["application/json"]).responseData { response in
+            
+            switch response.result {
+                
+            case .success(let data):
+                let decodedData = jsonDecode(type: type, data: data)
+                
+                completion(decodedData)
+                
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    func jsonDecode<T: Codable>(type: T.Type, data: Data) -> T? {
+        
+        let jsonDecoder = JSONDecoder()
+        let result: Codable?
+        
+        jsonDecoder.dateDecodingStrategy = .formatted(DateFormatter.myDateFormatter)
+        
+        do {
+            
+            result = try jsonDecoder.decode(type, from: data)
+            
+            return result as? T
+        } catch {
+            
+            print(error)
+            
+            return nil
+        }
+        
+    }
+    
+    func getMerchandisesListFetchingURL(keyword: String? = nil, number: Int? = nil, category: Int? = nil, sort: Sort? = nil, last: Int? = nil) -> String{
+        
+        var url = "http://ec2-43-200-120-225.ap-northeast-2.compute.amazonaws.com/api/v1/products?"
+        var isFirstQuery = true
+        
+        if keyword == nil, number == nil, category == nil, sort == nil, last == nil {
+            url.remove(at: url.index(before: url.endIndex))
+        }
+        
+        if let keyword = keyword {
+            
+            if isFirstQuery == true {
+                
+                url.append(contentsOf: "keyword=\(keyword)")
+                isFirstQuery = false
+            }
+        }
+        
+        if let number = number {
+            
+            if isFirstQuery == true{
+                
+                url.append(contentsOf: "number=\(number)")
+                isFirstQuery = false
+            } else {
+                url.append(contentsOf: "&number=\(number)")
+            }
+            
+        }
+        
+        if let category = category {
+            
+            if isFirstQuery == true {
+                
+                url.append(contentsOf: "category=\(category)")
+                isFirstQuery = false
+            } else {
+                url.append(contentsOf: "&category=\(category)")
+            }
+        }
+        
+        if let sort = sort {
+            
+            if isFirstQuery == true {
+                
+                url.append(contentsOf: "sort=\(sort)")
+                isFirstQuery = false
+            } else {
+                url.append(contentsOf: "&sort=\(sort)")
+            }
+        }
+        
+        if let last = last {
+            
+            if isFirstQuery == true {
+                
+                url.append(contentsOf: "last=\(last)")
+                isFirstQuery = false
+            } else {
+                url.append(contentsOf: "&last=\(last)")
+            }
+        }
+        
+        return url
+    }
+    
+//    func fetchMerchandises(keyword: String? = nil, number: Int? = nil, category: Int? = nil, sort: Sort? = nil, last: Int? = nil) -> [Merchandise] {
+//
+//        var url = "http://ec2-43-200-120-225.ap-northeast-2.compute.amazonaws.com/api/v1/products?"
+//        var isFirstQuery = true
+//
+//        if keyword == nil, number == nil, category == nil, sort == nil, last == nil {
+//            url.remove(at: url.endIndex)
+//        }
+//
+//        if let keyword = keyword {
+//            if isFirstQuery == true {
+//                url.append(contentsOf: "keyword=\(keyword)")
+//                isFirstQuery = false
+//            }
+//        }
+//
+//        if let number = number {
+//            if isFirstQuery == true{
+//                url.append(contentsOf: "number=\(number)")
+//                isFirstQuery = false
+//            } else {
+//                url.append(contentsOf: "&number=\(number)")
+//            }
+//
+//        }
+//
+//        if let category = category {
+//            if isFirstQuery == true {
+//                url.append(contentsOf: "category=\(category)")
+//                isFirstQuery = false
+//            } else {
+//                url.append(contentsOf: "&category=\(category)")
+//            }
+//        }
+//
+//        if let sort = sort {
+//            if isFirstQuery == true {
+//                url.append(contentsOf: "sort=\(sort)")
+//                isFirstQuery = false
+//            } else {
+//                url.append(contentsOf: "&sort=\(sort)")
+//            }
+//        }
+//
+//        if let last = last {
+//            if isFirstQuery == true {
+//                url.append(contentsOf: "last=\(last)")
+//                isFirstQuery = false
+//            } else {
+//                url.append(contentsOf: "&last=\(last)")
+//            }
+//        }
+//
+////        var merchandises = Merchandises(keyword: nil, category: nil, products: [], size: 0)
+//        var merchandises = [Merchandise]()
+//
+//        AF.request(url).validate().validate(contentType: ["application/json"]).responseData { response in
+//
+//            switch response.result {
+//
+//            case .success(let data):
+//                do {
+//                    let jsonDecoder = JSONDecoder()
+//
+//                    jsonDecoder.dateDecodingStrategy = .formatted(DateFormatter.myDateFormatter)
+//
+//                    let decodedMerchandises = try jsonDecoder.decode(MerchandisesList.self, from: data)
+//
+//                    merchandises = decodedMerchandises.products
+//
+//
+//                } catch(let error) {
+//                    print(error.localizedDescription)
+//                }
+//
+//            case .failure(let error):
+//                print(error.localizedDescription)
+//            }
+//        }
+//        return merchandises
+//    }
 }

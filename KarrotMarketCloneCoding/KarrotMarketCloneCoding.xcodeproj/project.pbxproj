@@ -72,6 +72,8 @@
 		D3E12319287FF55E00A1EDC8 /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E12318287FF55E00A1EDC8 /* SignUpViewController.swift */; };
 		D3E1231D28800E5700A1EDC8 /* ReusableSignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E1231C28800E5700A1EDC8 /* ReusableSignView.swift */; };
 		D3E1231F28800FEE00A1EDC8 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E1231E28800FEE00A1EDC8 /* SignInViewController.swift */; };
+		D3FB4CE428919C3F003300B0 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB4CE328919C3F003300B0 /* DateFormatter.swift */; };
+		D3FB4CE6289656C9003300B0 /* MerchandiseDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB4CE5289656C9003300B0 /* MerchandiseDetailViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -142,6 +144,8 @@
 		D3E12318287FF55E00A1EDC8 /* SignUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		D3E1231C28800E5700A1EDC8 /* ReusableSignView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableSignView.swift; sourceTree = "<group>"; };
 		D3E1231E28800FEE00A1EDC8 /* SignInViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
+		D3FB4CE328919C3F003300B0 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
+		D3FB4CE5289656C9003300B0 /* MerchandiseDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MerchandiseDetailViewModel.swift; sourceTree = "<group>"; };
 		E9C03AEF92EC0A43D0E03512 /* Pods-KarrotMarketCloneCoding.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KarrotMarketCloneCoding.debug.xcconfig"; path = "Target Support Files/Pods-KarrotMarketCloneCoding/Pods-KarrotMarketCloneCoding.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -255,6 +259,8 @@
 				D3E1230F287D719100A1EDC8 /* ViewController */,
 				723FE69D2889484700A987E7 /* Copyright.swift */,
 				7248CA4E2893992100DDF939 /* Credential.swift */,
+				D3FB4CE5289656C9003300B0 /* MerchandiseDetailViewModel.swift */,
+				D3FB4CE328919C3F003300B0 /* DateFormatter.swift */,
 				D3E12301287BF66100A1EDC8 /* Assets.xcassets */,
 				D3E12303287BF66100A1EDC8 /* LaunchScreen.storyboard */,
 				D3E12306287BF66100A1EDC8 /* Info.plist */,
@@ -465,6 +471,7 @@
 				7248CA4F2893992100DDF939 /* Credential.swift in Sources */,
 				D3DF368A288ACC0900F20065 /* CategoryTableViewController.swift in Sources */,
 				D3E12313287D9AF800A1EDC8 /* UserCheckViewController.swift in Sources */,
+				D3FB4CE428919C3F003300B0 /* DateFormatter.swift in Sources */,
 				D3E122FB287BF66000A1EDC8 /* SceneDelegate.swift in Sources */,
 				D3DF36782885B53C00F20065 /* PhotosCollectionViewCell.swift in Sources */,
 				D3DF36802889785000F20065 /* PhotosCollectionView.swift in Sources */,
@@ -495,6 +502,7 @@
 				D3A2158B288D905400D06AD3 /* Enum.swift in Sources */,
 				723FE681288539A900A987E7 /* MerchandiseDetailViewOtherPostsCell.swift in Sources */,
 				D3E122F9287BF66000A1EDC8 /* AppDelegate.swift in Sources */,
+				D3FB4CE6289656C9003300B0 /* MerchandiseDetailViewModel.swift in Sources */,
 				723FE692288806CB00A987E7 /* OtherPostsCollectionViewCell.swift in Sources */,
 				723FE6A02889523800A987E7 /* SearchBarBottomView.swift in Sources */,
 				D3E122FB287BF66000A1EDC8 /* SceneDelegate.swift in Sources */,
@@ -641,7 +649,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = G8228CR939;
+				DEVELOPMENT_TEAM = 887U9L3L57;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KarrotMarketCloneCoding/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -653,7 +661,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = BrianEHD.KarrotMarketCloneCoding;
+				PRODUCT_BUNDLE_IDENTIFIER = BrianEHD.KarrotMarketCloneCoding1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -681,7 +689,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = BrianEHD.KarrotMarketCloneCoding;
+				PRODUCT_BUNDLE_IDENTIFIER = BrianEHD.KarrotMarketCloneCoding1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;

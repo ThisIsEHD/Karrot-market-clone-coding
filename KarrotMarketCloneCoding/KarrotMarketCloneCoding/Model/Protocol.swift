@@ -10,3 +10,7 @@ import Foundation
 protocol CollectionViewCellRemovable: AnyObject {
     func remove(cell: PhotosCollectionViewCell)
 }
+
+//protocol viewModel: AnyObject {
+////    func loadData
+//}

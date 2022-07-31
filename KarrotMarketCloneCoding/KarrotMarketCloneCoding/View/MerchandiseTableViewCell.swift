@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Alamofire
 
 class MerchandiseTableViewCell: UITableViewCell {
     
@@ -13,11 +14,14 @@ class MerchandiseTableViewCell: UITableViewCell {
     
     var merchandise: Merchandise? {
         didSet {
-            loadData()
+            getThumbnailImage { image in
+                self.loadData(image: image)
+            }
         }
     }
     
     private let thumbnailImageView: UIImageView = {
+        
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
         iv.layer.cornerRadius = 8
@@ -30,7 +34,7 @@ class MerchandiseTableViewCell: UITableViewCell {
     let nameLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 2
-        lbl.text = "당근마켓 상품의 이름은 여기에 입력하시오"
+        lbl.text = ""
         lbl.font = UIFont.systemFont(ofSize: 17)
         return lbl
     }()
@@ -52,7 +56,7 @@ class MerchandiseTableViewCell: UITableViewCell {
     let priceLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
-        lbl.text = "150,000원"
+        lbl.text = ""
         lbl.font = UIFont.systemFont(ofSize: 17)
         return lbl
     }()
@@ -84,7 +88,7 @@ class MerchandiseTableViewCell: UITableViewCell {
     private let chatLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
-        lbl.text = "5"
+        lbl.text = ""
         lbl.font = UIFont.systemFont(ofSize: 15)
         return lbl
     }()
@@ -137,10 +141,7 @@ class MerchandiseTableViewCell: UITableViewCell {
     
     // MARK: - Actions
     
-    private func loadData() {
-        //thumbnailImageView.image = merchandise.imageUrl 이미지로 변경
-        nameLabel.text = merchandise?.name
-    }
+   
     
     // MARK: - Life Cycle
     
@@ -193,5 +194,31 @@ class MerchandiseTableViewCell: UITableViewCell {
         priceLabel.anchor(top: nameLabel.bottomAnchor, topConstant: 10, leading: nameLabel.leadingAnchor)
         
         iconStackView.anchor(bottom: bottomAnchor, bottomConstant: 10, trailing: trailingAnchor, trailingConstant: 15)
+    }
+    
+    private func getThumbnailImage(completion: @escaping (UIImage?) -> ()) {
+        
+        AF.request(merchandise?.images.first?.url ?? "").validate().validate(contentType: ["application/octet-stream"]).responseData { response in
+            
+            switch response.result {
+                
+            case .success(let data):
+                completion(UIImage(data: data))
+                
+            case .failure(let error):
+                
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    private func loadData(image: UIImage?) {
+        
+        if let image = image {
+            thumbnailImageView.image = image
+        }
+        nameLabel.text = merchandise?.title
+        priceLabel.text = "\(merchandise?.price ?? 0)"
+        wishLabel.text = "\(merchandise?.wishes ?? 0)"
     }
 }

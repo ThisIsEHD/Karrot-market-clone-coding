@@ -15,3 +15,11 @@ enum DeviceSize {
     case deviceHeight
     case deviceWidth
 }
+
+enum Sort: String{
+    case price, regdate, pricedesc, regdatedesc
+}
+
+enum Section: Int, CaseIterable {
+    case main
+}

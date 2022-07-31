@@ -12,6 +12,8 @@ class MerchandiseDetailViewController: UIViewController, UITableViewDelegate {
     
     private let list = [UIColor.red, UIColor.green, UIColor.blue, UIColor.gray, UIColor.black]
     
+    var merchandise: Merchandise?
+    
     private let imageListCollectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .horizontal
