@@ -8,28 +8,12 @@
 import UIKit
 import Alamofire
 
-enum Section: Int, CaseIterable {
-    case main
-}
-
-typealias DataSource = UITableViewDiffableDataSource<Section, Merchandise>
-typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Merchandise>
-
 final class HomeViewController: UIViewController {
     // MARK: - Properties
-    var viewModel: HomeViewModel? {
-        didSet {
-            print("셀 구성하기")
-        }
-    }
+    var viewModel = HomeViewModel()
+    var isViewBusy = true
     
-    var dummy = [
-        Merchandise(ownerId: 1, id: 2, name: UUID().uuidString, imageUrl: nil, price: 10000, wishCount: nil, category: nil, views: nil, content: nil),
-        Merchandise(ownerId: 2, id: 4, name: UUID().uuidString, imageUrl: nil, price: 10000, wishCount: nil, category: nil, views: nil, content: nil),
-        Merchandise(ownerId: 3, id: 4, name: UUID().uuidString, imageUrl: nil, price: 10000, wishCount: nil, category: nil, views: nil, content: nil)
-    ]
-    
-    private let MerchandiseTableView : UITableView = {
+    private let merchandiseTableView : UITableView = {
         let tv = UITableView(frame:CGRect.zero, style: .plain)
         
         tv.register(MerchandiseTableViewCell.self, forCellReuseIdentifier: "MerchandiseTableViewCell")
@@ -52,8 +36,7 @@ final class HomeViewController: UIViewController {
     }()
     
     private var dataSource: DataSource!
-    private var sanpshot: Snapshot!
-    
+    private var snapshot = Snapshot()
     
     // MARK: - Actions
     @objc func searchButtonDidTapped() {
@@ -63,10 +46,16 @@ final class HomeViewController: UIViewController {
     }
     
     @objc func notiButtonDidTapped() {
+//        let notificationVC = NotificationViewController()
+//        navigationController?.pushViewController(notificationVC, animated: true)
+        let merchandiseDetailVC = MerchandiseDetailViewController()
+        navigationController?.pushViewController(merchandiseDetailVC, animated: true)
     }
     
     @objc func addButtonDidTapped() {
+        
         let newPostVC = NewPostTableViewController()
+        
         newPostVC.modalPresentationStyle  = .fullScreen
         present(newPostVC, animated: true, completion: nil)
     }
@@ -89,24 +78,32 @@ final class HomeViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-//        navigationController?.navigationBar.barStyle = .default
-//        navigationController?.navigationBar.backgroundColor = .systemBackground
-//        navigationController?.navigationBar.tintColor = .black
-//        navigationController?.navigationBar.isHidden = false
-//        navigationController?.navigationBar.isTranslucent = false
+
     }
+    
     // MARK: - DiffableDataSource
     
     func configureTableViewDiffableDataSource() {
-        dataSource = UITableViewDiffableDataSource(tableView: self.MerchandiseTableView, cellProvider: { [weak self] tableView, indexPath, merchandise in
+        
+        viewModel.dataSource = UITableViewDiffableDataSource(tableView: self.merchandiseTableView, cellProvider: { tableView, indexPath, merchandise in
+            
             let cell = tableView.dequeueReusableCell(withIdentifier: "MerchandiseTableViewCell", for: indexPath) as! MerchandiseTableViewCell
             
-            self?.viewModel?.loadImage(for: merchandise)
             cell.merchandise = merchandise
             
             return cell
         })
-        viewModel?.loadData()
+    }
+    
+    func reloadTableViewData() {
+        
+//        var snapshot = NSDiffableDataSourceSnapshot<Section, Merchandise>()
+//        snapshot.appendSections([.main])
+////        snapshot.appendItems(dummy)
+//        self.dataSource.apply(snapshot, animatingDifferences: true)
+
+        viewModel.isViewBusy = false
+        viewModel.loadData(lastID: viewModel.lastProductID)
     }
     
     // MARK: - Configure Views
@@ -116,11 +113,10 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Configure MerchandiseTableView
     private func configureMerchandiseTableView() {
-        MerchandiseTableView.delegate = self
-        MerchandiseTableView.dataSource = dataSource
-        MerchandiseTableView.prefetchDataSource = self
+        
+        merchandiseTableView.dataSource = viewModel.dataSource
                
-        view.addSubview(MerchandiseTableView)
+        view.addSubview(merchandiseTableView)
     }
     
     // MARK: - configure NavigationItems
@@ -129,10 +125,22 @@ final class HomeViewController: UIViewController {
             UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonDidTapped)),
             UIBarButtonItem(image: UIImage(named: "bell"), style: .plain, target: self, action: #selector(notiButtonDidTapped))]
     }
+        
+    // MARK: - Setup NavigationItems
+    private func setupNavigationItems() {
+        
+        let searchBarButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonDidTapped))
+        let notiBarButton = UIBarButtonItem(image: UIImage(named: "bell"), style: .plain, target: self, action: #selector(notiButtonDidTapped))
+        
+        searchBarButton.tintColor = .label
+        notiBarButton.tintColor = .label
+        
+        navigationItem.rightBarButtonItems = [ searchBarButton, notiBarButton ]
+    }
     
     // MARK: - Setting Constraints
     private func setConstraints() {
-        MerchandiseTableView.anchor(top: view.topAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
+        merchandiseTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
         addPostButton.anchor(bottom: view.bottomAnchor, bottomConstant: 100, trailing: view.trailingAnchor, trailingConstant: 20)
     }
 }
@@ -141,9 +149,28 @@ final class HomeViewController: UIViewController {
 
 extension HomeViewController: UITableViewDelegate {
     
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let contentHeight = scrollView.contentSize.height
+        let yOffset = scrollView.contentOffset.y
+        let heightRemainFromBottom = contentHeight - yOffset
+
+        let frameHeight = scrollView.frame.size.height
+        if heightRemainFromBottom < frameHeight {
+            
+            viewModel.loadData(lastID: viewModel
+                                .lastProductID)
+            
+        }
+    }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let vc = MerchandiseDetailViewController()
+        
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "MerchandiseTableViewCell", for: indexPath) as? MerchandiseTableViewCell else { return }
+        
+        cell.merchandise = vc.merchandise
         
         self.navigationController?.pushViewController(vc, animated: true)
         tableView.deselectRow(at: indexPath, animated: false)
@@ -155,12 +182,6 @@ extension HomeViewController: UITableViewDelegate {
     }
 }
 
-// MARK: - UITableViewDataSourcePrefetching
 
-extension HomeViewController: UITableViewDataSourcePrefetching {
-    
-    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        print(#function)
-        indexPaths.forEach { viewModel?.prefetchImage(at: $0)}
-    }
-}
+typealias DataSource = UITableViewDiffableDataSource<Section, Merchandise>
+typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Merchandise>

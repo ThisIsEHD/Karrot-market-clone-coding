@@ -19,10 +19,8 @@ final class ProfileEditingView: UIView {
     }()
     internal let cameraIconView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "camera")
+        imageView.image = UIImage(systemName: "camera.circle.fill")
         imageView.clipsToBounds = true
-        imageView.layer.cornerRadius = 20
-        
         return imageView
     }()
     internal let nickNameTextField: UITextField = {

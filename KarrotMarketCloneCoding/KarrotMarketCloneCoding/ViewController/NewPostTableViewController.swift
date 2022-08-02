@@ -198,7 +198,7 @@ extension NewPostTableViewController: UITableViewDelegate {
 }
 
 extension NewPostTableViewController: PHPickerViewControllerDelegate {
-    
+//    deinit시 제거해줘야하나?
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         
         picker.dismiss(animated: true)

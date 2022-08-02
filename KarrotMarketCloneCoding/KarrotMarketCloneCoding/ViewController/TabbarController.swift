@@ -14,12 +14,6 @@ final class TabbarController: UITabBarController {
             configureTabbarController()
         }
     }
-    var token: String? {
-        didSet {
-            guard let token = token else { return }
-            fetchUser()
-        }
-    }
 
     // MARK: - Actions
    
@@ -36,9 +30,11 @@ final class TabbarController: UITabBarController {
     }
     
     private func checkIfUserIsLoggedIn() {
-        token = UserDefaults.standard.string(forKey: "AccessToken")
+        let token = UserDefaults.standard.string(forKey: "AccessToken")
         if token == nil {
             presentUserCheckVC()
+        } else {
+            fetchUser()
         }
     }
     
@@ -95,7 +91,6 @@ extension TabbarController: AuthenticationDelegate {
     
     func authenticationDidComplete(token: Token) {
         self.dismiss(animated: false, completion: nil)
-        self.token = token
         UserDefaults.standard.set(token, forKey: "AccessToken")
         fetchUser()
     }

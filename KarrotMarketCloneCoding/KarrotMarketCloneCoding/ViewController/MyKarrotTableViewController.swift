@@ -34,7 +34,11 @@ final class MyKarrotTableViewController: UIViewController {
     }()
     
     // MARK: - Actions
- 
+    @objc func settingButtonDidTapped() {
+        print(#function)
+        UserDefaults.standard.removeObject(forKey: "AccessToken")
+    }
+
     // MARK: - LifeCycle
    
     override func viewDidLoad() {
@@ -55,7 +59,7 @@ final class MyKarrotTableViewController: UIViewController {
     // MARK: - Setup NavigationItems
     private func setupNavigationItems() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleLabel)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "setting"), style: .plain, target: self, action: nil)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "setting"), style: .plain, target: self, action: #selector(settingButtonDidTapped))
     }
     
     // MARK: - Configure TableView

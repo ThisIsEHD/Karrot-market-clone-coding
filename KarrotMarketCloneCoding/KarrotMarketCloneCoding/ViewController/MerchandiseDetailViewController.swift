@@ -12,6 +12,8 @@ class MerchandiseDetailViewController: UIViewController, UITableViewDelegate {
     
     private let list = [UIColor.red, UIColor.green, UIColor.blue, UIColor.gray, UIColor.black]
     
+    var merchandise: Merchandise?
+    
     private let imageListCollectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
         flowLayout.scrollDirection = .horizontal
@@ -37,8 +39,6 @@ class MerchandiseDetailViewController: UIViewController, UITableViewDelegate {
         tv.register(MerchandiseDetailViewProfileCell.self, forCellReuseIdentifier: "ProfileCell")
         tv.register(MerchandiseDescriptionCell.self, forCellReuseIdentifier: "DescriptionCell")
         tv.register(MerchandiseDetailViewOtherPostsCell.self, forCellReuseIdentifier: "PostCell")
-//        tv.rowHeight = UITableView.automaticDimension
-//        tv.estimatedRowHeight = 200
         // contentInset이 조정되지 않아 테이블뷰의 topAnchor가 superview의 topAnchor와 같아짐
         tv.contentInsetAdjustmentBehavior = .never
         tv.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
@@ -76,7 +76,9 @@ class MerchandiseDetailViewController: UIViewController, UITableViewDelegate {
         navigationController?.navigationBar.barStyle = .default
         navigationController?.navigationBar.backgroundColor = .systemBackground
         navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.shadowImage = .none
         navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
         navigationController?.navigationBar.isTranslucent = false
     }
     
@@ -127,11 +129,12 @@ class MerchandiseDetailViewController: UIViewController, UITableViewDelegate {
             navigationController?.navigationBar.backgroundColor = .systemBackground
             navigationController?.navigationBar.tintColor = .black
             navigationController?.navigationBar.shadowImage = .none
-            navigationController?.navigationBar.isHidden = false
+            navigationController?.isNavigationBarHidden = false
             navigationController?.navigationBar.isTranslucent = false
             
         }
         else {
+            navigationController?.isNavigationBarHidden = true
             navigationController?.navigationBar.barStyle = .black
             navigationController?.navigationBar.backgroundColor = .clear
             navigationController?.navigationBar.tintColor = .white

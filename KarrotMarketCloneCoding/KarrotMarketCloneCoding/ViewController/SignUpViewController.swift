@@ -32,7 +32,7 @@ final class SignUpViewController: UIViewController {
     @objc func signUp() {
         guard let email = signUpView.emailTextField.text else { return }
         guard let password = signUpView.passwordTextField.text else { return }
-//        Network.shared.register(user: user)
+        Network.shared.register(user: User(id: nil, email: email, pw: password, nickName: "야놀자", name: "나는 누구", phone: nil, profileImageUrl: nil))
         navigationController?.popViewController(animated: true)
     }
     
