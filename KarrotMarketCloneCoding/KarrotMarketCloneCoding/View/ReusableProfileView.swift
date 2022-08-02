@@ -26,6 +26,12 @@ class ReusableProfileView: UIView {
         return lbl
     }()
     
+    // MARK: - Actions
+    
+    func configure(user: User) {
+        nickNameLabel.text = user.nickName
+    }
+    
     // MARK: - Life Cycle
     
     override init(frame: CGRect) {

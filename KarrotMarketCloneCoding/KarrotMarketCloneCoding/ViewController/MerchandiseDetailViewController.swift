@@ -70,9 +70,8 @@ class MerchandiseDetailViewController: UIViewController, UITableViewDelegate {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        // domb: status bar 사라지는 문제 해결필요.
-        
         super.viewWillDisappear(animated)
+        
         tabBarController?.tabBar.isHidden = false
         navigationController?.navigationBar.barStyle = .default
         navigationController?.navigationBar.backgroundColor = .systemBackground

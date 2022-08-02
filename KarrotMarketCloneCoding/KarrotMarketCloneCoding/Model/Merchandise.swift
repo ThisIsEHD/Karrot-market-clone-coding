@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-struct Merchandise: Codable, Hashable {
+struct Merchandise: Codable {
     
     let ownerId: Int
     let id: Int
@@ -32,5 +32,15 @@ struct Merchandise: Codable, Hashable {
         case category = "categoryId"
         case views
         case content
+    }
+}
+
+extension Merchandise: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+
+    static func == (lhs: Merchandise, rhs: Merchandise) -> Bool {
+        return lhs.id == rhs.id
     }
 }

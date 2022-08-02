@@ -13,7 +13,8 @@ class MerchandiseTableViewCell: UITableViewCell {
     
     var merchandise: Merchandise? {
         didSet {
-            loadData()
+            //모델변경
+            bind()
         }
     }
     
@@ -137,9 +138,7 @@ class MerchandiseTableViewCell: UITableViewCell {
     
     // MARK: - Actions
     
-    private func loadData() {
-        //thumbnailImageView.image = merchandise.imageUrl 이미지로 변경
-        nameLabel.text = merchandise?.name
+    private func bind() {
     }
     
     // MARK: - Life Cycle

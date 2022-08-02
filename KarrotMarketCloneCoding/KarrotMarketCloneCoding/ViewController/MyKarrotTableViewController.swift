@@ -11,11 +11,8 @@ import Alamofire
 final class MyKarrotTableViewController: UIViewController {
     
     // MARK: - Properties
-    private var user: [User]? {
-        didSet {
-            print(user)
-        }
-    }
+    private var user: User?
+      
     private let tableView = UITableView(frame: .zero, style: .grouped)
     private let myProfileTableList = [["내 동네 설정", "동네인증하기", "키워드 알림", "모아보기", "당근가계부", "관심 카테고리 설정"],
                                       ["동네생활 글/댓글", "동네홍보 글", "동네 가게 후기", "저장한 장소", "내 단골가게", "받은 쿠폰함"],
@@ -44,9 +41,15 @@ final class MyKarrotTableViewController: UIViewController {
         super.viewDidLoad()
         profileView.delegate = self
         
+        configureUserInfo(of: user)
         setupNavigationItems()
         configureTableView()
         setTableViewConstraints()
+    }
+    
+    convenience init(user: User?) {
+        self.init()
+        self.user = user
     }
     
     // MARK: - Setup NavigationItems
@@ -153,6 +156,11 @@ extension MyKarrotTableViewController: UITableViewDelegate {
 
 
 extension MyKarrotTableViewController: ProfileViewDelegate {
+    
+    func configureUserInfo(of user: User?) {
+        guard let user = user else { return }
+        profileView.configureUserInfo(user: user)
+    }
     
     func goToMyProfileVC() {
         let profileEditingVC = ProfileEditingViewController()

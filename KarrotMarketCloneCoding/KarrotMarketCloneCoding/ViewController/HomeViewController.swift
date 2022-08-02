@@ -30,7 +30,6 @@ final class HomeViewController: UIViewController {
     ]
     
     private let MerchandiseTableView : UITableView = {
-        
         let tv = UITableView(frame:CGRect.zero, style: .plain)
         
         tv.register(MerchandiseTableViewCell.self, forCellReuseIdentifier: "MerchandiseTableViewCell")
@@ -41,7 +40,6 @@ final class HomeViewController: UIViewController {
     }()
     
     private lazy var addPostButton: UIButton = {
-        
         let btn = UIButton(type: .system)
         
         btn.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
@@ -59,23 +57,12 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Actions
     @objc func searchButtonDidTapped() {
-        
         let searchVC = SearchViewController()
         
         navigationController?.pushViewController(searchVC, animated: true)
     }
     
     @objc func notiButtonDidTapped() {
-//        var snapshot = dataSource.snapshot()
-//        let items = [
-//            Merchandise(ownerId: 4, id: 4, name: UUID().uuidString, imageUrl: nil, price: 10000, wishCount: nil, category: nil, views: nil, content: nil),
-//            Merchandise(ownerId: 5, id: 4, name: UUID().uuidString, imageUrl: nil, price: 10000, wishCount: nil, category: nil, views: nil, content: nil),
-//            Merchandise(ownerId: 6, id: 4, name: UUID().uuidString, imageUrl: nil, price: 10000, wishCount: nil, category: nil, views: nil, content: nil)
-//        ]
-//        dummy.append(contentsOf: items)
-//        snapshot.appendItems(items)
-//        dataSource.apply(snapshot)
-        Network.shared.register(user: User(id: "domb@gmail.com", pw: "!Qwer1234", nickName: "sdsdsd", name: "돔브", phone: "010-1234-1234", profileImageUrl: nil))
     }
     
     @objc func addButtonDidTapped() {
@@ -90,15 +77,23 @@ final class HomeViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-        
         super.viewDidLoad()
+        
         configureViews()
-        setupNavigationItems()
+        configureNavigationItems()
         configureMerchandiseTableView()
         configureTableViewDiffableDataSource()
         configureAddButton()
-        reloadTableViewData()
+        
         setConstraints()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+//        navigationController?.navigationBar.barStyle = .default
+//        navigationController?.navigationBar.backgroundColor = .systemBackground
+//        navigationController?.navigationBar.tintColor = .black
+//        navigationController?.navigationBar.isHidden = false
+//        navigationController?.navigationBar.isTranslucent = false
     }
     // MARK: - DiffableDataSource
     
@@ -109,19 +104,9 @@ final class HomeViewController: UIViewController {
             self?.viewModel?.loadImage(for: merchandise)
             cell.merchandise = merchandise
             
-            
             return cell
         })
         viewModel?.loadData()
-    }
-    
-    func reloadTableViewData() {
-        
-        var snapshot = NSDiffableDataSourceSnapshot<Section, Merchandise>()
-        snapshot.appendSections([.main])
-        snapshot.appendItems(dummy)
-        self.dataSource.apply(snapshot, animatingDifferences: true)
-        
     }
     
     // MARK: - Configure Views
@@ -138,8 +123,8 @@ final class HomeViewController: UIViewController {
         view.addSubview(MerchandiseTableView)
     }
     
-    // MARK: - Setup NavigationItems
-    private func setupNavigationItems() {
+    // MARK: - configure NavigationItems
+    private func configureNavigationItems() {
         navigationItem.rightBarButtonItems = [
             UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonDidTapped)),
             UIBarButtonItem(image: UIImage(named: "bell"), style: .plain, target: self, action: #selector(notiButtonDidTapped))]
@@ -151,23 +136,6 @@ final class HomeViewController: UIViewController {
         addPostButton.anchor(bottom: view.bottomAnchor, bottomConstant: 100, trailing: view.trailingAnchor, trailingConstant: 20)
     }
 }
-
-//extension HomeViewController: UITableViewDataSource {
-//
-//    func numberOfSections(in tableView: UITableView) -> Int {
-//        return 1
-//    }
-//
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return 10
-//    }
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "MerchandiseTableViewCell", for: indexPath) as! MerchandiseTableViewCell
-//        cell.selectionStyle = .none
-//        return cell
-//    }
-//}
 
 // MARK: - UITableViewDelegate
 
@@ -192,6 +160,7 @@ extension HomeViewController: UITableViewDelegate {
 extension HomeViewController: UITableViewDataSourcePrefetching {
     
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        print(#function)
         indexPaths.forEach { viewModel?.prefetchImage(at: $0)}
     }
 }

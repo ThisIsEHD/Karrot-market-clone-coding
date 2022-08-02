@@ -5,7 +5,6 @@
 //  Created by 서동운 on 2022/07/26.
 //
 
-import Foundation
 import UIKit
 import Alamofire
 
@@ -17,12 +16,12 @@ class HomeViewModel {
     
     func loadData() {
         guard let url = URL(string: "") else { return }
-        AF.session.dataTask(with: url) { data, response, error in
+        AF.session.dataTask(with: url) { [weak self] data, response, error in
             if let error = error {
                 print(error.localizedDescription)
                 return
             }
-            guard var snapshot = self.dataSource?.snapshot() else { return }
+            guard var snapshot = self?.dataSource?.snapshot() else { return }
             if snapshot.sectionIdentifiers.isEmpty {
                 snapshot.appendSections([.main])
             }
@@ -35,13 +34,13 @@ class HomeViewModel {
             snapshot.appendItems(newMerchandise)
             
             DispatchQueue.global(qos: .background).async {
-                self.dataSource?.apply(snapshot, animatingDifferences: false)
+                self?.dataSource?.apply(snapshot, animatingDifferences: false)
             }
         }
     }
     
     func prefetchImage(at indexPath: IndexPath) {
-        
+        print(#function)
         guard let merchandise = dataSource?.itemIdentifier(for: indexPath) else { return }
         guard let url = URL(string:merchandise.imageUrl!) else { return }
         
@@ -62,7 +61,7 @@ class HomeViewModel {
                 self.dataSource?.apply(snapshot, animatingDifferences: false)
             }
             return
-        }
+        } 
         guard let url = URL(string:merchandise.imageUrl!) else { return }
         
         AF.session.dataTask(with: url) { [weak self] data, response, error in

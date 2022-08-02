@@ -13,7 +13,7 @@ final class MyKarrotHeaderView: UIView {
     
     weak var delegate: ProfileViewDelegate?
     
-    private lazy var profileView: UIView = {
+    private lazy var profileView: ReusableProfileView = {
         let v = ReusableProfileView(imageSize: 80)
         v.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(profileViewDidTapped)))
         return v
@@ -100,6 +100,10 @@ final class MyKarrotHeaderView: UIView {
     }()
     
     // MARK: Actions
+    
+    func configureUserInfo(user: User) {
+        profileView.configure(user: user)
+    }
     
     @objc func profileViewDidTapped() {
         self.delegate?.goToMyProfileVC()
@@ -207,4 +211,5 @@ final class MyKarrotHeaderView: UIView {
 protocol ProfileViewDelegate: AnyObject {
     func goToMyProfileVC()
     func selectedMerchandiseTableVC()
+    func configureUserInfo(of: User?)
 }

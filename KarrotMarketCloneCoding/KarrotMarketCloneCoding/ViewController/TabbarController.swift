@@ -10,11 +10,16 @@ import UIKit
 final class TabbarController: UITabBarController {
     // MARK: - Properties
     var user: User? {
-        willSet {
+        didSet {
             configureTabbarController()
         }
     }
-    var token: String?
+    var token: String? {
+        didSet {
+            guard let token = token else { return }
+            fetchUser()
+        }
+    }
 
     // MARK: - Actions
    
@@ -32,24 +37,15 @@ final class TabbarController: UITabBarController {
     
     private func checkIfUserIsLoggedIn() {
         token = UserDefaults.standard.string(forKey: "AccessToken")
-        
-        guard let token = token else {
+        if token == nil {
             presentUserCheckVC()
-            return
         }
-        presentUserCheckVC()
-//        fetchUser(token: token)
     }
     
-    private func fetchUser(token: Token) {
-        let userIdBase64 = token.components(separatedBy: ".")[1]
-        guard let data = Data(base64Encoded: userIdBase64) else { print("data is nil"); return }
-        if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any] {
-            guard let userId = json["user_id"] as? String else { print("user_id is nil"); return }
-            Network.shared.fetch(user: userId, token: token) { [self] user in
-                guard let user = user else { return }
-                self.user = user
-            }
+    private func fetchUser() {
+        Network.shared.fetch() { [self] user in
+            guard let user = user else { return }
+            self.user = user
         }
     }
     
@@ -73,7 +69,7 @@ final class TabbarController: UITabBarController {
         
         let chatViewController = templateNavigationController(selectedImage: #imageLiteral(resourceName: "chat-selected"), unselectedImage: #imageLiteral(resourceName: "chat-unselected"), rootViewController: ChatViewController(), title: "채팅")
         
-        let profileViewController = templateNavigationController(selectedImage: #imageLiteral(resourceName: "user-selected"), unselectedImage: #imageLiteral(resourceName: "user-unselected"), rootViewController: MyKarrotTableViewController(), title: "나의당근")
+        let profileViewController = templateNavigationController(selectedImage: #imageLiteral(resourceName: "user-selected"), unselectedImage: #imageLiteral(resourceName: "user-unselected"), rootViewController: MyKarrotTableViewController(user: user), title: "나의당근")
         
         viewControllers = [homeViewController, chatViewController, profileViewController]
     }
@@ -101,7 +97,7 @@ extension TabbarController: AuthenticationDelegate {
         self.dismiss(animated: false, completion: nil)
         self.token = token
         UserDefaults.standard.set(token, forKey: "AccessToken")
-        fetchUser(token: token)
+        fetchUser()
     }
 }
 

@@ -166,7 +166,6 @@ struct Network {
         let credential = Credential(email: email, pw: pw)
         AF.request(Purpose.login(credential)).response { response in
             guard let httpResponse = response.response else { return }
-            print(response.request?.httpBody?.toDictionary())
             switch httpResponse.statusCode {
                 case 200:
                     guard let token = httpResponse.allHeaderFields["Authorization"] as? String else { fatalError() }
@@ -191,16 +190,18 @@ struct Network {
         // response 정보처리모듈화 필요.
     }
     
-    func fetch(user: UserId, token: Token, completion: @escaping (User?) -> Void) {
+    func fetch(completion: @escaping (User?) -> Void) {
         AF.request(Purpose.fetchUser, interceptor: MyInterceptor()).response { response in
             if let err = response.error{    //응답 에러
                 print(err)
                 return
             }
             if let statusCode = response.response?.statusCode, (200...299).contains(statusCode) {
-                print("success")
-                guard let data = response.data, let jsonData = String(data: data, encoding: String.Encoding.utf8) else { return }
-                print(jsonData)
+                print("fetch success")
+                guard let data = response.data, let user = try? JSONDecoder().decode(User.self, from: data) else {
+                    fatalError()
+                }
+                completion(user)
                 
             } else if let data = response.data {
                 let json = data.toDictionary()
