@@ -100,7 +100,6 @@ final class HomeViewController: UIViewController {
     }
     
     func reloadTableViewData() {
-        
 //        var snapshot = NSDiffableDataSourceSnapshot<Section, Merchandise>()
 //        snapshot.appendSections([.main])
 ////        snapshot.appendItems(dummy)
