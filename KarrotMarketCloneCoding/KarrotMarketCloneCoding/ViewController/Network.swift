@@ -29,7 +29,7 @@ struct Network {
             } else if let data = response.data {
                 let json = data.toDictionary()
                 print(response.response?.statusCode as Any)
-                print("Failure Response: \(json)")
+                print("Register Failure Response: \(json)")
             }
         }
     }
@@ -45,7 +45,7 @@ struct Network {
                 case 400:
                     guard let data = response.data else { fatalError() }
                     let json = data.toDictionary()
-                    print("Failure Response: \(json)")
+                    print("Auth Failure Response: \(json)")
                     return
                 case 401:
                     print("비밀번호를 다시 입력해주세요")

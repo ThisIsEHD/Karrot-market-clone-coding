@@ -23,12 +23,16 @@ final class HomeViewController: UIViewController {
         return tv
     }()
     
+    
     private lazy var addPostButton: UIButton = {
-        let btn = UIButton(type: .system)
+        let btn = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        let image = UIImage(systemName: "plus.circle.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 50, weight: .medium))
         
-        btn.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
+        btn.layer.shadowRadius = 2
+        btn.layer.shadowOpacity = 0.3
+        btn.layer.cornerRadius = 50 / 2
         btn.clipsToBounds = true
-        btn.setImage(UIImage(systemName: "plus.circle.fill"), for: .normal)
+        btn.setImage(image, for: .normal)
         btn.tintColor = UIColor.appColor(.carrot)
         btn.addTarget(self, action: #selector(addButtonDidTapped), for: .touchUpInside)
 

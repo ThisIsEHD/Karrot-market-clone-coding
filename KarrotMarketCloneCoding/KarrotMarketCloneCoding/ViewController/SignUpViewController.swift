@@ -48,12 +48,12 @@ final class SignUpViewController: UIViewController {
 }
 
 extension SignUpViewController: UITextFieldDelegate {
-  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-      if textField == signUpView.emailTextField {
-          signUpView.passwordTextField.becomeFirstResponder()
-    } else {
-        signUp()
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == signUpView.emailTextField {
+            signUpView.passwordTextField.becomeFirstResponder()
+        } else {
+            signUp()
+        }
+        return true
     }
-    return true
-  }
 }
