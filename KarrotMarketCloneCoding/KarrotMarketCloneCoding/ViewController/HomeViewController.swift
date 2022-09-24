@@ -163,7 +163,6 @@ extension HomeViewController: UITableViewDelegate {
             
             viewModel.loadData(lastID: viewModel
                                 .lastProductID)
-            
         }
     }
     

@@ -15,27 +15,24 @@ struct Network {
     
     static let shared = Network()
     
-    func register(user: User) {
-//        임시 사진⭐️
-        guard let imageData = UIImage(named: "logo")?.pngData() else { return }
+    func register(user: User, image: UIImage?, completion: @escaping (User?) -> ()) {
+        guard let imageData = (image ?? UIImage(named: "user-selected"))?.jpegData(compressionQuality: 0.5) else { return }
         guard let jsonData = try? JSONEncoder().encode(user) else { return }
-        
+
         AF.upload(multipartFormData: { data in
-            data.append(imageData, withName: "file", fileName: "file.png", mimeType: "image/png")
+
+            data.append(imageData, withName: "file", fileName: "file")
             data.append(jsonData, withName: "json")
-        }, with: Purpose.registerUser).responseData { response in
+        }, with: Purpose.registerUser).response { response in
             if let err = response.error {
-                print("🛑",err)
+                print(err)
                 return
             }
             if let statusCode = response.response?.statusCode, (200...299).contains(statusCode) {
-                print("success")
-                guard let data = response.data, let jsonData = String(data: data, encoding: String.Encoding.utf8) else { return }
-
+                completion(nil)
             } else if let data = response.data {
-                let json = data.toDictionary()
+                completion(jsonDecode(type: User.self, data: data))
                 print(response.response?.statusCode as Any)
-                print("Register Failure Response: \(json)")
             }
         }
     }
@@ -98,11 +95,9 @@ struct Network {
                 return
             }
             if let statusCode = response.response?.statusCode, (200...299).contains(statusCode) {
-                
                 guard let data = response.data else { return }
                 
                 completion(jsonDecode(type: FetchedMerchandisesList.self, data: data))
-//                guard let data = response.data, let jsonData = String(data: data, encoding: String.Encoding.utf8) else { return }
 
             } else if let data = response.data {
                 let json = data.toDictionary()
@@ -111,54 +106,7 @@ struct Network {
             }
         }
     }
-//    func fetchMerchandises(keyword: String? = nil, number: Int? = nil, category: Int? = nil, sort: Sort? = nil, last: Int? = nil) -> Merchandises {
-//        
-//        let url = "http://ec2-43-200-120-225.ap-northeast-2.compute.amazonaws.com/api/v1/products"
-//        var merchandises = Merchandises(keyword: nil, category: nil, products: [], size: 0)
-//        
-//        AF.request(url).validate().validate(contentType: ["application/json"]).responseData { response in
-//            
-//            switch response.result {
-//                
-//            case .success(let data):
-//                do {
-//                    let jsonDecoder = JSONDecoder()
-//                    
-//                    jsonDecoder.dateDecodingStrategy = .formatted(DateFormatter.myDateFormatter)
-//                    
-//                    let decodedMerchandises = try jsonDecoder.decode(Merchandises.self, from: data)
-//                    
-//                    merchandises = decodedMerchandises
-//                    
-//                } catch(let error) {
-//                    print(error.localizedDescription)
-//                }
-//                
-//            case .failure(let error):
-//                print(error.localizedDescription)
-//            }
-//        }
-//        return merchandises
-//    }
     
-    func httpGetJSON<T: Codable>(url: String, in type: T.Type, completion: @escaping ((T)?) -> (Void)) {
-        
-        AF.request(url).validate().validate(contentType: ["application/json"]).responseData { response in
-            
-            switch response.result {
-                
-            case .success(let data):
-                let decodedData = jsonDecode(type: type, data: data)
-                
-                completion(decodedData)
-                
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
-    // domb: Date Formatter만 디코딩 가능?
     func jsonDecode<T: Codable>(type: T.Type, data: Data) -> T? {
         
         let jsonDecoder = JSONDecoder()

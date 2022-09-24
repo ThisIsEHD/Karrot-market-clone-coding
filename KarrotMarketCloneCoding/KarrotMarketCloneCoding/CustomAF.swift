@@ -62,25 +62,24 @@ extension Purpose {
     func asURLRequest() throws -> URLRequest {
         let url = try baseUrl.asURL()
         var urlRequest = try URLRequest(url: url.appendingPathComponent(path), method: method)
-        urlRequest.headers = HTTPHeaders(["Content-Type" : "multipart/form-data"])
-//        urlRequest.addValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
+        urlRequest.headers = HTTPHeaders([HTTPHeader.contentType(Header.multipart.type)])
         
         switch parameters {
-        case .body(let parameter):
-            let jsonParameter = parameter?.toJSONData()
-            urlRequest.httpBody = jsonParameter
-        case .query(let queryItems):
-            if var url = urlRequest.url, var urlComponent = URLComponents(url: url, resolvingAgainstBaseURL: false) {
-                let queryItems = [URLQueryItem(name: "keyword", value: queryItems.keyword),
-                                  URLQueryItem(name: "size", value: queryItems.size),
-                                  URLQueryItem(name: "category", value: queryItems.category),
-                                  URLQueryItem(name: "sort", value: queryItems.sort),
-                                  URLQueryItem(name: "last", value: queryItems.last)
-                ]
-                urlComponent.queryItems = queryItems
-            }
-        case .none:
-            return urlRequest
+            case .body(let parameter):
+                let jsonParameter = parameter?.toJSONData()
+                urlRequest.httpBody = jsonParameter
+            case .none:
+                return urlRequest
+            case .query(let queryItems):
+                if var url = urlRequest.url, var urlComponent = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+                    let queryItems = [URLQueryItem(name: "keyword", value: queryItems.keyword),
+                                      URLQueryItem(name: "size", value: queryItems.size),
+                                      URLQueryItem(name: "category", value: queryItems.category),
+                                      URLQueryItem(name: "sort", value: queryItems.sort),
+                                      URLQueryItem(name: "last", value: queryItems.last)
+                    ]
+                    urlComponent.queryItems = queryItems
+                }
         }
         return urlRequest
     }
