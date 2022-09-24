@@ -10,10 +10,10 @@ import Foundation
 struct User: Codable {
 
     let id: String?
-    let email: String
+    let email: String?
     let pw: String?
-    let nickName: String
-    let name: String
+    let nickName: String?
+    let name: String?
     let phone: String?
     let profileImageUrl: String?
     

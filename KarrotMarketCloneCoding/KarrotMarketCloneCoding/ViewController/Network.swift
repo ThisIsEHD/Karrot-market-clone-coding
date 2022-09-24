@@ -16,16 +16,22 @@ struct Network {
     static let shared = Network()
     
     func register(user: User) {
-        AF.request(Purpose.registerUser(user)).response { response in
+//        임시 사진⭐️
+        guard let imageData = UIImage(named: "logo")?.pngData() else { return }
+        guard let jsonData = try? JSONEncoder().encode(user) else { return }
+        
+        AF.upload(multipartFormData: { data in
+            data.append(imageData, withName: "file", fileName: "file.png", mimeType: "image/png")
+            data.append(jsonData, withName: "json")
+        }, with: Purpose.registerUser).responseData { response in
             if let err = response.error {
-                print(err)
+                print("🛑",err)
                 return
             }
             if let statusCode = response.response?.statusCode, (200...299).contains(statusCode) {
                 print("success")
                 guard let data = response.data, let jsonData = String(data: data, encoding: String.Encoding.utf8) else { return }
-                print(jsonData)
-                
+
             } else if let data = response.data {
                 let json = data.toDictionary()
                 print(response.response?.statusCode as Any)
@@ -41,6 +47,7 @@ struct Network {
             switch httpResponse.statusCode {
                 case 200:
                     guard let token = httpResponse.allHeaderFields["Authorization"] as? String else { fatalError() }
+                print(token)
                     completion(token)
                 case 400:
                     guard let data = response.data else { fatalError() }
@@ -84,6 +91,26 @@ struct Network {
         }
     }
     
+    func fetchItems(completion: @escaping (FetchedMerchandisesList?) -> ()) {
+        AF.request(Purpose.fetch(QueryItem(keyword: nil, size: nil, category: nil, sort: nil, last: nil))).response { response in
+            if let err = response.error {
+                print("🛑",err)
+                return
+            }
+            if let statusCode = response.response?.statusCode, (200...299).contains(statusCode) {
+                
+                guard let data = response.data else { return }
+                
+                completion(jsonDecode(type: FetchedMerchandisesList.self, data: data))
+//                guard let data = response.data, let jsonData = String(data: data, encoding: String.Encoding.utf8) else { return }
+
+            } else if let data = response.data {
+                let json = data.toDictionary()
+                print(response.response?.statusCode as Any)
+                print("Register Failure Response: \(json)")
+            }
+        }
+    }
 //    func fetchMerchandises(keyword: String? = nil, number: Int? = nil, category: Int? = nil, sort: Sort? = nil, last: Int? = nil) -> Merchandises {
 //        
 //        let url = "http://ec2-43-200-120-225.ap-northeast-2.compute.amazonaws.com/api/v1/products"

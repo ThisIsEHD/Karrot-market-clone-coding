@@ -14,13 +14,13 @@ struct QueryItem {
     let sort: String?
     let last: String?
     
-    init(keyword: String? = nil, size: Int? = nil, category: Int? = nil, sort: Sort? = nil, last: Int? = nil) {
-        self.keyword = keyword
-        self.size = "\(size!)"
-        self.category = "\(category)"
-        self.sort = sort?.rawValue
-        self.last = "\(last)"
-    }
+//    init(keyword: String? = nil, size: Int? = nil, category: Int? = nil, sort: Sort? = nil, last: Int? = nil) {
+//        self.keyword = keyword
+//        self.size = "\(size!)"
+//        self.category = "\(category)"
+//        self.sort = sort?.rawValue
+//        self.last = "\(last)"
+//    }
 }
 
 extension String {

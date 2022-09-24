@@ -18,7 +18,7 @@ protocol Requestable: URLRequestConvertible {
 enum Purpose: Requestable {
     case login(Credential)
     case fetchUser
-    case registerUser(User)
+    case registerUser
     case update(User)
     case fetch(QueryItem)
 }
@@ -52,7 +52,7 @@ extension Purpose {
     var parameters: RequestParameters {
         switch self {
             case .login(let credential): return .body(credential)
-            case .registerUser(let user): return .body(user)
+            case .registerUser: return .none
             case .fetchUser: return .none
             case .update(let user): return .body(user)
             case .fetch(let queryItem): return .query(queryItem)
@@ -62,24 +62,25 @@ extension Purpose {
     func asURLRequest() throws -> URLRequest {
         let url = try baseUrl.asURL()
         var urlRequest = try URLRequest(url: url.appendingPathComponent(path), method: method)
-        urlRequest.headers = HTTPHeaders([HTTPHeader.contentType(Header.json.type)])
+        urlRequest.headers = HTTPHeaders(["Content-Type" : "multipart/form-data"])
+//        urlRequest.addValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
         
         switch parameters {
-            case .body(let parameter):
-                let jsonParameter = parameter?.toJSONData()
-                urlRequest.httpBody = jsonParameter
-            case .none:
-                return urlRequest
-            case .query(let queryItems):
-                if var url = urlRequest.url, var urlComponent = URLComponents(url: url, resolvingAgainstBaseURL: false) {
-                    let queryItems = [URLQueryItem(name: "keyword", value: queryItems.keyword),
-                                      URLQueryItem(name: "size", value: queryItems.size),
-                                      URLQueryItem(name: "category", value: queryItems.category),
-                                      URLQueryItem(name: "sort", value: queryItems.sort),
-                                      URLQueryItem(name: "last", value: queryItems.last)
-                    ]
-                    urlComponent.queryItems = queryItems
-                }
+        case .body(let parameter):
+            let jsonParameter = parameter?.toJSONData()
+            urlRequest.httpBody = jsonParameter
+        case .query(let queryItems):
+            if var url = urlRequest.url, var urlComponent = URLComponents(url: url, resolvingAgainstBaseURL: false) {
+                let queryItems = [URLQueryItem(name: "keyword", value: queryItems.keyword),
+                                  URLQueryItem(name: "size", value: queryItems.size),
+                                  URLQueryItem(name: "category", value: queryItems.category),
+                                  URLQueryItem(name: "sort", value: queryItems.sort),
+                                  URLQueryItem(name: "last", value: queryItems.last)
+                ]
+                urlComponent.queryItems = queryItems
+            }
+        case .none:
+            return urlRequest
         }
         return urlRequest
     }
