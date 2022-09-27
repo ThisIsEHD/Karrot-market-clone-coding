@@ -9,23 +9,23 @@ import Foundation
 import UIKit
 import Alamofire
 
-final class SignUpViewController: UIViewController {
+class SignUpViewController: UIViewController {
     
-    private let signUpView = ReusableSignView(frame: .zero)
+    internal let RealView = ReusableSignView(frame: .zero)
     private var emailValidationOkay = false
     private var passwordValidationOkay = false
     
     override func loadView() {
-        view = signUpView
+        view = RealView
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        signUpView.emailTextField.delegate = self
-        signUpView.passwordTextField.delegate = self
+        RealView.emailTextField.delegate = self
+        RealView.passwordTextField.delegate = self
         
-        signUpView.signButton.addTarget(self, action: #selector(jumpToNextScene), for: .touchUpInside)
+        RealView.signButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
     }
     
     override func viewDidLayoutSubviews() {
@@ -37,13 +37,19 @@ final class SignUpViewController: UIViewController {
         view.endEditing(true)
     }
     
-    @objc func jumpToNextScene() {
-        validateCheck(signUpView.emailTextField)
-        validateCheck(signUpView.passwordTextField)
+    @objc private func doneButtonTapped() {
+        validateCheck(RealView.emailTextField)
+        validateCheck(RealView.passwordTextField)
         checkDoneButtonPossible()
+        
         guard emailValidationOkay && passwordValidationOkay else { return }
-        guard let email = signUpView.emailTextField.text else { return }
-        guard let password = signUpView.passwordTextField.text else { return }
+        
+        configureNextScene()
+    }
+    
+    internal func configureNextScene() {
+        guard let email = RealView.emailTextField.text else { return }
+        guard let password = RealView.passwordTextField.text else { return }
         
         let nextVC = ProfileSettingViewController()
         
@@ -54,14 +60,14 @@ final class SignUpViewController: UIViewController {
     
     private func validateCheck(_ textField: UITextField) {
         switch textField {
-        case signUpView.emailTextField:
+        case RealView.emailTextField:
             
             guard let email = textField.text else { return }
             let range = email.range(of: "^([a-z0-9_\\.-]+)@([\\da-z\\.-]+)\\.([a-z\\.]{2,6})$", options: .regularExpression)
             
             emailValidationOkay = range != nil ? true : false
             
-        case signUpView.passwordTextField:
+        case RealView.passwordTextField:
             
             guard let password = textField.text else { return }
             let range = password.range(of: "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+=-]).{7,}", options: .regularExpression)
@@ -72,8 +78,8 @@ final class SignUpViewController: UIViewController {
     }
     
     private func checkDoneButtonPossible() {
-        signUpView.signButton.backgroundColor = emailValidationOkay && passwordValidationOkay ? UIColor.appColor(.carrot) : .systemGray
-        signUpView.signButton.isEnabled = emailValidationOkay && passwordValidationOkay ? true : false
+        RealView.signButton.backgroundColor = emailValidationOkay && passwordValidationOkay ? UIColor.appColor(.carrot) : .systemGray
+        RealView.signButton.isEnabled = emailValidationOkay && passwordValidationOkay ? true : false
     }
     
     private func setupNaviBar() {
@@ -89,8 +95,8 @@ final class SignUpViewController: UIViewController {
 
 extension SignUpViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == signUpView.emailTextField {
-            signUpView.passwordTextField.becomeFirstResponder()
+        if textField == RealView.emailTextField {
+            RealView.passwordTextField.becomeFirstResponder()
         } else {
             view.endEditing(true)
         }
@@ -99,10 +105,10 @@ extension SignUpViewController: UITextFieldDelegate {
     
     func textFieldDidEndEditing(_ textField: UITextField) {
         switch textField {
-        case signUpView.emailTextField:
+        case RealView.emailTextField:
             validateCheck(textField)
             checkDoneButtonPossible()
-        case signUpView.passwordTextField:
+        case RealView.passwordTextField:
             validateCheck(textField)
             checkDoneButtonPossible()
         default: break

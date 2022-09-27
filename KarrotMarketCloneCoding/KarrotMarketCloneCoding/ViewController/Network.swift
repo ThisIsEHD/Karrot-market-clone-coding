@@ -7,15 +7,22 @@
 
 import Foundation
 import Alamofire
+import JWTDecode
 
 typealias Token = String
 typealias UserId = String
+
+enum RegisterError {
+    case alreadyExistingEmail
+    case alreadyExistingNickName
+    case networkError
+}
 
 struct Network {
     
     static let shared = Network()
     
-    func register(user: User, image: UIImage?, completion: @escaping (User?) -> ()) {
+    func register(user: User, image: UIImage?, completion: @escaping (RegisterError?) -> ()) {
         guard let imageData = (image ?? UIImage(named: "user-selected"))?.jpegData(compressionQuality: 0.5) else { return }
         guard let jsonData = try? JSONEncoder().encode(user) else { return }
 
@@ -24,23 +31,30 @@ struct Network {
             data.append(imageData, withName: "file", fileName: "file")
             data.append(jsonData, withName: "json")
         }, with: Purpose.registerUser).response { response in
-            if let err = response.error {
-                print(err)
-                return
-            }
-            if let statusCode = response.response?.statusCode, (200...299).contains(statusCode) {
-                auth(email: user.email ?? "", pw: user.pw ?? "") { _ in
-//                    <#code#>
-                }
-                completion(nil)
-            } else if let data = response.data {
-                completion(jsonDecode(type: User.self, data: data))
-                print(response.response?.statusCode as Any)
+            guard let httpResponse = response.response else { return }
+            
+            switch httpResponse.statusCode {
+            case 201:
+                completion(.none)
+            case 400:
+                print(response.data ?? "네트워크 에러")
+                completion(.networkError)
+                
+            case 422:
+                guard let data = response.data else { return }
+                let user = jsonDecode(type: User.self, data: data)
+                
+                if user?.email != nil { completion(.alreadyExistingEmail) }
+                else if user?.nickName != nil { completion(.alreadyExistingNickName)}
+                else { completion(.none) }
+                
+            default: break
             }
         }
     }
     
     func auth(email: String, pw: String, completion: @escaping (SimpleAlert?) -> Void) {
+        print(#function)
         let credential = Credential(email: email, pw: pw)
         AF.request(Purpose.login(credential)).response { response in
             guard let httpResponse = response.response else { return }
@@ -48,10 +62,18 @@ struct Network {
             case 200:
                 guard let token = httpResponse.allHeaderFields["Authorization"] as? String else { fatalError() }
                 
-                UserDefaults.standard.removeObject(forKey: Const.userId.value)  //로그아웃시로 빼버릴까
-                UserDefaults.standard.set(email, forKey: Const.userId.value)
-                KeyChain.create(key: email, token: token)
-                completion(nil)
+                do {
+                    let jwt = try decode(jwt: token)
+                    guard let id = jwt.body["user_id"] else { return }
+                    
+                    UserDefaults.standard.removeObject(forKey: Const.userId.value)  //로그아웃시로 빼버릴거. keychain에서 토큰도 삭제해야.
+                    UserDefaults.standard.set(id, forKey: Const.userId.value)
+                    KeyChain.create(key: id as! String, token: token)
+                    
+                    completion(nil)
+                }
+                catch { print(error) }
+                
             case 400:
                 guard let data = response.data else { fatalError() }
                 let json = data.toDictionary()
@@ -75,25 +97,17 @@ struct Network {
         print(#function)
         AF.request(Purpose.fetchUser(id)).response { response in
             if let _ = response.error{    //응답 에러
-                print(#function, "⭐️")
                 completion(nil)
             }
             if let statusCode = response.response?.statusCode, (200...299).contains(statusCode) {
-                print("fetch success")
                 guard let data = response.data, let user = try? JSONDecoder().decode(User.self, from: data) else {
                     fatalError()
                 }
-                print(#function, "⭐️⭐️")
                 completion(user)
                 
             } else {
                 print(response.response?.statusCode)
-                print(#function, "⭐️⭐️⭐️")
                 completion(nil)
-//                let json = data.toDictionary()
-//                print(response.response?.statusCode as Any)
-//                print("Failure Response: \(json)")
-//                fatalError()
             }
         }
     }
@@ -136,72 +150,72 @@ struct Network {
         }
     }
     
-    func getMerchandisesListFetchingURL(keyword: String? = nil, number: Int? = nil, category: Int? = nil, sort: Sort? = nil, last: Int? = nil) -> String{
-        
-        var url = "http://ec2-43-200-120-225.ap-northeast-2.compute.amazonaws.com/api/v1/products?"
-        var isFirstQuery = true
-        
-        if keyword == nil, number == nil, category == nil, sort == nil, last == nil {
-            url.remove(at: url.index(before: url.endIndex))
-        }
-        
-        if let keyword = keyword {
-            
-            if isFirstQuery == true {
-                
-                url.append(contentsOf: "keyword=\(keyword)")
-                isFirstQuery = false
-            }
-        }
-        
-        if let number = number {
-            
-            if isFirstQuery == true{
-                
-                url.append(contentsOf: "number=\(number)")
-                isFirstQuery = false
-            } else {
-                url.append(contentsOf: "&number=\(number)")
-            }
-            
-        }
-        
-        if let category = category {
-            
-            if isFirstQuery == true {
-                
-                url.append(contentsOf: "category=\(category)")
-                isFirstQuery = false
-            } else {
-                url.append(contentsOf: "&category=\(category)")
-            }
-        }
-        
-        if let sort = sort {
-            
-            if isFirstQuery == true {
-                
-                url.append(contentsOf: "sort=\(sort)")
-                isFirstQuery = false
-            } else {
-                url.append(contentsOf: "&sort=\(sort)")
-            }
-        }
-        
-        if let last = last {
-            
-            if isFirstQuery == true {
-                
-                url.append(contentsOf: "last=\(last)")
-                isFirstQuery = false
-            } else {
-                url.append(contentsOf: "&last=\(last)")
-            }
-        }
-        
-        return url
-    }
-    
+//    func getMerchandisesListFetchingURL(keyword: String? = nil, number: Int? = nil, category: Int? = nil, sort: Sort? = nil, last: Int? = nil) -> String{
+//
+//        var url = "http://ec2-43-200-120-225.ap-northeast-2.compute.amazonaws.com/api/v1/products?"
+//        var isFirstQuery = true
+//
+//        if keyword == nil, number == nil, category == nil, sort == nil, last == nil {
+//            url.remove(at: url.index(before: url.endIndex))
+//        }
+//
+//        if let keyword = keyword {
+//
+//            if isFirstQuery == true {
+//
+//                url.append(contentsOf: "keyword=\(keyword)")
+//                isFirstQuery = false
+//            }
+//        }
+//
+//        if let number = number {
+//
+//            if isFirstQuery == true{
+//
+//                url.append(contentsOf: "number=\(number)")
+//                isFirstQuery = false
+//            } else {
+//                url.append(contentsOf: "&number=\(number)")
+//            }
+//
+//        }
+//
+//        if let category = category {
+//
+//            if isFirstQuery == true {
+//
+//                url.append(contentsOf: "category=\(category)")
+//                isFirstQuery = false
+//            } else {
+//                url.append(contentsOf: "&category=\(category)")
+//            }
+//        }
+//
+//        if let sort = sort {
+//
+//            if isFirstQuery == true {
+//
+//                url.append(contentsOf: "sort=\(sort)")
+//                isFirstQuery = false
+//            } else {
+//                url.append(contentsOf: "&sort=\(sort)")
+//            }
+//        }
+//
+//        if let last = last {
+//
+//            if isFirstQuery == true {
+//
+//                url.append(contentsOf: "last=\(last)")
+//                isFirstQuery = false
+//            } else {
+//                url.append(contentsOf: "&last=\(last)")
+//            }
+//        }
+//
+//        return url
+//    }
+//    
 //    func fetchMerchandises(keyword: String? = nil, number: Int? = nil, category: Int? = nil, sort: Sort? = nil, last: Int? = nil) -> [Merchandise] {
 //
 //        var url = "http://ec2-43-200-120-225.ap-northeast-2.compute.amazonaws.com/api/v1/products?"

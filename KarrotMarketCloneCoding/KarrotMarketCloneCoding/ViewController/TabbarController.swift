@@ -20,7 +20,6 @@ final class TabbarController: UITabBarController {
     func presentUserCheckVC() {
         DispatchQueue.main.async { [weak self] in
             let userCheckVC = UserCheckViewController()
-//            userCheckVC.authenticationDelegate = self
             
             let nav = UINavigationController(rootViewController: userCheckVC)
             nav.modalPresentationStyle = .fullScreen
@@ -31,19 +30,14 @@ final class TabbarController: UITabBarController {
     
     private func checkIfUserIsLoggedIn() {
         let userId = UserDefaults.standard.object(forKey: Const.userId.value) as? String ?? ""
-        print(userId)
         let token = KeyChain.read(key: userId)
-        print(token)
+        
         if token == nil {
-            
             presentUserCheckVC()
         } else {
-            print("성공!")
-//            Network.shared.fetchUser { user in
-//                if user == nil { self.presentUserCheckVC() } else { print("여기까진됌")
-//
-//                    self.user = user }
-//            }
+            Network.shared.fetchUser(id: userId) { user in
+                self.user = user
+            }
         }
     }
     
@@ -57,11 +51,6 @@ final class TabbarController: UITabBarController {
         super.viewWillAppear(animated)
         checkIfUserIsLoggedIn()
     }
-    
-//    deinit {
-//        UserDefaults.standard.removeObject(forKey: "AccessToken")
-//    }
-    
     
     // MARK: - Configure TabbarViewController
     
@@ -88,19 +77,3 @@ final class TabbarController: UITabBarController {
         return nav
     }
 }
-
-// MARK: - AuthenticationDelegate
-//
-//protocol AuthenticationDelegate: AnyObject {
-//    func authenticationDidComplete(token: Token)
-//}
-//
-//extension TabbarController: AuthenticationDelegate {
-//
-//    func authenticationDidComplete(token: Token) {
-//        self.dismiss(animated: false, completion: nil)
-//
-////        UserDefaults.standard.set(token, forKey: "AccessToken")
-////        fetchUser()
-//    }
-//}

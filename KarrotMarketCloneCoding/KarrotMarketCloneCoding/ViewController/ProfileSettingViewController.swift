@@ -57,9 +57,30 @@ class ProfileSettingViewController: UIViewController {
         present(alert, animated: true)
     }
     
+    
     @objc private func doneButtonTapped() {
-        Network.shared.register(user: User(id: nil, email: email, pw: pw, nickName: profileView.nickNameTextField.text, name: "멸치", phone: "010-1111-1111", profileImageUrl: nil), image: profileImage) { user in
+        let user = User(id: nil, email: email, pw: pw, nickName: profileView.nickNameTextField.text, profileImageUrl: nil)
+        Network.shared.register(user: user, image: profileImage) { error in
             
+            switch error {
+            case .alreadyExistingEmail:
+                let alert = self.prepareAlert(title: "이미 사용중인 이메일입니다.", isPop: true)
+                DispatchQueue.main.async {
+                    self.present(alert, animated: true)
+                }
+            case .alreadyExistingNickName:
+                let alert = self.prepareAlert(title: "이미 사용중인 닉네임입니다.", isPop: false)
+                DispatchQueue.main.async {
+                    self.present(alert, animated: true)
+                }
+            case .networkError:
+                let alert = self.prepareAlert(title: "서버 에러. 나중에 다시 시도해주세요.", isPop: true)
+                DispatchQueue.main.async {
+                    self.present(alert, animated: true)
+                }
+            case .none:
+                self.signIn()
+            }
         }
     }
     
@@ -155,6 +176,35 @@ class ProfileSettingViewController: UIViewController {
 
         self.present(picker, animated: true, completion: nil)
     }
+    
+    private func prepareAlert(title: String, isPop: Bool) -> UIAlertController {
+        
+        let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
+        let alertAction = UIAlertAction(title: "확인", style: .default) { _ in
+            if isPop {
+                DispatchQueue.main.async {
+                    self.navigationController?.popViewController(animated: true)
+                }
+            }
+        }
+        alert.addAction(alertAction)
+        
+        return alert
+    }
+    
+    private func signIn() {
+        Network.shared.auth(email: self.email ?? "", pw: self.pw ?? "") { alert in
+            
+            DispatchQueue.main.async {
+                if let alert = alert {
+                    self.present(alert, animated: true)
+                } else {
+                    self.dismiss(animated: true)
+                }
+            }
+        }
+    }
+    
 }
 
 extension ProfileSettingViewController: UITextFieldDelegate {

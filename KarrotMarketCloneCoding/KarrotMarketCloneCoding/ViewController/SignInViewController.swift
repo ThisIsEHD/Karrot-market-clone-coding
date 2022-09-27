@@ -7,31 +7,12 @@
 
 import UIKit
 
-final class SignInViewController: UIViewController {
+final class SignInViewController: SignUpViewController {
     
-    let signInView = ReusableSignView(frame: .zero)
-    
-//    weak var authenticationDelegate: AuthenticationDelegate?
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func configureNextScene() {
+        guard let email = RealView.emailTextField.text else { return }
+        guard let password = RealView.passwordTextField.text else { return }
         
-        view = signInView
-        
-        signInView.emailTextField.delegate = self
-        signInView.passwordTextField.delegate = self
-        
-        signInView.helloLabel.text = "안녕하세요!,\n이메일로 로그인해주세요."
-        signInView.signButton.setTitle("로그인", for: .normal)
-        
-        signInView.signButton.isEnabled = true
-        signInView.signButton.addTarget(self, action: #selector(signIn), for: .touchUpInside)
-    }
-    
-    @objc func signIn() {
-        print("🤮",#function)
-        guard let email = signInView.emailTextField.text else { return }
-        guard let password = signInView.passwordTextField.text else { return }
         Network.shared.auth(email: email, pw: password) { alert in
             DispatchQueue.main.async {
                 if let alert = alert {
@@ -43,15 +24,11 @@ final class SignInViewController: UIViewController {
             }
         }
     }
-}
-
-extension SignInViewController: UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == signInView.emailTextField {
-            signInView.passwordTextField.becomeFirstResponder()
-        } else {
-            signIn()
-        }
-        return true
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        RealView.helloLabel.text = "안녕하세요!,\n이메일로 로그인해주세요."
+        RealView.signButton.setTitle("로그인", for: .normal)
     }
 }

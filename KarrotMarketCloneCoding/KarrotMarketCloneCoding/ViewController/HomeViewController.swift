@@ -81,10 +81,6 @@ final class HomeViewController: UIViewController {
         setConstraints()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-
-    }
-    
     // MARK: - DiffableDataSource
     
     func configureTableViewDiffableDataSource() {
