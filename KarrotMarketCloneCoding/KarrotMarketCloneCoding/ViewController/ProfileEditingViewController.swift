@@ -8,11 +8,11 @@
 import UIKit
 import PhotosUI
 
-final class ProfileEditingViewController: UIViewController {
+class ProfileEditingViewController: UIViewController {
     
     // profile update기능
     
-    let profileEditingView = ProfileEditingView(frame: .zero)
+    let profileEditingView = ReusableSettingProfileView(frame: .zero)
     
     override func loadView() {
         
@@ -39,7 +39,7 @@ final class ProfileEditingViewController: UIViewController {
     }
     
     private func setupNaviBar() {
-
+        
         let appearance = UINavigationBarAppearance()
         
         appearance.configureWithDefaultBackground()
@@ -52,7 +52,7 @@ final class ProfileEditingViewController: UIViewController {
         var configuration = PHPickerConfiguration()
         
         configuration.selectionLimit = 0
-        configuration.filter = .any(of: [.images, .videos])
+        configuration.filter = .any(of: [.images])
         
         let picker = PHPickerViewController(configuration: configuration)
         
@@ -80,8 +80,6 @@ final class ProfileEditingViewController: UIViewController {
 //            profileEditingView.editingDoneButton.backgroundColor = UIColor.systemGray
 //        }
     }
-    // domb: 완료버튼 눌렀을때 처리
-    // domb: close버튼 없음
     
     @objc func close() {
         self.dismiss(animated: true, completion: nil)
@@ -94,12 +92,7 @@ extension ProfileEditingViewController: UITextFieldDelegate {
         
         let currentText = NSString(string: textField.text ?? "")
         let finalText = currentText.replacingCharacters(in: range, with: string)
-        
-        if finalText.count > 12 {
-            return false
-        }
-        
-        return true
+        return finalText.count <= 10
     }
 }
 

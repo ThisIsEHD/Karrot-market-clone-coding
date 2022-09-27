@@ -7,11 +7,25 @@
 
 import UIKit
 
-final class ProfileEditingView: UIView {
-    
+final class ReusableSettingProfileView: UIView {
+//    
+//    var pickerViewImage: UIImage? {
+//        return imagePickerView.image
+//    }
+//    var isCameraIconHidden: Bool {
+//        return cameraIconView.isHidden
+//    }
+//    var nickNameTextField: UITextField {
+//        return nickNameField
+//    }
+//    var editingDoneButton: UIButton {
+//        return doneButton
+//    }
+//    
     internal let imagePickerView: UIImageView = {
         let imageView = UIImageView()
-        imageView.backgroundColor = .lightGray
+        imageView.image = UIImage(systemName: "person.crop.circle.fill")
+        imageView.tintColor = .systemFill
         imageView.clipsToBounds = true
         imageView.layer.cornerRadius = 75
         
@@ -20,12 +34,13 @@ final class ProfileEditingView: UIView {
     internal let cameraIconView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "camera.circle.fill")
+        imageView.tintColor = .systemGray
         imageView.clipsToBounds = true
         return imageView
     }()
     internal let nickNameTextField: UITextField = {
         let textField = CustomTextField(placeholder: "")
-        textField.text = "욘두"
+//        textField.text = ""
         textField.textAlignment = .center
         
         return textField
@@ -39,7 +54,7 @@ final class ProfileEditingView: UIView {
         
         return label
     }()
-    internal let editingDoneButton: UIButton = {
+    internal let doneButton: UIButton = {
         let button = UIButton(type: .system)
         
         button.setTitle("완료", for: .normal)
@@ -68,7 +83,7 @@ final class ProfileEditingView: UIView {
         addSubview(guidelineLabel)
         setGuidelineLabelLayout()
         
-        addSubview(editingDoneButton)
+        addSubview(doneButton)
         setEditingDoneButtonLayout()
     }
     
@@ -82,7 +97,7 @@ final class ProfileEditingView: UIView {
     }
     
     private func setCameraIconViewLayout() {
-        cameraIconView.anchor(bottom: imagePickerView.bottomAnchor, bottomConstant: 10, trailing: imagePickerView.trailingAnchor, trailingConstant: 10, width: 30, height: 30)
+        cameraIconView.anchor(bottom: imagePickerView.bottomAnchor, bottomConstant: 15, trailing: imagePickerView.trailingAnchor, trailingConstant: 15, width: 30, height: 30)
     }
     
     private func setNickNameTextFieldLayout() {
@@ -94,7 +109,7 @@ final class ProfileEditingView: UIView {
     }
     
     private func setEditingDoneButtonLayout() {
-        editingDoneButton.anchor(bottom: self.bottomAnchor, leading: self.leadingAnchor, trailing: self.trailingAnchor, height: 75)
+        doneButton.anchor(bottom: self.bottomAnchor, leading: self.leadingAnchor, trailing: self.trailingAnchor, height: 75)
     }
     
     func setupTapGestures(target: UIViewController, selector: Selector) {

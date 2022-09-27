@@ -17,7 +17,7 @@ protocol Requestable: URLRequestConvertible {
 
 enum Purpose: Requestable {
     case login(Credential)
-    case fetchUser
+    case fetchUser(ID)
     case registerUser
     case update(User)
     case fetch(QueryItem)
@@ -28,24 +28,43 @@ extension Purpose {
         return "http://ec2-43-200-120-225.ap-northeast-2.compute.amazonaws.com"
     }
     
+    var header: RequestHeaders {
+        switch self {
+        case .login:
+            return .json
+        case .registerUser:
+            return .multipart
+        case .fetchUser:
+            return .jsonWithToken
+        case .update:
+            return .jsonWithToken
+        case .fetch:
+            return .none
+        }
+    }
+    
     var path: String {
         switch self {
-            case .login:
-                return "/api/v1/users/auth/login"
-            case .fetchUser, .registerUser, .update:
-                return "/api/v1/users"
-            case .fetch:
-                return "/api/v1/products"
+        case .login:
+            return "/api/v1/users/auth/login"
+        case .registerUser:
+            return "/api/v1/users"
+        case .fetchUser(let id):
+            return "/api/v1/users/\(id)"
+        case .update(let user):
+            return "/api/v1/users/\(user.id ?? "")"
+        case .fetch:
+            return "/api/v1/products"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-            case .login: return .post
-            case .fetchUser: return .get
-            case .registerUser: return .post
-            case .update: return .put
-            case .fetch: return .get
+        case .login: return .post
+        case .fetchUser: return .get
+        case .registerUser: return .post
+        case .update: return .put
+        case .fetch: return .get
         }
     }
         
@@ -62,7 +81,20 @@ extension Purpose {
     func asURLRequest() throws -> URLRequest {
         let url = try baseUrl.asURL()
         var urlRequest = try URLRequest(url: url.appendingPathComponent(path), method: method)
-        urlRequest.headers = HTTPHeaders([HTTPHeader.contentType(Header.multipart.type)])
+        let userId = UserDefaults.standard.object(forKey: Const.userId.value) as? String ?? ""
+        let accessToken = KeyChain.read(key: userId) ?? ""
+        
+        switch header {
+        case .json:
+            urlRequest.headers = HTTPHeaders([HTTPHeader.contentType(Header.json.type)])
+        case .jsonWithToken:
+            urlRequest.headers = HTTPHeaders([HTTPHeader.contentType(Header.json.type), HTTPHeader.authorization(bearerToken: accessToken)])
+        case .multipart:
+            urlRequest.headers = HTTPHeaders([HTTPHeader.contentType(Header.multipart.type)])
+        case .multipartWithToken:
+            urlRequest.headers = HTTPHeaders([HTTPHeader.contentType(Header.multipart.type), HTTPHeader.authorization(bearerToken: accessToken)])
+        case .none: break
+        }
         
         switch parameters {
             case .body(let parameter):
@@ -83,6 +115,14 @@ extension Purpose {
         }
         return urlRequest
     }
+}
+
+enum RequestHeaders {
+    case json
+    case jsonWithToken
+    case multipart
+    case multipartWithToken
+    case none
 }
 
 enum RequestParameters {
@@ -108,21 +148,23 @@ enum Header: String {
 
 struct MyInterceptor: RequestInterceptor {
     func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
-        guard let accessToken = UserDefaults.standard.string(forKey: "AccessToken"), let userId = accessToken.getUserId() else {
-                  completion(.success(urlRequest))
-                  fatalError()
-              }
+//        guard let accessToken = UserDefaults.standard.string(forKey: "AccessToken"), let userId = accessToken.getUserId() else {
+//                  completion(.success(urlRequest))
+//                  fatalError()
+//              }
         
-        var request = urlRequest
-        request.url?.appendPathComponent("/\(userId)")
-        request.addValue(accessToken, forHTTPHeaderField: "Authorization")
-        completion(.success(request))
+//        var request = urlRequest
+//        request.url?.appendPathComponent("/\(userId)")
+//        request.addValue(accessToken, forHTTPHeaderField: "Authorization")
+//        completion(.success(request))
     }
     
     func retry(_ request: Request, for session: Session, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
-        guard let response = request.task?.response as? HTTPURLResponse, response.statusCode == 401 else {
-            completion(.doNotRetryWithError(error))
-            return
-        }
+//        guard let response = request.task?.response as? HTTPURLResponse, response.statusCode == 401 else {
+//            completion(.doNotRetryWithError(error))
+//            return
+//        }
     }
 }
+
+typealias ID = String

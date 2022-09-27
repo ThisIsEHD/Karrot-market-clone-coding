@@ -12,7 +12,7 @@ final class UserCheckViewController: UIViewController {
     
     let userCheckView = UserCheckView(frame: .zero)
     
-    weak var authenticationDelegate: AuthenticationDelegate?
+//    weak var authenticationDelegate: AuthenticationDelegate?
     
     override func loadView() {
         view = userCheckView
@@ -36,7 +36,7 @@ final class UserCheckViewController: UIViewController {
     
     @objc func logIn() {
         let signInVC = SignInViewController()
-        signInVC.authenticationDelegate = authenticationDelegate
+//        signInVC.authenticationDelegate = authenticationDelegate
         navigationController?.pushViewController(signInVC, animated: true)
     }
 }

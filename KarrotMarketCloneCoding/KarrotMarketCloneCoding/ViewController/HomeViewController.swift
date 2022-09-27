@@ -71,7 +71,7 @@ final class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print(#function)
         configureViews()
         configureNavigationItems()
         configureMerchandiseTableView()
@@ -183,7 +183,6 @@ extension HomeViewController: UITableViewDelegate {
         return CGFloat(150.0)
     }
 }
-
 
 typealias DataSource = UITableViewDiffableDataSource<Section, Merchandise>
 typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Merchandise>

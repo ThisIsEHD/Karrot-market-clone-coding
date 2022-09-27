@@ -44,28 +44,28 @@ class HomeViewModel {
 //            }
 //        }
         
-        Network.shared.httpGetJSON(url: Network.shared.getMerchandisesListFetchingURL(last: lastID), in: FetchedMerchandisesList.self) { [weak self] merchandisesList in
-            
-            guard let weakSelf = self else { return }
-            guard var snapshot = weakSelf.dataSource?.snapshot() else { return }
-            
-            DispatchQueue.global(qos: .background).async {
-                self?.dataSource?.apply(snapshot, animatingDifferences: false)
-                if let merchandises = merchandisesList?.merchandises {
-                    
-                    if snapshot.numberOfSections == 0 {
-                        snapshot.appendSections([.main])
-                    }
-                    
-                    snapshot.appendItems(merchandises)
-                    weakSelf.lastProductID = merchandises.last?.id
-                    weakSelf.isViewBusy = false
-                    
-                    DispatchQueue.global(qos: .background).async {
-                        weakSelf.dataSource?.apply(snapshot, animatingDifferences: false)
-                    }
-                }
-            }
-        }
+//        Network.shared.httpGetJSON(url: Network.shared.getMerchandisesListFetchingURL(last: lastID), in: FetchedMerchandisesList.self) { [weak self] merchandisesList in
+//            
+//            guard let weakSelf = self else { return }
+//            guard var snapshot = weakSelf.dataSource?.snapshot() else { return }
+//            
+//            DispatchQueue.global(qos: .background).async {
+//                self?.dataSource?.apply(snapshot, animatingDifferences: false)
+//                if let merchandises = merchandisesList?.merchandises {
+//                    
+//                    if snapshot.numberOfSections == 0 {
+//                        snapshot.appendSections([.main])
+//                    }
+//                    
+//                    snapshot.appendItems(merchandises)
+//                    weakSelf.lastProductID = merchandises.last?.id
+//                    weakSelf.isViewBusy = false
+//                    
+//                    DispatchQueue.global(qos: .background).async {
+//                        weakSelf.dataSource?.apply(snapshot, animatingDifferences: false)
+//                    }
+//                }
+//            }
+//        }
     }
 }

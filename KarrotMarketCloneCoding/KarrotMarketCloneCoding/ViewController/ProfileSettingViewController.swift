@@ -1,0 +1,194 @@
+//
+//  ProfileSettingViewController.swift
+//  KarrotMarketCloneCoding
+//
+//  Created by 신동훈 on 2022/09/25.
+//
+
+import Foundation
+import UIKit
+import PhotosUI
+
+class ProfileSettingViewController: UIViewController {
+    
+    private var isAuthForAlbum: Bool?
+//    internal var buttonTapped: ([Any]) -> () = { info in }
+    internal var email: String?
+    internal var pw: String?
+    private var profileImage: UIImage? {
+        willSet {
+            profileView.imagePickerView.image = newValue == nil ? UIImage(systemName: "person.crop.circle.fill") : newValue
+        }
+    }
+    
+    private let profileView = ReusableSettingProfileView(frame: .zero)
+    
+    override func loadView() {
+        view = profileView
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        profileView.nickNameTextField.delegate = self
+        profileView.nickNameTextField.placeholder = "닉네임"
+        profileView.setupTapGestures(target: self, selector: #selector(touchUpImageView))
+        profileView.doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func touchUpImageView() {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let selectImageAction = UIAlertAction(title: "앨범에서 선택", style: .default) { _ in
+            self.openAlbum()
+        }
+        lazy var defaultImageAction = UIAlertAction(title: "기본 이미지로 변경", style: .default) { _ in
+            self.profileImage = nil
+            self.profileView.cameraIconView.isHidden = false
+        }
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+        alert.addAction(selectImageAction)
+        
+        if profileView.imagePickerView.image != nil {
+            alert.addAction(defaultImageAction)
+        }
+        
+        alert.addAction(cancelAction)
+        present(alert, animated: true)
+    }
+    
+    @objc private func doneButtonTapped() {
+        Network.shared.register(user: User(id: nil, email: email, pw: pw, nickName: profileView.nickNameTextField.text, name: "멸치", phone: "010-1111-1111", profileImageUrl: nil), image: profileImage) { user in
+            
+        }
+    }
+    
+    private func openAlbum() {
+        PHPhotoLibrary.requestAuthorization( { status in
+            
+            switch status {
+            case .authorized:
+                DispatchQueue.main.async {
+                    self.setupImagePicker()
+                }
+            case .denied:
+                if self.isAuthForAlbum == false {
+                    DispatchQueue.main.async {
+                        self.AuthSettingOpen()
+                    }
+                }
+                self.isAuthForAlbum = false
+                
+            case .restricted, .notDetermined:
+                break
+            default:
+                break
+            }
+        })
+    }
+    
+    private func AuthSettingOpen() {
+
+        let message = "📌프로필 사진 변경을\n위해 사진 접근 권한이\n필요합니다"
+        let alert = UIAlertController(title: "", message: message, preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "취소", style: .default)
+        let settingAction = UIAlertAction(title: "설정하기", style: .default) { (UIAlertAction) in
+            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+        }
+        
+        alert.addAction(cancelAction)
+        alert.addAction(settingAction)
+        
+        //alert 사이즈 변경
+        let widthConstraints = alert.view.constraints.filter({ return $0.firstAttribute == .width })
+        
+        alert.view.removeConstraints(widthConstraints)
+        
+        let newWidth = UIScreen.main.bounds.width * 0.6
+        let widthConstraint = NSLayoutConstraint(item: alert.view!,
+                                                 attribute: .width,
+                                                 relatedBy: .equal,
+                                                 toItem: nil,
+                                                 attribute: .notAnAttribute,
+                                                 multiplier: 1,
+                                                 constant: newWidth)
+        
+        alert.view.addConstraint(widthConstraint)
+        
+        let firstContainer = alert.view.subviews[0]
+        let constraint = firstContainer.constraints.filter({ return $0.firstAttribute == .width && $0.secondItem == nil })
+        
+        firstContainer.removeConstraints(constraint)
+        alert.view.addConstraint(NSLayoutConstraint(item: firstContainer,
+                                                    attribute: .width,
+                                                    relatedBy: .equal,
+                                                    toItem: alert.view,
+                                                    attribute: .width,
+                                                    multiplier: 1.0,
+                                                    constant: 0))
+        
+        let innerBackground = firstContainer.subviews[0]
+        let innerConstraints = innerBackground.constraints.filter({ return $0.firstAttribute == .width && $0.secondItem == nil })
+        
+        innerBackground.removeConstraints(innerConstraints)
+        firstContainer.addConstraint(NSLayoutConstraint(item: innerBackground,
+                                                        attribute: .width,
+                                                        relatedBy: .equal,
+                                                        toItem: firstContainer,
+                                                        attribute: .width,
+                                                        multiplier: 1.0,
+                                                        constant: 0))
+        
+        present(alert, animated: true, completion: nil)
+    }
+    
+    private func setupImagePicker() {
+        
+        var configuration = PHPickerConfiguration()
+        
+        configuration.selectionLimit = 1
+        configuration.filter = .any(of: [.images])
+        
+        let picker = PHPickerViewController(configuration: configuration)
+        
+        picker.delegate = self
+
+        self.present(picker, animated: true, completion: nil)
+    }
+}
+
+extension ProfileSettingViewController: UITextFieldDelegate {
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        let currentText = NSString(string: textField.text ?? "")
+        let finalText = currentText.replacingCharacters(in: range, with: string)
+        
+        profileView.doneButton.isEnabled = finalText.count > 0 ? true : false
+        profileView.doneButton.backgroundColor = finalText.count > 0 ? UIColor.appColor(.carrot) : .systemGray
+        
+        return finalText.count <= 10
+    }
+}
+
+extension ProfileSettingViewController: PHPickerViewControllerDelegate {
+    
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        
+        picker.dismiss(animated: true)
+        
+        let itemProvider = results.first?.itemProvider
+        
+        if let itemProvider = itemProvider, itemProvider.canLoadObject(ofClass: UIImage.self) {
+            
+            itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
+                DispatchQueue.main.async {
+                    self.profileImage = image as? UIImage
+                    self.profileView.cameraIconView.isHidden = true
+                }
+            }
+        } else {
+            print("이미지 못 불러왔음!!!!")
+        }
+    }
+}

@@ -25,7 +25,7 @@ final class ReusableSignView: UIView {
     }()
     internal let passwordTextField: UITextField = {
         let textField = CustomTextField(placeholder: "비밀번호")
-        
+        textField.isSecureTextEntry = true
         return textField
     }()
     internal let signButton: UIButton = {
@@ -35,7 +35,8 @@ final class ReusableSignView: UIView {
         button.setTitleColor(.label, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        button.backgroundColor = UIColor.appColor(.carrot)
+        button.backgroundColor = .systemGray
+        button.isEnabled = false
         button.layer.cornerRadius = 10
         
         return button

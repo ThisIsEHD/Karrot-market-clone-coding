@@ -10,7 +10,8 @@ import Foundation
 enum NotificationType: String
 {
     case deleteButtonTapped = "deleteButtonTapped"
-
+    
+    
     var name: Notification.Name
     {
         return Notification.Name(self.rawValue)

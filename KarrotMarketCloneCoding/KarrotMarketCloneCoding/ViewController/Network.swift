@@ -29,6 +29,9 @@ struct Network {
                 return
             }
             if let statusCode = response.response?.statusCode, (200...299).contains(statusCode) {
+                auth(email: user.email ?? "", pw: user.pw ?? "") { _ in
+//                    <#code#>
+                }
                 completion(nil)
             } else if let data = response.data {
                 completion(jsonDecode(type: User.self, data: data))
@@ -37,53 +40,60 @@ struct Network {
         }
     }
     
-    func auth(email: String, pw: String, completion: @escaping (Token) -> Void) {
+    func auth(email: String, pw: String, completion: @escaping (SimpleAlert?) -> Void) {
         let credential = Credential(email: email, pw: pw)
         AF.request(Purpose.login(credential)).response { response in
             guard let httpResponse = response.response else { return }
             switch httpResponse.statusCode {
-                case 200:
-                    guard let token = httpResponse.allHeaderFields["Authorization"] as? String else { fatalError() }
-                print(token)
-                    completion(token)
-                case 400:
-                    guard let data = response.data else { fatalError() }
-                    let json = data.toDictionary()
-                    print("Auth Failure Response: \(json)")
-                    return
-                case 401:
-                    print("비밀번호를 다시 입력해주세요")
-                    return
-                case 404:
-                    print("존재하지 않는 사용자입니다.")
-                    return
-                default:
-                    print("서버에러")
-                    break
+            case 200:
+                guard let token = httpResponse.allHeaderFields["Authorization"] as? String else { fatalError() }
+                
+                UserDefaults.standard.removeObject(forKey: Const.userId.value)  //로그아웃시로 빼버릴까
+                UserDefaults.standard.set(email, forKey: Const.userId.value)
+                KeyChain.create(key: email, token: token)
+                completion(nil)
+            case 400:
+                guard let data = response.data else { fatalError() }
+                let json = data.toDictionary()
+                print("Auth Failure Response: \(json)")
+            case 401:
+                let alert = SimpleAlert(message: "비밀번호를 다시 입력해주세요")
+                completion(alert)
+            case 404:
+                let alert = SimpleAlert(message: "존재하지 않는 사용자입니다.")
+                completion(alert)
+            default:
+                let alert = SimpleAlert(message: "서버에러. 나중에 다시 시도해주세요.")
+                completion(alert)
             }
         }
         
         // response 정보처리모듈화 필요.
     }
     
-    func fetch(completion: @escaping (User?) -> Void) {
-        AF.request(Purpose.fetchUser, interceptor: MyInterceptor()).response { response in
-            if let err = response.error{    //응답 에러
-                print(err)
-                return
+    func fetchUser(id: String, completion: @escaping (User?) -> Void) {
+        print(#function)
+        AF.request(Purpose.fetchUser(id)).response { response in
+            if let _ = response.error{    //응답 에러
+                print(#function, "⭐️")
+                completion(nil)
             }
             if let statusCode = response.response?.statusCode, (200...299).contains(statusCode) {
                 print("fetch success")
                 guard let data = response.data, let user = try? JSONDecoder().decode(User.self, from: data) else {
                     fatalError()
                 }
+                print(#function, "⭐️⭐️")
                 completion(user)
                 
-            } else if let data = response.data {
-                let json = data.toDictionary()
-                print(response.response?.statusCode as Any)
-                print("Failure Response: \(json)")
-                fatalError()
+            } else {
+                print(response.response?.statusCode)
+                print(#function, "⭐️⭐️⭐️")
+                completion(nil)
+//                let json = data.toDictionary()
+//                print(response.response?.statusCode as Any)
+//                print("Failure Response: \(json)")
+//                fatalError()
             }
         }
     }
