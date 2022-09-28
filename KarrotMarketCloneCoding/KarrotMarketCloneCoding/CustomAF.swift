@@ -20,7 +20,7 @@ enum Purpose: Requestable {
     case fetchUser(ID)
     case registerUser
     case update(User)
-    case fetch(QueryItem)
+    case fetch([String : Any])
 }
 
 extension Purpose {
@@ -105,16 +105,9 @@ extension Purpose {
                 urlRequest.httpBody = jsonParameter
             case .none:
                 return urlRequest
-            case .query(let queryItems):
-                if var url = urlRequest.url, var urlComponent = URLComponents(url: url, resolvingAgainstBaseURL: false) {
-                    let queryItems = [URLQueryItem(name: "keyword", value: queryItems.keyword),
-                                      URLQueryItem(name: "size", value: queryItems.size),
-                                      URLQueryItem(name: "category", value: queryItems.category),
-                                      URLQueryItem(name: "sort", value: queryItems.sort),
-                                      URLQueryItem(name: "last", value: queryItems.last)
-                    ]
-                    urlComponent.queryItems = queryItems
-                }
+            case .query(let query):
+            
+            return try URLEncoding.default.encode(urlRequest, with: query)
         }
         return urlRequest
     }
@@ -130,7 +123,8 @@ enum RequestHeaders {
 
 enum RequestParameters {
     case body(_ parameter: Encodable?)
-    case query(_ parameter: QueryItem)
+//    case query(_ parameter: QueryItem)
+    case query([String : Any])
     case none
 }
 

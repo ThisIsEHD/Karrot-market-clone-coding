@@ -153,8 +153,7 @@ extension HomeViewController: UITableViewDelegate {
         let frameHeight = scrollView.frame.size.height
         if heightRemainFromBottom < frameHeight {
             
-            viewModel.loadData(lastID: viewModel
-                                .ItemID)
+            viewModel.loadData(lastID: viewModel.lastItemID)
         }
     }
     

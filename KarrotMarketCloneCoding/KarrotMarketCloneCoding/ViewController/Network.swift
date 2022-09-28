@@ -124,34 +124,46 @@ struct Network {
         }
     }
     
-    func fetchItems(completion: @escaping (FetchedItemsList?) -> ()) {
-        AF.request(Purpose.fetch(QueryItem(keyword: nil, size: nil, category: nil, sort: nil, last: nil))).response { response in
-            if let err = response.error {
-                print("🛑")
-                print(err)
-                completion(nil)
-                return
-            }
-            if let statusCode = response.response?.statusCode, (200...299).contains(statusCode) {
-                guard let data = response.data else { return }
-                print("🛑🛑")
-                print(data.toDictionary())
-                do {
-                    let list = try JSONDecoder().decode(FetchedItemsList.self, from: data)
-                    print(list)
-                    completion(list)
-                } catch {
-                    print(error)
-                }
-//                completion(jsonDecode(type: FetchedItemsList.self, data: data))
+    func fetchItems(keyword: String?, category: Int?, sort: String?, lastId: Int?, completion: @escaping (Result<FetchedItemsList?, KarrotError>) -> ()) {
+        var queryItems = [String : Any]()
 
-            } else if let data = response.data {
-                let json = data.toDictionary()
-                print("🛑🛑🛑")
-                print("Register Failure Response: \(json)")
-                completion(nil)
-            }
+        if let keyword = keyword {
+            queryItems["keyword"] = keyword
         }
+        if let category = category {
+            queryItems["category"] = category
+        }
+        if let sort = sort {
+            queryItems["sort"] = sort
+        }
+        if let lastId = lastId {
+            queryItems["last"] = lastId
+        }
+
+        AF.request(Purpose.fetch(queryItems)).response { response in
+                if let err = response.error {
+                    print(err)
+                    completion(.failure(.serverError))
+                    return
+                }
+                if let statusCode = response.response?.statusCode, (200...299).contains(statusCode) {
+                    guard let data = response.data else { return }
+                    
+                    do {
+                        let list = try JSONDecoder().decode(FetchedItemsList.self, from: data)
+                        completion(.success(list))
+                    } catch {
+                        print(error)
+                        completion(.failure(.serverError))
+                    }
+                    
+                } else if let data = response.data {
+                    let json = data.toDictionary()
+                    
+                    print("Register Failure Response: \(json)")
+                    completion(.failure(.serverError))
+                }
+            }
     }
     
     func jsonDecode<T: Codable>(type: T.Type, data: Data) -> T? {
@@ -166,164 +178,8 @@ struct Network {
             
             return result as? T
         } catch {
-            print("🥶")
             print(error)
-            
             return nil
         }
     }
-    
-    
-    
-    
-    
-    
-    
-//    func getItemsListFetchingURL(keyword: String? = nil, number: Int? = nil, category: Int? = nil, sort: Sort? = nil, last: Int? = nil) -> String{
-//
-//        var url = "http://ec2-43-200-120-225.ap-northeast-2.compute.amazonaws.com/api/v1/products?"
-//        var isFirstQuery = true
-//
-//        if keyword == nil, number == nil, category == nil, sort == nil, last == nil {
-//            url.remove(at: url.index(before: url.endIndex))
-//        }
-//
-//        if let keyword = keyword {
-//
-//            if isFirstQuery == true {
-//
-//                url.append(contentsOf: "keyword=\(keyword)")
-//                isFirstQuery = false
-//            }
-//        }
-//
-//        if let number = number {
-//
-//            if isFirstQuery == true{
-//
-//                url.append(contentsOf: "number=\(number)")
-//                isFirstQuery = false
-//            } else {
-//                url.append(contentsOf: "&number=\(number)")
-//            }
-//
-//        }
-//
-//        if let category = category {
-//
-//            if isFirstQuery == true {
-//
-//                url.append(contentsOf: "category=\(category)")
-//                isFirstQuery = false
-//            } else {
-//                url.append(contentsOf: "&category=\(category)")
-//            }
-//        }
-//
-//        if let sort = sort {
-//
-//            if isFirstQuery == true {
-//
-//                url.append(contentsOf: "sort=\(sort)")
-//                isFirstQuery = false
-//            } else {
-//                url.append(contentsOf: "&sort=\(sort)")
-//            }
-//        }
-//
-//        if let last = last {
-//
-//            if isFirstQuery == true {
-//
-//                url.append(contentsOf: "last=\(last)")
-//                isFirstQuery = false
-//            } else {
-//                url.append(contentsOf: "&last=\(last)")
-//            }
-//        }
-//
-//        return url
-//    }
-//    
-//    func fetchItems(keyword: String? = nil, number: Int? = nil, category: Int? = nil, sort: Sort? = nil, last: Int? = nil) -> [Item] {
-//
-//        var url = "http://ec2-43-200-120-225.ap-northeast-2.compute.amazonaws.com/api/v1/products?"
-//        var isFirstQuery = true
-//
-//        if keyword == nil, number == nil, category == nil, sort == nil, last == nil {
-//            url.remove(at: url.endIndex)
-//        }
-//
-//        if let keyword = keyword {
-//            if isFirstQuery == true {
-//                url.append(contentsOf: "keyword=\(keyword)")
-//                isFirstQuery = false
-//            }
-//        }
-//
-//        if let number = number {
-//            if isFirstQuery == true{
-//                url.append(contentsOf: "number=\(number)")
-//                isFirstQuery = false
-//            } else {
-//                url.append(contentsOf: "&number=\(number)")
-//            }
-//
-//        }
-//
-//        if let category = category {
-//            if isFirstQuery == true {
-//                url.append(contentsOf: "category=\(category)")
-//                isFirstQuery = false
-//            } else {
-//                url.append(contentsOf: "&category=\(category)")
-//            }
-//        }
-//
-//        if let sort = sort {
-//            if isFirstQuery == true {
-//                url.append(contentsOf: "sort=\(sort)")
-//                isFirstQuery = false
-//            } else {
-//                url.append(contentsOf: "&sort=\(sort)")
-//            }
-//        }
-//
-//        if let last = last {
-//            if isFirstQuery == true {
-//                url.append(contentsOf: "last=\(last)")
-//                isFirstQuery = false
-//            } else {
-//                url.append(contentsOf: "&last=\(last)")
-//            }
-//        }
-//
-////        var items = Items(keyword: nil, category: nil, products: [], size: 0)
-//        var items = [Item]()
-//
-//        AF.request(url).validate().validate(contentType: ["application/json"]).responseData { response in
-//
-//            switch response.result {
-//
-//            case .success(let data):
-//                do {
-//                    let jsonDecoder = JSONDecoder()
-//
-//                    jsonDecoder.dateDecodingStrategy = .formatted(DateFormatter.myDateFormatter)
-//
-//                    let decodedItems = try jsonDecoder.decode(ItemsList.self, from: data)
-//
-//                    items = decodedItems.products
-//
-//
-//                } catch(let error) {
-//                    print(error.localizedDescription)
-//                }
-//
-//            case .failure(let error):
-//                print(error.localizedDescription)
-//            }
-//        }
-//        return items
-//    }
 }

@@ -16,7 +16,7 @@ struct FetchedItemsList: Codable, Hashable {
     
     enum CodingKeys: String, CodingKey {
         case keyword, category, size
-        case Items = "products"
+        case items = "products"
     }
 }
 
@@ -28,7 +28,7 @@ struct Item: Codable {
     let regdate: String //일단여기 잠깐 string
     let views: Int?
     let wishes: Int
-    let images: [Image]
+    let images: [Image]?
 }
 
 extension Item: Hashable {
@@ -47,7 +47,7 @@ struct Image: Codable, Hashable {
     let url: String
     
     enum CodingKeys: String, CodingKey {
-        case ItemID = "productId"
+        case itemID = "productId"
         case id, url, sequence
     }
 }

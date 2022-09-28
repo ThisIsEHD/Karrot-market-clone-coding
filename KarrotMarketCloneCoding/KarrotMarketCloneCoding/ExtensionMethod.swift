@@ -9,10 +9,10 @@ import Foundation
 
 struct QueryItem {
     let keyword: String?
-    let size: String?
-    let category: String?
+    let size: Int?
+    let category: Int?
     let sort: String?
-    let last: String?
+    let last: Int?
     
 //    init(keyword: String? = nil, size: Int? = nil, category: Int? = nil, sort: Sort? = nil, last: Int? = nil) {
 //        self.keyword = keyword

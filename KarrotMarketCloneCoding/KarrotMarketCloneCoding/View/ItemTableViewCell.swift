@@ -196,7 +196,7 @@ class ItemTableViewCell: UITableViewCell {
     
     private func getThumbnailImage(completion: @escaping (UIImage?) -> ()) {
         
-        AF.request(item?.images.first?.url ?? "").validate().validate(contentType: ["application/octet-stream"]).responseData { response in
+        AF.request(item?.images?.first?.url ?? "").validate().validate(contentType: ["application/octet-stream"]).responseData { response in
             
             switch response.result {
                 
