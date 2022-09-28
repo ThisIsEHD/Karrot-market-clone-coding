@@ -81,20 +81,23 @@ extension Purpose {
     func asURLRequest() throws -> URLRequest {
         let url = try baseUrl.asURL()
         var urlRequest = try URLRequest(url: url.appendingPathComponent(path), method: method)
-        let userId = UserDefaults.standard.object(forKey: Const.userId.value) as? String ?? ""
+        let userId = UserDefaults.standard.object(forKey: Const.userId.asItIs) as? String ?? ""
         let accessToken = KeyChain.read(key: userId) ?? ""
+        var headers = HTTPHeaders()
         
         switch header {
         case .json:
-            urlRequest.headers = HTTPHeaders([HTTPHeader.contentType(Header.json.type)])
+            headers = [ Header.contentType.type : Header.json.type ]
         case .jsonWithToken:
-            urlRequest.headers = HTTPHeaders([HTTPHeader.contentType(Header.json.type), HTTPHeader.authorization(bearerToken: accessToken)])
+            headers = [ Header.contentType.type: Header.json.type, Header.authorization.type : accessToken ]
         case .multipart:
-            urlRequest.headers = HTTPHeaders([HTTPHeader.contentType(Header.multipart.type)])
+            headers = [ Header.contentType.type: Header.multipart.type ]
         case .multipartWithToken:
-            urlRequest.headers = HTTPHeaders([HTTPHeader.contentType(Header.multipart.type), HTTPHeader.authorization(bearerToken: accessToken)])
+            headers = [ Header.contentType.type: Header.multipart.type, Header.authorization.type : accessToken ]
         case .none: break
         }
+        
+        urlRequest.headers = headers
         
         switch parameters {
             case .body(let parameter):
@@ -132,6 +135,9 @@ enum RequestParameters {
 }
 
 enum Header: String {
+    case contentType = "Content-Type"
+    case authorization = "Authorization"
+    
     case json = "application/json"
     case multipart = "multipart/form-data"
     
@@ -139,12 +145,6 @@ enum Header: String {
         return self.rawValue
     }
 }
-
-//struct LoginResponse {
-//    let accessToken: String
-//    let refreshToken: String?
-//    var userId: String? { return accessToken.getUserId() }
-//}
 
 struct MyInterceptor: RequestInterceptor {
     func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {

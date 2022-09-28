@@ -12,17 +12,22 @@ import JWTDecode
 typealias Token = String
 typealias UserId = String
 
-enum RegisterError {
-    case alreadyExistingEmail
-    case alreadyExistingNickName
-    case networkError
+enum KarrotError: Error {
+    case invalidToken
+    case wrongPassword
+    case duplicatedEmail
+    case duplicatedNickName
+    case unknownUser
+    
+    case serverError
 }
 
 struct Network {
     
     static let shared = Network()
     
-    func register(user: User, image: UIImage?, completion: @escaping (RegisterError?) -> ()) {
+    func register(user: User, image: UIImage?, completion: @escaping (Result<Data?,KarrotError>) -> ()) {
+        
         guard let imageData = (image ?? UIImage(named: "user-selected"))?.jpegData(compressionQuality: 0.5) else { return }
         guard let jsonData = try? JSONEncoder().encode(user) else { return }
 
@@ -35,79 +40,86 @@ struct Network {
             
             switch httpResponse.statusCode {
             case 201:
-                completion(.none)
+                completion(.success(.none))
             case 400:
-                print(response.data ?? "네트워크 에러")
-                completion(.networkError)
-                
+                completion(.failure(.serverError))
             case 422:
                 guard let data = response.data else { return }
                 let user = jsonDecode(type: User.self, data: data)
                 
-                if user?.email != nil { completion(.alreadyExistingEmail) }
-                else if user?.nickName != nil { completion(.alreadyExistingNickName)}
-                else { completion(.none) }
-                
-            default: break
+                if user?.email != nil { completion(.failure(.duplicatedEmail)) }
+                else if user?.nickName != nil { completion(.failure(.duplicatedNickName))}
+                else { completion(.failure(.serverError)) }
+            default:
+                completion(.failure(.serverError))
             }
         }
     }
     
-    func auth(email: String, pw: String, completion: @escaping (SimpleAlert?) -> Void) {
-        print(#function)
+    func auth(email: String, pw: String, completion: @escaping (Result<Data?,KarrotError>) -> Void) {
+        
         let credential = Credential(email: email, pw: pw)
+        
         AF.request(Purpose.login(credential)).response { response in
+            if let _ = response.error{    //응답 에러
+                completion(.failure(.serverError))
+            }
             guard let httpResponse = response.response else { return }
+            
             switch httpResponse.statusCode {
             case 200:
-                guard let token = httpResponse.allHeaderFields["Authorization"] as? String else { fatalError() }
-                
+                guard let token = httpResponse.allHeaderFields["Authorization"] as? String else {
+                    completion(.failure(.serverError))
+                    return
+                }
                 do {
                     let jwt = try decode(jwt: token)
+                    print(jwt)
                     guard let id = jwt.body["user_id"] else { return }
-                    
-                    UserDefaults.standard.removeObject(forKey: Const.userId.value)  //로그아웃시로 빼버릴거. keychain에서 토큰도 삭제해야.
-                    UserDefaults.standard.set(id, forKey: Const.userId.value)
+                    UserDefaults.standard.removeObject(forKey: Const.userId.asItIs)  //로그아웃시로 빼버릴거. keychain에서 토큰도 삭제해야.
+                    UserDefaults.standard.set(id, forKey: Const.userId.asItIs)
                     KeyChain.create(key: id as! String, token: token)
                     
-                    completion(nil)
+                    completion(.success(.none))
                 }
-                catch { print(error) }
+                catch { completion(.failure(.serverError)) }
                 
             case 400:
                 guard let data = response.data else { fatalError() }
                 let json = data.toDictionary()
+                
                 print("Auth Failure Response: \(json)")
+                completion(.failure(.serverError))
             case 401:
-                let alert = SimpleAlert(message: "비밀번호를 다시 입력해주세요")
-                completion(alert)
+                completion(.failure(.wrongPassword))
             case 404:
-                let alert = SimpleAlert(message: "존재하지 않는 사용자입니다.")
-                completion(alert)
+                completion(.failure(.unknownUser))
             default:
-                let alert = SimpleAlert(message: "서버에러. 나중에 다시 시도해주세요.")
-                completion(alert)
+                completion(.failure(.serverError))
             }
         }
-        
-        // response 정보처리모듈화 필요.
     }
     
-    func fetchUser(id: String, completion: @escaping (User?) -> Void) {
-        print(#function)
+    func fetchUser(id: String, completion: @escaping (Result<User,KarrotError>) -> Void) {
+        
         AF.request(Purpose.fetchUser(id)).response { response in
             if let _ = response.error{    //응답 에러
-                completion(nil)
+                completion(.failure(.serverError))
             }
-            if let statusCode = response.response?.statusCode, (200...299).contains(statusCode) {
-                guard let data = response.data, let user = try? JSONDecoder().decode(User.self, from: data) else {
-                    fatalError()
+            guard let httpResponse = response.response else { return }
+            switch httpResponse.statusCode {
+            case 200:
+                guard let data = response.data, let user = jsonDecode(type: User.self, data: data) else {
+                    completion(.failure(.serverError))
+                    return
                 }
-                completion(user)
-                
-            } else {
-                print(response.response?.statusCode)
-                completion(nil)
+                completion(.success(user))
+            case 401:
+                completion(.failure(.invalidToken))
+            case 403, 404:
+                completion(.failure(.unknownUser))
+            default:
+                completion(.failure(.serverError))
             }
         }
     }
@@ -125,7 +137,6 @@ struct Network {
 
             } else if let data = response.data {
                 let json = data.toDictionary()
-                print(response.response?.statusCode as Any)
                 print("Register Failure Response: \(json)")
             }
         }
@@ -149,6 +160,12 @@ struct Network {
             return nil
         }
     }
+    
+    
+    
+    
+    
+    
     
 //    func getMerchandisesListFetchingURL(keyword: String? = nil, number: Int? = nil, category: Int? = nil, sort: Sort? = nil, last: Int? = nil) -> String{
 //

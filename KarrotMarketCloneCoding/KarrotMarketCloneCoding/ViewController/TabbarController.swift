@@ -29,14 +29,29 @@ final class TabbarController: UITabBarController {
     }
     
     private func checkIfUserIsLoggedIn() {
-        let userId = UserDefaults.standard.object(forKey: Const.userId.value) as? String ?? ""
+        let userId = UserDefaults.standard.object(forKey: Const.userId.asItIs) as? String ?? ""
         let token = KeyChain.read(key: userId)
         
         if token == nil {
             presentUserCheckVC()
         } else {
-            Network.shared.fetchUser(id: userId) { user in
-                self.user = user
+            Network.shared.fetchUser(id: userId) { result in
+                switch result {
+                case .success(let user):
+                    self.user = user
+                case .failure(let error):
+                    
+                    switch error {
+                    case .serverError:
+                        let alert = SimpleAlert(message: "서버에러. 나중에 다시 시도해주세요.")
+                        DispatchQueue.main.async {
+                            self.present(alert, animated: true)
+                        }
+                    default:
+                        print(error)
+                        self.presentUserCheckVC()
+                    }
+                }
             }
         }
     }

@@ -10,7 +10,7 @@ import Foundation
 enum Const: String {
     case userId = "userId"
     
-    var value: String {
+    var asItIs: String {
         return self.rawValue
     }
 }

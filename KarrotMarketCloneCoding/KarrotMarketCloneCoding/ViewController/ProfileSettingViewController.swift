@@ -60,26 +60,27 @@ class ProfileSettingViewController: UIViewController {
     
     @objc private func doneButtonTapped() {
         let user = User(id: nil, email: email, pw: pw, nickName: profileView.nickNameTextField.text, profileImageUrl: nil)
-        Network.shared.register(user: user, image: profileImage) { error in
+        var alert: UIAlertController?
+        Network.shared.register(user: user, image: profileImage) { result in
             
-            switch error {
-            case .alreadyExistingEmail:
-                let alert = self.prepareAlert(title: "이미 사용중인 이메일입니다.", isPop: true)
-                DispatchQueue.main.async {
-                    self.present(alert, animated: true)
-                }
-            case .alreadyExistingNickName:
-                let alert = self.prepareAlert(title: "이미 사용중인 닉네임입니다.", isPop: false)
-                DispatchQueue.main.async {
-                    self.present(alert, animated: true)
-                }
-            case .networkError:
-                let alert = self.prepareAlert(title: "서버 에러. 나중에 다시 시도해주세요.", isPop: true)
-                DispatchQueue.main.async {
-                    self.present(alert, animated: true)
-                }
-            case .none:
+            switch result {
+            case .success:
                 self.signIn()
+            case .failure(let error):
+                switch error {
+                case .duplicatedEmail:
+                    alert = self.prepareAlert(title: "이미 사용중인 이메일입니다.", isPop: true)
+                case .duplicatedNickName:
+                    alert = self.prepareAlert(title: "이미 사용중인 닉네임입니다.", isPop: false)
+                case .serverError:
+                    alert = self.prepareAlert(title: "서버 에러. 나중에 다시 시도해주세요.", isPop: false)
+                default:
+                    alert = self.prepareAlert(title: "서버에러. 나중에 다시 시도해주세요.", isPop: false)
+                }
+                
+                DispatchQueue.main.async {
+                    self.present(alert!, animated: true)
+                }
             }
         }
     }
@@ -193,13 +194,18 @@ class ProfileSettingViewController: UIViewController {
     }
     
     private func signIn() {
-        Network.shared.auth(email: self.email ?? "", pw: self.pw ?? "") { alert in
-            
-            DispatchQueue.main.async {
-                if let alert = alert {
-                    self.present(alert, animated: true)
-                } else {
+        
+        Network.shared.auth(email: email ?? "", pw: pw ?? "") { result in
+            switch result {
+            case .success:
+                DispatchQueue.main.async {
                     self.dismiss(animated: true)
+                }
+            case .failure:
+                let alert = self.prepareAlert(title: "서버에러. 나중에 다시 시도해주세요.", isPop: false)
+
+                DispatchQueue.main.async {
+                    self.present(alert, animated: true)
                 }
             }
         }
