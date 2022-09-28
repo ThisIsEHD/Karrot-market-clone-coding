@@ -210,6 +210,6 @@ final class MyKarrotHeaderView: UIView {
 // MARK: - ProfileViewDelegate
 protocol ProfileViewDelegate: AnyObject {
     func goToMyProfileVC()
-    func selectedMerchandiseTableVC()
+    func selectedItemTableVC()
     func configureUserInfo(of: User?)
 }

@@ -1,5 +1,5 @@
 //
-//  MerchandiseTableViewCell.swift
+//  itemTableViewCell.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/07/22.
@@ -8,11 +8,11 @@
 import UIKit
 import Alamofire
 
-class MerchandiseTableViewCell: UITableViewCell {
+class ItemTableViewCell: UITableViewCell {
     
     // MARK: - Properties
     
-    var merchandise: Merchandise? {
+    var item: Item? {
         didSet {
             getThumbnailImage { image in
                 self.loadData(image: image)
@@ -196,7 +196,7 @@ class MerchandiseTableViewCell: UITableViewCell {
     
     private func getThumbnailImage(completion: @escaping (UIImage?) -> ()) {
         
-        AF.request(merchandise?.images.first?.url ?? "").validate().validate(contentType: ["application/octet-stream"]).responseData { response in
+        AF.request(item?.images.first?.url ?? "").validate().validate(contentType: ["application/octet-stream"]).responseData { response in
             
             switch response.result {
                 
@@ -215,8 +215,8 @@ class MerchandiseTableViewCell: UITableViewCell {
         if let image = image {
             thumbnailImageView.image = image
         }
-        nameLabel.text = merchandise?.title
-        priceLabel.text = "\(merchandise?.price ?? 0)"
-        wishLabel.text = "\(merchandise?.wishes ?? 0)"
+        nameLabel.text = item?.title
+        priceLabel.text = "\(item?.price ?? 0)"
+        wishLabel.text = "\(item?.wishes ?? 0)"
     }
 }

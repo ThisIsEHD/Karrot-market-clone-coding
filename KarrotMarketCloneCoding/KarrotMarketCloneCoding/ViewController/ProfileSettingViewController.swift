@@ -78,9 +78,7 @@ class ProfileSettingViewController: UIViewController {
                     alert = self.prepareAlert(title: "서버에러. 나중에 다시 시도해주세요.", isPop: false)
                 }
                 
-                DispatchQueue.main.async {
-                    self.present(alert!, animated: true)
-                }
+                DispatchQueue.main.async { self.present(alert!, animated: true) }
             }
         }
     }
@@ -90,17 +88,10 @@ class ProfileSettingViewController: UIViewController {
             
             switch status {
             case .authorized:
-                DispatchQueue.main.async {
-                    self.setupImagePicker()
-                }
+                DispatchQueue.main.async { self.setupImagePicker() }
             case .denied:
-                if self.isAuthForAlbum == false {
-                    DispatchQueue.main.async {
-                        self.AuthSettingOpen()
-                    }
-                }
+                if self.isAuthForAlbum == false { DispatchQueue.main.async { self.AuthSettingOpen() } }
                 self.isAuthForAlbum = false
-                
             case .restricted, .notDetermined:
                 break
             default:
@@ -182,11 +173,8 @@ class ProfileSettingViewController: UIViewController {
         
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         let alertAction = UIAlertAction(title: "확인", style: .default) { _ in
-            if isPop {
-                DispatchQueue.main.async {
-                    self.navigationController?.popViewController(animated: true)
-                }
-            }
+            
+            if isPop { DispatchQueue.main.async { self.navigationController?.popViewController(animated: true) } }
         }
         alert.addAction(alertAction)
         
@@ -198,15 +186,11 @@ class ProfileSettingViewController: UIViewController {
         Network.shared.auth(email: email ?? "", pw: pw ?? "") { result in
             switch result {
             case .success:
-                DispatchQueue.main.async {
-                    self.dismiss(animated: true)
-                }
+                DispatchQueue.main.async { self.dismiss(animated: true) }
             case .failure:
                 let alert = self.prepareAlert(title: "서버에러. 나중에 다시 시도해주세요.", isPop: false)
 
-                DispatchQueue.main.async {
-                    self.present(alert, animated: true)
-                }
+                DispatchQueue.main.async { self.present(alert, animated: true) }
             }
         }
     }
@@ -238,6 +222,7 @@ extension ProfileSettingViewController: PHPickerViewControllerDelegate {
         if let itemProvider = itemProvider, itemProvider.canLoadObject(ofClass: UIImage.self) {
             
             itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
+                
                 DispatchQueue.main.async {
                     self.profileImage = image as? UIImage
                     self.profileView.cameraIconView.isHidden = true

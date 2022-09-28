@@ -18,9 +18,7 @@ final class SignInViewController: SignUpViewController {
         Network.shared.auth(email: email, pw: password) { result in
             switch result {
             case .success:
-                DispatchQueue.main.async {
-                    self.dismiss(animated: true)
-                }
+                DispatchQueue.main.async { self.dismiss(animated: true) }
             case .failure(let error):
                 switch error {
                 case .wrongPassword:
@@ -33,9 +31,7 @@ final class SignInViewController: SignUpViewController {
                     alert = self.prepareAlert(title: "서버에러. 나중에 다시 시도해주세요.", isPop: false)
                 }
 
-                DispatchQueue.main.async {
-                    self.present(alert!, animated: true)
-                }
+                DispatchQueue.main.async { self.present(alert!, animated: true) }
             }
         }
     }
@@ -52,9 +48,7 @@ final class SignInViewController: SignUpViewController {
         let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)
         let alertAction = UIAlertAction(title: "확인", style: .default) { _ in
             if isPop {
-                DispatchQueue.main.async {
-                    self.navigationController?.popViewController(animated: true)
-                }
+                DispatchQueue.main.async { self.navigationController?.popViewController(animated: true) }
             }
         }
         alert.addAction(alertAction)

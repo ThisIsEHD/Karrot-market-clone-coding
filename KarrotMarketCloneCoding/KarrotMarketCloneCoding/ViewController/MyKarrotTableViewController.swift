@@ -171,6 +171,6 @@ extension MyKarrotTableViewController: ProfileViewDelegate {
         navigationController?.pushViewController(profileEditingVC, animated: true)
     }
     
-    func selectedMerchandiseTableVC() {
+    func selectedItemTableVC() {
     }
 }

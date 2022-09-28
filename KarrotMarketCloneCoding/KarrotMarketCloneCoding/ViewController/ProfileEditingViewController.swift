@@ -107,9 +107,7 @@ extension ProfileEditingViewController: PHPickerViewControllerDelegate {
         if let itemProvider = itemProvider, itemProvider.canLoadObject(ofClass: UIImage.self) {
             
             itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
-                DispatchQueue.main.async {
-                    self.profileEditingView.imagePickerView.image = image as? UIImage
-                }
+                DispatchQueue.main.async { self.profileEditingView.imagePickerView.image = image as? UIImage }
             }
         } else {
             print("이미지 못 불러왔음!!!!")

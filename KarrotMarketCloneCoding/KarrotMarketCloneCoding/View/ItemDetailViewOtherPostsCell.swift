@@ -1,5 +1,5 @@
 //
-//  MerchandiseDetailViewPostsCell.swift
+//  ItemDetailViewPostsCell.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/07/18.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MerchandiseDetailViewOtherPostsCell: UITableViewCell {
+class ItemDetailViewOtherPostsCell: UITableViewCell {
     
     // MARK: - Properties
     let tableTitlelabel: UILabel = {
@@ -54,7 +54,7 @@ class MerchandiseDetailViewOtherPostsCell: UITableViewCell {
 
 // MARK: - UICollectionViewDataSource
 
-extension MerchandiseDetailViewOtherPostsCell: UICollectionViewDataSource {
+extension ItemDetailViewOtherPostsCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 2
     }
@@ -67,7 +67,7 @@ extension MerchandiseDetailViewOtherPostsCell: UICollectionViewDataSource {
 
 // MARK: - UICollectionViewDelegateFlowLayout
 
-extension MerchandiseDetailViewOtherPostsCell: UICollectionViewDelegateFlowLayout {
+extension ItemDetailViewOtherPostsCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         guard let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else { return CGSize.zero }

@@ -124,20 +124,32 @@ struct Network {
         }
     }
     
-    func fetchItems(completion: @escaping (FetchedMerchandisesList?) -> ()) {
+    func fetchItems(completion: @escaping (FetchedItemsList?) -> ()) {
         AF.request(Purpose.fetch(QueryItem(keyword: nil, size: nil, category: nil, sort: nil, last: nil))).response { response in
             if let err = response.error {
-                print("🛑",err)
+                print("🛑")
+                print(err)
+                completion(nil)
                 return
             }
             if let statusCode = response.response?.statusCode, (200...299).contains(statusCode) {
                 guard let data = response.data else { return }
-                
-                completion(jsonDecode(type: FetchedMerchandisesList.self, data: data))
+                print("🛑🛑")
+                print(data.toDictionary())
+                do {
+                    let list = try JSONDecoder().decode(FetchedItemsList.self, from: data)
+                    print(list)
+                    completion(list)
+                } catch {
+                    print(error)
+                }
+//                completion(jsonDecode(type: FetchedItemsList.self, data: data))
 
             } else if let data = response.data {
                 let json = data.toDictionary()
+                print("🛑🛑🛑")
                 print("Register Failure Response: \(json)")
+                completion(nil)
             }
         }
     }
@@ -154,7 +166,7 @@ struct Network {
             
             return result as? T
         } catch {
-            
+            print("🥶")
             print(error)
             
             return nil
@@ -167,7 +179,7 @@ struct Network {
     
     
     
-//    func getMerchandisesListFetchingURL(keyword: String? = nil, number: Int? = nil, category: Int? = nil, sort: Sort? = nil, last: Int? = nil) -> String{
+//    func getItemsListFetchingURL(keyword: String? = nil, number: Int? = nil, category: Int? = nil, sort: Sort? = nil, last: Int? = nil) -> String{
 //
 //        var url = "http://ec2-43-200-120-225.ap-northeast-2.compute.amazonaws.com/api/v1/products?"
 //        var isFirstQuery = true
@@ -233,7 +245,7 @@ struct Network {
 //        return url
 //    }
 //    
-//    func fetchMerchandises(keyword: String? = nil, number: Int? = nil, category: Int? = nil, sort: Sort? = nil, last: Int? = nil) -> [Merchandise] {
+//    func fetchItems(keyword: String? = nil, number: Int? = nil, category: Int? = nil, sort: Sort? = nil, last: Int? = nil) -> [Item] {
 //
 //        var url = "http://ec2-43-200-120-225.ap-northeast-2.compute.amazonaws.com/api/v1/products?"
 //        var isFirstQuery = true
@@ -286,8 +298,8 @@ struct Network {
 //            }
 //        }
 //
-////        var merchandises = Merchandises(keyword: nil, category: nil, products: [], size: 0)
-//        var merchandises = [Merchandise]()
+////        var items = Items(keyword: nil, category: nil, products: [], size: 0)
+//        var items = [Item]()
 //
 //        AF.request(url).validate().validate(contentType: ["application/json"]).responseData { response in
 //
@@ -299,9 +311,9 @@ struct Network {
 //
 //                    jsonDecoder.dateDecodingStrategy = .formatted(DateFormatter.myDateFormatter)
 //
-//                    let decodedMerchandises = try jsonDecoder.decode(MerchandisesList.self, from: data)
+//                    let decodedItems = try jsonDecoder.decode(ItemsList.self, from: data)
 //
-//                    merchandises = decodedMerchandises.products
+//                    items = decodedItems.products
 //
 //
 //                } catch(let error) {
@@ -312,6 +324,6 @@ struct Network {
 //                print(error.localizedDescription)
 //            }
 //        }
-//        return merchandises
+//        return items
 //    }
 }

@@ -1,5 +1,5 @@
 //
-//  MerchandiseDetailViewController.swift
+//  ItemDetailViewController.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/07/18.
@@ -7,12 +7,12 @@
 
 import UIKit
 
-class MerchandiseDetailViewController: UIViewController, UITableViewDelegate {
+class ItemDetailViewController: UIViewController, UITableViewDelegate {
 // MARK: - Properties
     
     private let list = [UIColor.red, UIColor.green, UIColor.blue, UIColor.gray, UIColor.black]
     
-    var merchandise: Merchandise?
+    var item: Item?
     
     private let imageListCollectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
@@ -20,7 +20,7 @@ class MerchandiseDetailViewController: UIViewController, UITableViewDelegate {
         flowLayout.minimumLineSpacing = 0
         let cv = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         cv.showsHorizontalScrollIndicator = false
-        cv.register(MerchandiseDetailViewImageCell.self, forCellWithReuseIdentifier: "ImageCell")
+        cv.register(ItemDetailViewImageCell.self, forCellWithReuseIdentifier: "ImageCell")
         cv.isPagingEnabled = true
         return cv
     }()
@@ -36,23 +36,23 @@ class MerchandiseDetailViewController: UIViewController, UITableViewDelegate {
     
     private let contentListView: UITableView = {
         let tv = UITableView()
-        tv.register(MerchandiseDetailViewProfileCell.self, forCellReuseIdentifier: "ProfileCell")
-        tv.register(MerchandiseDescriptionCell.self, forCellReuseIdentifier: "DescriptionCell")
-        tv.register(MerchandiseDetailViewOtherPostsCell.self, forCellReuseIdentifier: "PostCell")
+        tv.register(ItemDetailViewProfileCell.self, forCellReuseIdentifier: "ProfileCell")
+        tv.register(ItemDescriptionCell.self, forCellReuseIdentifier: "DescriptionCell")
+        tv.register(ItemDetailViewOtherPostsCell.self, forCellReuseIdentifier: "PostCell")
         // contentInset이 조정되지 않아 테이블뷰의 topAnchor가 superview의 topAnchor와 같아짐
         tv.contentInsetAdjustmentBehavior = .never
         tv.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         return tv
     }()
     
-    private lazy var merchandiseDetailTableHeaderView: UIView = {
-        let v = MerchandiseDetailTableHeaderView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.width))
+    private lazy var itemDetailTableHeaderView: UIView = {
+        let v = ItemDetailTableHeaderView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.width))
         v.addSubview(imageListCollectionView)
         v.addSubview(imageListpageControl)
         return v
     }()
     
-    private let merchandiseDetailViewBottomStickyView = MerchandiseDetailViewBottomStickyView()
+    private let itemDetailViewBottomStickyView = ItemDetailViewBottomStickyView()
     
 // MARK: - Life Cycle
     
@@ -87,13 +87,13 @@ class MerchandiseDetailViewController: UIViewController, UITableViewDelegate {
         contentListView.dataSource = self
         // ScrollviewDelegate 사용을 위해
         contentListView.delegate = self
-        contentListView.tableHeaderView = merchandiseDetailTableHeaderView
+        contentListView.tableHeaderView = itemDetailTableHeaderView
         
         imageListCollectionView.dataSource = self
         imageListCollectionView.delegate = self
         
         view.addSubview(contentListView)
-        view.addSubview(merchandiseDetailViewBottomStickyView)
+        view.addSubview(itemDetailViewBottomStickyView)
     }
     
     // MARK: - Setting Constraints
@@ -119,7 +119,7 @@ class MerchandiseDetailViewController: UIViewController, UITableViewDelegate {
     }
     
     private func setBottomStickyViewConstraints() {
-        merchandiseDetailViewBottomStickyView.anchor(bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor, height: 120)
+        itemDetailViewBottomStickyView.anchor(bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor, height: 120)
         
     }
     
@@ -146,7 +146,7 @@ class MerchandiseDetailViewController: UIViewController, UITableViewDelegate {
 }
 // MARK: - UICollectionViewDataSource
 
-extension MerchandiseDetailViewController: UICollectionViewDataSource {
+extension ItemDetailViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return list.count
     }
@@ -161,7 +161,7 @@ extension MerchandiseDetailViewController: UICollectionViewDataSource {
 
 // MARK: - UICollectionViewDelegateFlowLayout
 
-extension MerchandiseDetailViewController: UICollectionViewDelegateFlowLayout {
+extension ItemDetailViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return collectionView.bounds.size
     }
@@ -169,7 +169,7 @@ extension MerchandiseDetailViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - UITableViewDataSource
 
-extension MerchandiseDetailViewController: UITableViewDataSource {
+extension ItemDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 4
     }
@@ -177,21 +177,21 @@ extension MerchandiseDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.row {
             case 0:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ProfileCell", for: indexPath) as! MerchandiseDetailViewProfileCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ProfileCell", for: indexPath) as! ItemDetailViewProfileCell
                 cell.selectionStyle = .none
                 return cell
 
             case 1:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "DescriptionCell", for: indexPath) as! MerchandiseDescriptionCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: "DescriptionCell", for: indexPath) as! ItemDescriptionCell
                 cell.selectionStyle = .none
                 return cell
             case 2:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! MerchandiseDetailViewOtherPostsCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! ItemDetailViewOtherPostsCell
                 cell.selectionStyle = .none
                 cell.tableTitlelabel.text = "욘두님의 판매 상품"
                 return cell
             case 3:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! MerchandiseDetailViewOtherPostsCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! ItemDetailViewOtherPostsCell
                 cell.selectionStyle = .none
                 cell.tableTitlelabel.text = "OO님, 이건어때요?"
                 return cell
@@ -203,9 +203,9 @@ extension MerchandiseDetailViewController: UITableViewDataSource {
 
 // MARK: - UIScrollViewDelegate
 
-extension MerchandiseDetailViewController: UIScrollViewDelegate {
+extension ItemDetailViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let headerView = self.contentListView.tableHeaderView as! MerchandiseDetailTableHeaderView
+        let headerView = self.contentListView.tableHeaderView as! ItemDetailTableHeaderView
         headerView.scrollViewDidScroll(scrollView: scrollView, pageControl: imageListpageControl)
         print(#function)
         

@@ -1,5 +1,5 @@
 //
-//  MerchandiseDetailViewProfileCell.swift
+//  ItemDetailViewProfileCell.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/07/18.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MerchandiseDetailViewProfileCell: UITableViewCell {
+class ItemDetailViewProfileCell: UITableViewCell {
     // MARK: - Properties
     
     private lazy var profileView: UIView = {

@@ -1,5 +1,5 @@
 //
-//  MerchandiseDetailTableHeaderView.swift
+//  ItemDetailTableHeaderView.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/07/20.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MerchandiseDetailTableHeaderView: UIView {
+class ItemDetailTableHeaderView: UIView {
     
     // MARK: - Properties
     private let containerView = UIView()

@@ -44,9 +44,7 @@ final class TabbarController: UITabBarController {
                     switch error {
                     case .serverError:
                         let alert = SimpleAlert(message: "서버에러. 나중에 다시 시도해주세요.")
-                        DispatchQueue.main.async {
-                            self.present(alert, animated: true)
-                        }
+                        DispatchQueue.main.async { self.present(alert, animated: true) }
                     default:
                         print(error)
                         self.presentUserCheckVC()
@@ -59,7 +57,7 @@ final class TabbarController: UITabBarController {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        checkIfUserIsLoggedIn()
+//        checkIfUserIsLoggedIn()
     }
     
     override func viewWillAppear(_ animated: Bool) {

@@ -211,12 +211,7 @@ extension NewPostTableViewController: PHPickerViewControllerDelegate {
 
                 itemProvider.loadObject(ofClass: UIImage.self) { image, error in
                     
-                    
-                    DispatchQueue.main.async {
-                        
-                        self.selectedImages.append(image as? UIImage)
-                    }
-                    
+                    DispatchQueue.main.async { self.selectedImages.append(image as? UIImage) }
                 }
             } else {
                 print("이미지 못 불러왔음!!!!")

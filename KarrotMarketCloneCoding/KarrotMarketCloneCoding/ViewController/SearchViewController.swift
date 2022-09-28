@@ -19,9 +19,9 @@ class SearchViewController: UIViewController{
     
     private lazy var navigationBottomView = SearchBarBottomView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width , height: 60))
         
-    private let MerchandiseTableView : UITableView = {
+    private let ItemTableView : UITableView = {
         let tv = UITableView(frame:CGRect.zero, style: .plain)
-        tv.register(MerchandiseTableViewCell.self, forCellReuseIdentifier: "MerchandiseTableViewCell")
+        tv.register(ItemTableViewCell.self, forCellReuseIdentifier: "ItemTableViewCell")
         tv.separatorColor = .systemGray5
         tv.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         return tv
@@ -31,7 +31,7 @@ class SearchViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         configureSearchController()
-        configureMerchandiseTableView()
+        configureItemTableView()
         setConstraints()
     }
     
@@ -56,11 +56,11 @@ class SearchViewController: UIViewController{
     }
     
     // MARK: - Configure TableView
-    private func configureMerchandiseTableView() {
-        MerchandiseTableView.delegate = self
-        MerchandiseTableView.dataSource = self
+    private func configureItemTableView() {
+        ItemTableView.delegate = self
+        ItemTableView.dataSource = self
                
-        view.addSubview(MerchandiseTableView)
+        view.addSubview(ItemTableView)
     }
     // MARK: - Setting Constraints
     
@@ -77,7 +77,7 @@ extension SearchViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MerchandiseTableViewCell", for: indexPath) as! MerchandiseTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ItemTableViewCell", for: indexPath) as! ItemTableViewCell
         return cell
     }
 }
@@ -90,7 +90,7 @@ extension SearchViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let vc = MerchandiseDetailViewController()
+        let vc = ItemDetailViewController()
         self.navigationController?.pushViewController(vc, animated: true)
         tableView.deselectRow(at: indexPath, animated: false)
     }
