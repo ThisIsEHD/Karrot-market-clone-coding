@@ -6,13 +6,16 @@
 //
 
 import UIKit
+import Alamofire
 
 class ItemDetailViewController: UIViewController, UITableViewDelegate {
 // MARK: - Properties
-    
-    private let list = [UIColor.red, UIColor.green, UIColor.blue, UIColor.gray, UIColor.black]
-    
-    var item: Item?
+
+    var item: Item? {
+        didSet {
+            
+        }
+    }
     
     private let imageListCollectionView: UICollectionView = {
         let flowLayout = UICollectionViewFlowLayout()
@@ -20,14 +23,14 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate {
         flowLayout.minimumLineSpacing = 0
         let cv = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         cv.showsHorizontalScrollIndicator = false
-        cv.register(ItemDetailViewImageCell.self, forCellWithReuseIdentifier: "ImageCell")
+        cv.register(ItemDetailViewImageCell.self, forCellWithReuseIdentifier: "ItemDetailViewImageCell")
         cv.isPagingEnabled = true
         return cv
     }()
     
     private lazy var imageListpageControl: UIPageControl = {
         let pc = UIPageControl()
-        pc.numberOfPages = list.count
+        pc.numberOfPages = item?.images?.count ?? 1
         pc.currentPage = 0
         pc.pageIndicatorTintColor = .systemGray5
         pc.currentPageIndicatorTintColor = .white
@@ -36,10 +39,10 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate {
     
     private let contentListView: UITableView = {
         let tv = UITableView()
-        tv.register(ItemDetailViewProfileCell.self, forCellReuseIdentifier: "ProfileCell")
-        tv.register(ItemDescriptionCell.self, forCellReuseIdentifier: "DescriptionCell")
-        tv.register(ItemDetailViewOtherPostsCell.self, forCellReuseIdentifier: "PostCell")
-        // contentInset이 조정되지 않아 테이블뷰의 topAnchor가 superview의 topAnchor와 같아짐
+        tv.register(ItemDetailViewProfileCell.self, forCellReuseIdentifier: "ItemDetailViewProfileCell")
+        tv.register(ItemDescriptionCell.self, forCellReuseIdentifier: "ItemDescriptionCell")
+        tv.register(ItemDetailViewOtherPostsCell.self, forCellReuseIdentifier: "ItemDetailViewOtherPostsCell")
+        
         tv.contentInsetAdjustmentBehavior = .never
         tv.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         return tv
@@ -51,6 +54,8 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate {
         v.addSubview(imageListpageControl)
         return v
     }()
+    
+    let statusBarView = UIView(frame: CGRect(x:0, y:0, width: UIScreen.main.bounds.width, height: UIApplication.shared.statusBarFrame.height))
     
     private let itemDetailViewBottomStickyView = ItemDetailViewBottomStickyView()
     
@@ -73,13 +78,10 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate {
         super.viewWillDisappear(animated)
         
         tabBarController?.tabBar.isHidden = false
-        navigationController?.navigationBar.barStyle = .default
+        
         navigationController?.navigationBar.backgroundColor = .systemBackground
         navigationController?.navigationBar.tintColor = .black
         navigationController?.navigationBar.shadowImage = .none
-        navigationController?.navigationBar.isHidden = false
-        navigationController?.navigationBar.setBackgroundImage(nil, for: .default)
-        navigationController?.navigationBar.isTranslucent = false
     }
     
     // MARK: - Configure Views
@@ -92,8 +94,13 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate {
         imageListCollectionView.dataSource = self
         imageListCollectionView.delegate = self
         
+        
         view.addSubview(contentListView)
         view.addSubview(itemDetailViewBottomStickyView)
+        
+        statusBarView.backgroundColor = .systemBackground
+        statusBarView.alpha = 0
+        view.addSubview(statusBarView)
     }
     
     // MARK: - Setting Constraints
@@ -115,7 +122,7 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate {
     }
     
     private func setContentListConstraints() {
-        contentListView.anchor(top: view.topAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
+        contentListView.anchor(top: view.topAnchor, bottom: view.bottomAnchor, bottomConstant: 120, leading: view.leadingAnchor, trailing: view.trailingAnchor)
     }
     
     private func setBottomStickyViewConstraints() {
@@ -124,23 +131,19 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate {
     }
     
     func setNavigationColorByHeight(_ sender: UIScrollView) {
-        if sender.contentOffset.y > 280 {
-            navigationController?.navigationBar.barStyle = .default
+        
+        if sender.contentOffset.y >= 300 {
             navigationController?.navigationBar.backgroundColor = .systemBackground
             navigationController?.navigationBar.tintColor = .black
             navigationController?.navigationBar.shadowImage = .none
-            navigationController?.isNavigationBarHidden = false
-            navigationController?.navigationBar.isTranslucent = false
-            
+            self.statusBarView.alpha = 1
         }
         else {
-            navigationController?.isNavigationBarHidden = true
-            navigationController?.navigationBar.barStyle = .black
             navigationController?.navigationBar.backgroundColor = .clear
             navigationController?.navigationBar.tintColor = .white
             navigationController?.navigationBar.shadowImage = UIImage()
-            navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-            navigationController?.navigationBar.isTranslucent = true
+            self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+            self.statusBarView.alpha = 0
         }
     }
 }
@@ -148,12 +151,29 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate {
 
 extension ItemDetailViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return list.count
+        return item?.images?.count ?? 1
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath)
-        cell.backgroundColor = list[indexPath.row]
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ItemDetailViewImageCell", for: indexPath) as! ItemDetailViewImageCell
+        
+        
+        AF.request(item?.images?.first?.url ?? "").validate().validate(contentType: ["application/octet-stream"]).responseData { response in
+            
+            switch response.result {
+                    
+                case .success(let data):
+                    DispatchQueue.main.async {
+                        cell.imageView.image = UIImage(data: data)
+                    }
+                    
+                case .failure(let error):
+                    
+                    print(error.localizedDescription)
+            }
+        }
+        
+        
         return cell
     }
     
@@ -177,21 +197,21 @@ extension ItemDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.row {
             case 0:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ProfileCell", for: indexPath) as! ItemDetailViewProfileCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewProfileCell", for: indexPath) as! ItemDetailViewProfileCell
                 cell.selectionStyle = .none
                 return cell
 
             case 1:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "DescriptionCell", for: indexPath) as! ItemDescriptionCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDescriptionCell", for: indexPath) as! ItemDescriptionCell
                 cell.selectionStyle = .none
                 return cell
             case 2:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! ItemDetailViewOtherPostsCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewOtherPostsCell", for: indexPath) as! ItemDetailViewOtherPostsCell
                 cell.selectionStyle = .none
                 cell.tableTitlelabel.text = "욘두님의 판매 상품"
                 return cell
             case 3:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell", for: indexPath) as! ItemDetailViewOtherPostsCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewOtherPostsCell", for: indexPath) as! ItemDetailViewOtherPostsCell
                 cell.selectionStyle = .none
                 cell.tableTitlelabel.text = "OO님, 이건어때요?"
                 return cell
@@ -207,7 +227,6 @@ extension ItemDetailViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let headerView = self.contentListView.tableHeaderView as! ItemDetailTableHeaderView
         headerView.scrollViewDidScroll(scrollView: scrollView, pageControl: imageListpageControl)
-        print(#function)
         
         setNavigationColorByHeight(scrollView)
     }

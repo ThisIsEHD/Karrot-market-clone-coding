@@ -20,7 +20,7 @@ struct FetchedItemsList: Codable, Hashable {
     }
 }
 
-// MARK: - Product
+// MARK: - Item
 struct Item: Codable {
     let id: Int
     let title: String

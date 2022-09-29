@@ -72,7 +72,6 @@ final class HomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(#function)
         
         view.backgroundColor = .systemBackground
         configureNavigationItems()
@@ -109,7 +108,7 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Configure ItemTableView
     private func configureItemTableView() {
-        
+        itemTableView.delegate = self
         itemTableView.dataSource = viewModel.dataSource
         view.addSubview(itemTableView)
     }
@@ -160,6 +159,7 @@ extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let vc = ItemDetailViewController()
+        vc.item = viewModel.dataSource?.itemIdentifier(for: indexPath)
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ItemTableViewCell", for: indexPath) as? ItemTableViewCell else { return }
         
@@ -171,7 +171,7 @@ extension HomeViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
-        return CGFloat(150.0)
+        return 150
     }
 }
 
