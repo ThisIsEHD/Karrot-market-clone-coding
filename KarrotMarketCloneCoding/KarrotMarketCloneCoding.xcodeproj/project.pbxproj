@@ -21,7 +21,7 @@
 		723FE683288539F200A987E7 /* ItemDetailViewDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE682288539F200A987E7 /* ItemDetailViewDescriptionCell.swift */; };
 		723FE68828853E0800A987E7 /* ItemDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE68728853E0800A987E7 /* ItemDetailViewController.swift */; };
 		723FE68C2887B3EF00A987E7 /* ItemDetailTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE68B2887B3EF00A987E7 /* ItemDetailTableHeaderView.swift */; };
-		723FE6902887E4AE00A987E7 /* ItemDetailViewImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE68F2887E4AE00A987E7 /* ItemDetailViewImageCell.swift */; };
+		723FE6902887E4AE00A987E7 /* ItemDetailViewImagesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE68F2887E4AE00A987E7 /* ItemDetailViewImagesCollectionViewCell.swift */; };
 		723FE692288806CB00A987E7 /* OtherPostsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE691288806CA00A987E7 /* OtherPostsCollectionViewCell.swift */; };
 		723FE6942888488600A987E7 /* ItemDetailViewBottomStickyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE6932888488600A987E7 /* ItemDetailViewBottomStickyView.swift */; };
 		723FE6962889085400A987E7 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE6952889085400A987E7 /* SearchViewController.swift */; };
@@ -96,7 +96,7 @@
 		723FE682288539F200A987E7 /* ItemDetailViewDescriptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewDescriptionCell.swift; sourceTree = "<group>"; };
 		723FE68728853E0800A987E7 /* ItemDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewController.swift; sourceTree = "<group>"; };
 		723FE68B2887B3EF00A987E7 /* ItemDetailTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailTableHeaderView.swift; sourceTree = "<group>"; };
-		723FE68F2887E4AE00A987E7 /* ItemDetailViewImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewImageCell.swift; sourceTree = "<group>"; };
+		723FE68F2887E4AE00A987E7 /* ItemDetailViewImagesCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewImagesCollectionViewCell.swift; sourceTree = "<group>"; };
 		723FE691288806CA00A987E7 /* OtherPostsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherPostsCollectionViewCell.swift; sourceTree = "<group>"; };
 		723FE6932888488600A987E7 /* ItemDetailViewBottomStickyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewBottomStickyView.swift; sourceTree = "<group>"; };
 		723FE6952889085400A987E7 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -325,7 +325,7 @@
 				723FE680288539A900A987E7 /* ItemDetailViewOtherPostsCell.swift */,
 				723FE691288806CA00A987E7 /* OtherPostsCollectionViewCell.swift */,
 				723FE61E287DACA100A987E7 /* MyKarrotTableViewCell.swift */,
-				723FE68F2887E4AE00A987E7 /* ItemDetailViewImageCell.swift */,
+				723FE68F2887E4AE00A987E7 /* ItemDetailViewImagesCollectionViewCell.swift */,
 				723FE6A1288AC87C00A987E7 /* ItemTableViewCell.swift */,
 			);
 			path = View;
@@ -494,7 +494,7 @@
 				723FE683288539F200A987E7 /* ItemDetailViewDescriptionCell.swift in Sources */,
 				723FE6982889091D00A987E7 /* TabbarController.swift in Sources */,
 				723FE68828853E0800A987E7 /* ItemDetailViewController.swift in Sources */,
-				723FE6902887E4AE00A987E7 /* ItemDetailViewImageCell.swift in Sources */,
+				723FE6902887E4AE00A987E7 /* ItemDetailViewImagesCollectionViewCell.swift in Sources */,
 				7248CA45288E57BB00DDF939 /* Network.swift in Sources */,
 				723FE6942888488600A987E7 /* ItemDetailViewBottomStickyView.swift in Sources */,
 				723FE61F287DACA100A987E7 /* MyKarrotTableViewCell.swift in Sources */,

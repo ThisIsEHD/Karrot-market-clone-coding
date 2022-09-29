@@ -16,7 +16,7 @@ enum KarrotError: Error {
     case invalidToken
     case wrongPassword
     case duplicatedEmail
-    case duplicatedNickName
+    case duplicatedNickname
     case unknownUser
     
     case serverError
@@ -30,28 +30,28 @@ struct Network {
         
         guard let imageData = (image ?? UIImage(named: "user-selected"))?.jpegData(compressionQuality: 0.5) else { return }
         guard let jsonData = try? JSONEncoder().encode(user) else { return }
-
+        
         AF.upload(multipartFormData: { data in
-
+            
             data.append(imageData, withName: "file", fileName: "file")
             data.append(jsonData, withName: "json")
         }, with: Purpose.registerUser).response { response in
             guard let httpResponse = response.response else { return }
             
             switch httpResponse.statusCode {
-            case 201:
-                completion(.success(.none))
-            case 400:
-                completion(.failure(.serverError))
-            case 422:
-                guard let data = response.data else { return }
-                let user = jsonDecode(type: User.self, data: data)
-                
-                if user?.email != nil { completion(.failure(.duplicatedEmail)) }
-                else if user?.nickName != nil { completion(.failure(.duplicatedNickName))}
-                else { completion(.failure(.serverError)) }
-            default:
-                completion(.failure(.serverError))
+                case 201:
+                    completion(.success(.none))
+                case 400:
+                    completion(.failure(.serverError))
+                case 422:
+                    guard let data = response.data else { return }
+                    let user = jsonDecode(type: User.self, data: data)
+                    
+                    if user?.email != nil { completion(.failure(.duplicatedEmail)) }
+                    else if user?.nickname != nil { completion(.failure(.duplicatedNickname))}
+                    else { completion(.failure(.serverError)) }
+                default:
+                    completion(.failure(.serverError))
             }
         }
     }
@@ -67,35 +67,35 @@ struct Network {
             guard let httpResponse = response.response else { return }
             
             switch httpResponse.statusCode {
-            case 200:
-                guard let token = httpResponse.allHeaderFields["Authorization"] as? String else {
-                    completion(.failure(.serverError))
-                    return
-                }
-                do {
-                    let jwt = try decode(jwt: token)
-                    print(jwt)
-                    guard let id = jwt.body["user_id"] else { return }
-                    UserDefaults.standard.removeObject(forKey: Const.userId.asItIs)  //로그아웃시로 빼버릴거. keychain에서 토큰도 삭제해야.
-                    UserDefaults.standard.set(id, forKey: Const.userId.asItIs)
-                    KeyChain.create(key: id as! String, token: token)
+                case 200:
+                    guard let token = httpResponse.allHeaderFields["Authorization"] as? String else {
+                        completion(.failure(.serverError))
+                        return
+                    }
+                    do {
+                        let jwt = try decode(jwt: token)
+                        print(jwt)
+                        guard let id = jwt.body["user_id"] else { return }
+                        UserDefaults.standard.removeObject(forKey: Const.userId.asItIs)  //로그아웃시로 빼버릴거. keychain에서 토큰도 삭제해야.
+                        UserDefaults.standard.set(id, forKey: Const.userId.asItIs)
+                        KeyChain.create(key: id as! String, token: token)
+                        
+                        completion(.success(.none))
+                    }
+                    catch { completion(.failure(.serverError)) }
                     
-                    completion(.success(.none))
-                }
-                catch { completion(.failure(.serverError)) }
-                
-            case 400:
-                guard let data = response.data else { fatalError() }
-                let json = data.toDictionary()
-                
-                print("Auth Failure Response: \(json)")
-                completion(.failure(.serverError))
-            case 401:
-                completion(.failure(.wrongPassword))
-            case 404:
-                completion(.failure(.unknownUser))
-            default:
-                completion(.failure(.serverError))
+                case 400:
+                    guard let data = response.data else { fatalError() }
+                    let json = data.toDictionary()
+                    
+                    print("Auth Failure Response: \(json)")
+                    completion(.failure(.serverError))
+                case 401:
+                    completion(.failure(.wrongPassword))
+                case 404:
+                    completion(.failure(.unknownUser))
+                default:
+                    completion(.failure(.serverError))
             }
         }
     }
@@ -108,25 +108,26 @@ struct Network {
             }
             guard let httpResponse = response.response else { return }
             switch httpResponse.statusCode {
-            case 200:
-                guard let data = response.data, let user = jsonDecode(type: User.self, data: data) else {
+                case 200:
+                    guard let data = response.data, let user = jsonDecode(type: User.self, data: data) else {
+                        completion(.failure(.serverError))
+                        return
+                    }
+                    completion(.success(user))
+                case 401:
+                    completion(.failure(.invalidToken))
+                case 403, 404:
+                    completion(.failure(.unknownUser))
+                default:
                     completion(.failure(.serverError))
-                    return
-                }
-                completion(.success(user))
-            case 401:
-                completion(.failure(.invalidToken))
-            case 403, 404:
-                completion(.failure(.unknownUser))
-            default:
-                completion(.failure(.serverError))
             }
         }
     }
     
     func fetchItems(keyword: String?, category: Int?, sort: String?, lastId: Int?, completion: @escaping (Result<FetchedItemsList?, KarrotError>) -> ()) {
+        
         var queryItems = [String : Any]()
-
+        
         if let keyword = keyword {
             queryItems["keyword"] = keyword
         }
@@ -139,31 +140,60 @@ struct Network {
         if let lastId = lastId {
             queryItems["last"] = lastId
         }
-
-        AF.request(Purpose.fetch(queryItems)).response { response in
-                if let err = response.error {
-                    print(err)
-                    completion(.failure(.serverError))
-                    return
-                }
-                if let statusCode = response.response?.statusCode, (200...299).contains(statusCode) {
-                    guard let data = response.data else { return }
-                    
-                    do {
-                        let list = try JSONDecoder().decode(FetchedItemsList.self, from: data)
-                        completion(.success(list))
-                    } catch {
-                        print(error)
-                        completion(.failure(.serverError))
-                    }
-                    
-                } else if let data = response.data {
-                    let json = data.toDictionary()
-                    
-                    print("Register Failure Response: \(json)")
-                    completion(.failure(.serverError))
-                }
+        
+        AF.request(Purpose.fetchItems(queryItems)).response { response in
+            if let err = response.error {
+                print(err)
+                completion(.failure(.serverError))
+                return
             }
+            if let statusCode = response.response?.statusCode, (200...299).contains(statusCode) {
+                guard let data = response.data else { return }
+                
+                do {
+                    let list = try JSONDecoder().decode(FetchedItemsList.self, from: data)
+                    completion(.success(list))
+                } catch {
+                    print(error)
+                    completion(.failure(.serverError))
+                }
+                
+            } else if let data = response.data {
+                let json = data.toDictionary()
+                
+                print("Register Failure Response: \(json)")
+                completion(.failure(.serverError))
+            }
+        }
+    }
+    
+    func fetchItem(id: ProductID, completion: @escaping (Result<Item?, KarrotError>) -> Void) {
+        
+        AF.request(Purpose.fetchItem(id)).response { response in
+            if let err = response.error {
+                print(err)
+                completion(.failure(.serverError))
+                return
+            }
+            
+            if let statusCode = response.response?.statusCode, (200...299).contains(statusCode) {
+                guard let data = response.data else { return }
+                
+                do {
+                    let item = try JSONDecoder().decode(Item.self, from: data)
+                    completion(.success(item))
+                } catch {
+                    print(error)
+                    completion(.failure(.serverError))
+                }
+                
+            } else if let data = response.data {
+                let json = data.toDictionary()
+                
+                print("Register Failure Response: \(json)")
+                completion(.failure(.serverError))
+            }
+        }
     }
     
     func jsonDecode<T: Codable>(type: T.Type, data: Data) -> T? {

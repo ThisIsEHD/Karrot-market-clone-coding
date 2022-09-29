@@ -30,8 +30,8 @@ class ProfileSettingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        profileView.nickNameTextField.delegate = self
-        profileView.nickNameTextField.placeholder = "닉네임"
+        profileView.nicknameTextField.delegate = self
+        profileView.nicknameTextField.placeholder = "닉네임"
         profileView.setupTapGestures(target: self, selector: #selector(touchUpImageView))
         profileView.doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
     }
@@ -59,7 +59,7 @@ class ProfileSettingViewController: UIViewController {
     
     
     @objc private func doneButtonTapped() {
-        let user = User(id: nil, email: email, pw: pw, nickName: profileView.nickNameTextField.text, profileImageUrl: nil)
+        let user = User(id: nil, email: email, pw: pw, nickname: profileView.nicknameTextField.text)
         var alert: UIAlertController?
         Network.shared.register(user: user, image: profileImage) { result in
             
@@ -70,7 +70,7 @@ class ProfileSettingViewController: UIViewController {
                 switch error {
                 case .duplicatedEmail:
                     alert = self.prepareAlert(title: "이미 사용중인 이메일입니다.", isPop: true)
-                case .duplicatedNickName:
+                case .duplicatedNickname:
                     alert = self.prepareAlert(title: "이미 사용중인 닉네임입니다.", isPop: false)
                 case .serverError:
                     alert = self.prepareAlert(title: "서버 에러. 나중에 다시 시도해주세요.", isPop: false)

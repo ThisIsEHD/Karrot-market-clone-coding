@@ -38,7 +38,7 @@ final class ReusableSettingProfileView: UIView {
         imageView.clipsToBounds = true
         return imageView
     }()
-    internal let nickNameTextField: UITextField = {
+    internal let nicknameTextField: UITextField = {
         let textField = CustomTextField(placeholder: "")
 //        textField.text = ""
         textField.textAlignment = .center
@@ -77,8 +77,8 @@ final class ReusableSettingProfileView: UIView {
         addSubview(cameraIconView)
         setCameraIconViewLayout()
         
-        addSubview(nickNameTextField)
-        setNickNameTextFieldLayout()
+        addSubview(nicknameTextField)
+        setNicknameTextFieldLayout()
         
         addSubview(guidelineLabel)
         setGuidelineLabelLayout()
@@ -100,12 +100,12 @@ final class ReusableSettingProfileView: UIView {
         cameraIconView.anchor(bottom: imagePickerView.bottomAnchor, bottomConstant: 15, trailing: imagePickerView.trailingAnchor, trailingConstant: 15, width: 30, height: 30)
     }
     
-    private func setNickNameTextFieldLayout() {
-        nickNameTextField.anchor(top: imagePickerView.bottomAnchor, topConstant: 25, leading: self.leadingAnchor, leadingConstant: 18, trailing: self.trailingAnchor, trailingConstant: 10)
+    private func setNicknameTextFieldLayout() {
+        nicknameTextField.anchor(top: imagePickerView.bottomAnchor, topConstant: 25, leading: self.leadingAnchor, leadingConstant: 18, trailing: self.trailingAnchor, trailingConstant: 10)
     }
     
     private func setGuidelineLabelLayout() {
-        guidelineLabel.centerX(inView: self, topAnchor: nickNameTextField.bottomAnchor, topConstant: 12)
+        guidelineLabel.centerX(inView: self, topAnchor: nicknameTextField.bottomAnchor, topConstant: 12)
     }
     
     private func setEditingDoneButtonLayout() {

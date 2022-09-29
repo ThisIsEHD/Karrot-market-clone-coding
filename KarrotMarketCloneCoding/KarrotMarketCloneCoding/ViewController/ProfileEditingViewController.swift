@@ -23,8 +23,8 @@ class ProfileEditingViewController: UIViewController {
         super.viewDidLoad()
         
         title = "프로필 수정"
-        profileEditingView.nickNameTextField.delegate = self
-        profileEditingView.nickNameTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        profileEditingView.nicknameTextField.delegate = self
+        profileEditingView.nicknameTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         profileEditingView.setupTapGestures(target: self, selector: #selector(touchUpImageView))
     }
     

@@ -1,5 +1,5 @@
 //
-//  ItemDescriptionCell.swift
+//  ItemDetailViewDescriptionCell.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/07/18.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ItemDescriptionCell: UITableViewCell {
+class ItemDetailViewDescriptionCell: UITableViewCell {
     // MARK: - Properties
     private let itemNameLabel: UILabel = {
         let lbl = UILabel()
@@ -37,12 +37,20 @@ class ItemDescriptionCell: UITableViewCell {
     
     private let extraInfoLabel: UILabel = {
         let lbl = UILabel()
-        lbl.text = "2 chasts, 6 favorites, 114 views"
+        lbl.text = "0 chats, 0 favorites, 0 views"
         lbl.font = UIFont.systemFont(ofSize: 13)
         lbl.textColor = .systemGray2
         return lbl
     }()
     // MARK: - Actions
+    
+    func setDescription(itemName: String, category: Int, content: String, wishs: Int, views: Int) {
+        itemNameLabel.text =  itemName
+        let attributeString = NSMutableAttributedString(string: "\(category)", attributes: [.underlineStyle: NSUnderlineStyle.single.rawValue, .font: UIFont.systemFont(ofSize: 13)])
+        itemCategoryButton.setAttributedTitle(attributeString, for: .normal)
+        itemDescriptionTextView.text = content
+        extraInfoLabel.text = "0 chats, \(wishs) favorites, \(views) views"
+    }
     
     // MARK: - Life Cycle
     

@@ -1,5 +1,5 @@
 //
-//  ItemDetailViewImageCell.swift
+//  ItemDetailViewImagesCollectionViewCell.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/07/20.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ItemDetailViewImageCell: UICollectionViewCell {
+class ItemDetailViewImagesCollectionViewCell: UICollectionViewCell {
     
     let imageView = UIImageView()
     

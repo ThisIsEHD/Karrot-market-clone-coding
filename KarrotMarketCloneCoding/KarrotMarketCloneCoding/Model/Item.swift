@@ -24,10 +24,14 @@ struct FetchedItemsList: Codable, Hashable {
 struct Item: Codable {
     let id: Int
     let title: String
+    let content: String?
+    let categoryId: Int?
     let price: Int?
     let regdate: String //일단여기 잠깐 string
     let views: Int?
     let wishes: Int
+    let userId: String?
+    let nickname: String?
     let images: [Image]?
 }
 

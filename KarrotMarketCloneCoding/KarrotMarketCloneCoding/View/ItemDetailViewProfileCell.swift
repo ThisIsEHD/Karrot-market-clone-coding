@@ -10,12 +10,16 @@ import UIKit
 class ItemDetailViewProfileCell: UITableViewCell {
     // MARK: - Properties
     
-    private lazy var profileView: UIView = {
+    private lazy var profileView: ReusableProfileView = {
         let v = ReusableProfileView(imageSize: 50)
         return v
     }()
     
     // MARK: - Actions
+    
+    func setProfile(id: String?, nickname: String?) {
+        profileView.configure(user: User(id: id, nickname: nickname))
+    }
     
     // MARK: - Life Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {

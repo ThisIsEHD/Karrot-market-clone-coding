@@ -25,12 +25,11 @@ final class HomeViewController: UIViewController {
     
     
     private lazy var addPostButton: UIButton = {
-        let btn = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        let btn = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
         let image = UIImage(systemName: "plus.circle.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 50, weight: .medium))
         
-        btn.layer.shadowRadius = 2
-        btn.layer.shadowOpacity = 0.3
-        btn.layer.cornerRadius = 50 / 2
+        btn.backgroundColor = .white
+        btn.layer.cornerRadius = 60 / 2
         btn.clipsToBounds = true
         btn.setImage(image, for: .normal)
         btn.tintColor = UIColor.appColor(.carrot)

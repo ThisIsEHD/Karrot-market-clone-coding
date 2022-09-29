@@ -19,7 +19,7 @@ class ReusableProfileView: UIView {
         return iv
     }()
     
-    private let nickNameLabel: UILabel = {
+    private let nicknameLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = "욘듀"
         lbl.font = UIFont.boldSystemFont(ofSize: 18)
@@ -29,7 +29,7 @@ class ReusableProfileView: UIView {
     // MARK: - Actions
     
     func configure(user: User) {
-        nickNameLabel.text = user.nickName
+        nicknameLabel.text = user.nickname
     }
     
     // MARK: - Life Cycle
@@ -37,7 +37,7 @@ class ReusableProfileView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         confifureViews()
-        setNickNameLabelConstraints()
+        setNicknameLabelConstraints()
     }
     
     convenience init(imageSize: CGFloat) {
@@ -53,7 +53,7 @@ class ReusableProfileView: UIView {
     
     private func confifureViews() {
         self.addSubview(profileImageView)
-        self.addSubview(nickNameLabel)
+        self.addSubview(nicknameLabel)
     }
     
     // MARK: - Setting Constraints
@@ -66,9 +66,9 @@ class ReusableProfileView: UIView {
         profileImageView.layer.cornerRadius = (size - 10) / 2
     }
     
-    private func setNickNameLabelConstraints() {
-        nickNameLabel.centerY(inView: profileImageView)
-        nickNameLabel.anchor(leading: profileImageView.trailingAnchor,
+    private func setNicknameLabelConstraints() {
+        nicknameLabel.centerY(inView: profileImageView)
+        nicknameLabel.anchor(leading: profileImageView.trailingAnchor,
                              leadingConstant: 15)
     }
     

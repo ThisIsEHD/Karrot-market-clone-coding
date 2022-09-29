@@ -20,7 +20,8 @@ enum Purpose: Requestable {
     case fetchUser(ID)
     case registerUser
     case update(User)
-    case fetch([String : Any])
+    case fetchItems([String : Any])
+    case fetchItem(ProductID)
 }
 
 extension Purpose {
@@ -30,51 +31,57 @@ extension Purpose {
     
     var header: RequestHeaders {
         switch self {
-        case .login:
-            return .json
-        case .registerUser:
-            return .multipart
-        case .fetchUser:
-            return .jsonWithToken
-        case .update:
-            return .jsonWithToken
-        case .fetch:
-            return .none
+            case .login:
+                return .json
+            case .registerUser:
+                return .multipart
+            case .fetchUser:
+                return .jsonWithToken
+            case .update:
+                return .jsonWithToken
+            case .fetchItems:
+                return .none
+            case .fetchItem:
+                return .none
         }
     }
     
     var path: String {
         switch self {
-        case .login:
-            return "/api/v1/users/auth/login"
-        case .registerUser:
-            return "/api/v1/users"
-        case .fetchUser(let id):
-            return "/api/v1/users/\(id)"
-        case .update(let user):
-            return "/api/v1/users/\(user.id ?? "")"
-        case .fetch:
-            return "/api/v1/products"
+            case .login:
+                return "/api/v1/users/auth/login"
+            case .registerUser:
+                return "/api/v1/users"
+            case .fetchUser(let id):
+                return "/api/v1/users/\(id)"
+            case .update(let user):
+                return "/api/v1/users/\(user.id ?? "")"
+            case .fetchItems:
+                return "/api/v1/products"
+            case .fetchItem(let productID):
+                return "/api/v1/products/\(productID)"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .login: return .post
-        case .fetchUser: return .get
-        case .registerUser: return .post
-        case .update: return .put
-        case .fetch: return .get
+            case .login: return .post
+            case .fetchUser: return .get
+            case .registerUser: return .post
+            case .update: return .put
+            case .fetchItems: return .get
+            case .fetchItem: return .get
         }
     }
-        
+    
     var parameters: RequestParameters {
         switch self {
             case .login(let credential): return .body(credential)
             case .registerUser: return .none
             case .fetchUser: return .none
             case .update(let user): return .body(user)
-            case .fetch(let queryItem): return .query(queryItem)
+            case .fetchItems(let queryItem): return .query(queryItem)
+            case .fetchItem: return .none
         }
     }
     
@@ -86,15 +93,15 @@ extension Purpose {
         var headers = HTTPHeaders()
         
         switch header {
-        case .json:
-            headers = [ Header.contentType.type : Header.json.type ]
-        case .jsonWithToken:
-            headers = [ Header.contentType.type: Header.json.type, Header.authorization.type : accessToken ]
-        case .multipart:
-            headers = [ Header.contentType.type: Header.multipart.type ]
-        case .multipartWithToken:
-            headers = [ Header.contentType.type: Header.multipart.type, Header.authorization.type : accessToken ]
-        case .none: break
+            case .json:
+                headers = [ Header.contentType.type : Header.json.type ]
+            case .jsonWithToken:
+                headers = [ Header.contentType.type: Header.json.type, Header.authorization.type : accessToken ]
+            case .multipart:
+                headers = [ Header.contentType.type: Header.multipart.type ]
+            case .multipartWithToken:
+                headers = [ Header.contentType.type: Header.multipart.type, Header.authorization.type : accessToken ]
+            case .none: break
         }
         
         urlRequest.headers = headers
@@ -106,8 +113,8 @@ extension Purpose {
             case .none:
                 return urlRequest
             case .query(let query):
-            
-            return try URLEncoding.default.encode(urlRequest, with: query)
+                
+                return try URLEncoding.default.encode(urlRequest, with: query)
         }
         return urlRequest
     }
@@ -123,7 +130,7 @@ enum RequestHeaders {
 
 enum RequestParameters {
     case body(_ parameter: Encodable?)
-//    case query(_ parameter: QueryItem)
+    //    case query(_ parameter: QueryItem)
     case query([String : Any])
     case none
 }
@@ -142,23 +149,24 @@ enum Header: String {
 
 struct MyInterceptor: RequestInterceptor {
     func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
-//        guard let accessToken = UserDefaults.standard.string(forKey: "AccessToken"), let userId = accessToken.getUserId() else {
-//                  completion(.success(urlRequest))
-//                  fatalError()
-//              }
+        //        guard let accessToken = UserDefaults.standard.string(forKey: "AccessToken"), let userId = accessToken.getUserId() else {
+        //                  completion(.success(urlRequest))
+        //                  fatalError()
+        //              }
         
-//        var request = urlRequest
-//        request.url?.appendPathComponent("/\(userId)")
-//        request.addValue(accessToken, forHTTPHeaderField: "Authorization")
-//        completion(.success(request))
+        //        var request = urlRequest
+        //        request.url?.appendPathComponent("/\(userId)")
+        //        request.addValue(accessToken, forHTTPHeaderField: "Authorization")
+        //        completion(.success(request))
     }
     
     func retry(_ request: Request, for session: Session, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
-//        guard let response = request.task?.response as? HTTPURLResponse, response.statusCode == 401 else {
-//            completion(.doNotRetryWithError(error))
-//            return
-//        }
+        //        guard let response = request.task?.response as? HTTPURLResponse, response.statusCode == 401 else {
+        //            completion(.doNotRetryWithError(error))
+        //            return
+        //        }
     }
 }
 
 typealias ID = String
+typealias ProductID = Int
