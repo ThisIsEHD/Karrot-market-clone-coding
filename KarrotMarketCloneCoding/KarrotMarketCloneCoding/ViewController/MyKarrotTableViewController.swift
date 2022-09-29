@@ -12,7 +12,7 @@ final class MyKarrotTableViewController: UIViewController {
     
     // MARK: - Properties
     private var user: User?
-      
+
     private let tableView = UITableView(frame: .zero, style: .grouped)
     private let myProfileTableList = [["내 동네 설정", "동네인증하기", "키워드 알림", "모아보기", "당근가계부", "관심 카테고리 설정"],
                                       ["동네생활 글/댓글", "동네홍보 글", "동네 가게 후기", "저장한 장소", "내 단골가게", "받은 쿠폰함"],
@@ -22,7 +22,7 @@ final class MyKarrotTableViewController: UIViewController {
                                            ["writing", "file", "messenger", "bookmark", "shop", "voucher"],
                                            ["shop", "megaphone"],
                                            ["email", "microphone", "support", "setting"]]
-    
+    private let statusBarView = UIView(frame: CGRect(x:0, y:0, width: UIScreen.main.bounds.width, height: UIApplication.shared.statusBarFrame.height))
     private lazy var profileView = MyKarrotHeaderView(width: self.view.bounds.width, height: 230)
     
     private let titleLabel: UILabel = {
@@ -35,7 +35,6 @@ final class MyKarrotTableViewController: UIViewController {
     
     // MARK: - Actions
     @objc func settingButtonDidTapped() {
-        print(#function)
         UserDefaults.standard.removeObject(forKey: "AccessToken")
     }
 
@@ -43,11 +42,14 @@ final class MyKarrotTableViewController: UIViewController {
    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         profileView.delegate = self
         
         configureUserInfo(of: user)
         setupNavigationItems()
         configureTableView()
+        statusBarView.backgroundColor = .systemBackground
+        view.addSubview(statusBarView)
         setTableViewConstraints()
     }
     
@@ -76,7 +78,7 @@ final class MyKarrotTableViewController: UIViewController {
     
     // MARK: - Setting TableView Constraints
     private func setTableViewConstraints() {
-        tableView.anchor(top: view.topAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
+        tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
     }
 }
 

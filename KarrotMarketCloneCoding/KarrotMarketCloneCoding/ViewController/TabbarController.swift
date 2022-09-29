@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 final class TabbarController: UITabBarController {
     // MARK: - Properties
@@ -54,12 +55,7 @@ final class TabbarController: UITabBarController {
         }
     }
     
-    // MARK: - Life Cycle
-    override func viewDidLoad() {
-        super.viewDidLoad()
-//        checkIfUserIsLoggedIn()
-    }
-    
+    // MARK: - Life Cycle    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         checkIfUserIsLoggedIn()
@@ -85,6 +81,9 @@ final class TabbarController: UITabBarController {
         nav.tabBarItem.image = unselectedImage
         nav.tabBarItem.selectedImage = selectedImage
         nav.navigationBar.tintColor = .black
+        nav.navigationBar.barTintColor = .systemBackground
+        nav.navigationBar.backgroundColor = .systemBackground
+        nav.navigationBar.isTranslucent = true
         nav.title = title
         nav.navigationBar.topItem?.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         return nav

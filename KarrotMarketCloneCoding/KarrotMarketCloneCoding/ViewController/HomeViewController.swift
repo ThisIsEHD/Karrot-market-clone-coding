@@ -49,11 +49,6 @@ final class HomeViewController: UIViewController {
     }
     
     @objc func notiButtonDidTapped() {
-//        let notificationVC = NotificationViewController()
-//        navigationController?.pushViewController(notificationVC, animated: true)
-//        let ItemDetailVC = ItemDetailViewController()
-//        navigationController?.pushViewController(itemDetailVC, animated: true)
-        reloadTableViewData()
     }
     
     @objc func addButtonDidTapped() {
@@ -73,6 +68,7 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
+        reloadTableViewData()
         configureNavigationItems()
         configureItemTableView()
         configureTableViewDiffableDataSource()
@@ -96,11 +92,6 @@ final class HomeViewController: UIViewController {
     }
     
     func reloadTableViewData() {
-//        var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
-//        snapshot.appendSections([.main])
-////        snapshot.appendItems(dummy)
-//        self.dataSource.apply(snapshot, animatingDifferences: true)
-
         viewModel.isViewBusy = false
         viewModel.loadData(lastID: viewModel.lastItemID)
     }
@@ -158,14 +149,10 @@ extension HomeViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let vc = ItemDetailViewController()
+        
         vc.item = viewModel.dataSource?.itemIdentifier(for: indexPath)
-        
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ItemTableViewCell", for: indexPath) as? ItemTableViewCell else { return }
-        
-        cell.item = vc.item
-        
-        self.navigationController?.pushViewController(vc, animated: true)
-        tableView.deselectRow(at: indexPath, animated: false)
+        navigationController?.pushViewController(vc, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
