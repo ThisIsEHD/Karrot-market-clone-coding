@@ -19,11 +19,11 @@ final class NewPostTableViewController: UIViewController {
     
     private let newPostTableView = NewPostTableView(frame: .zero)
     
-    private let navibar = CustomNavigationBar(navigationBarTitle: "중고거래 글쓰기",  leftBarButtonImage: "xmark", leftButtonColor: .label, rightBarButtonTitle: "완료", rightButtonColor: UIColor.appColor(.carrot), lefeButtonAction: #selector(close), rightButtonAction: #selector(post))
+//    private let navibar = CustomNavigationBar(navigationBarTitle: "중고거래 글쓰기",  leftBarButtonImage: "xmark", leftButtonColor: .label, rightBarButtonTitle: "완료", rightButtonColor: UIColor.appColor(.carrot), lefeButtonAction: #selector(close), rightButtonAction: #selector(post))
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         view.addSubview(newPostTableView)
         
         newPostTableView.tableView.delegate = self
@@ -34,6 +34,7 @@ final class NewPostTableViewController: UIViewController {
                                                selector: #selector(handle(keyboardShowNotification:)),
                                                name: UIResponder.keyboardDidShowNotification,
                                                object: nil)
+        setupNaviBar()
     }
 
     override func viewDidLayoutSubviews() {
@@ -44,15 +45,35 @@ final class NewPostTableViewController: UIViewController {
         setupNewPostTableView()
     }
     
+    @objc private func close() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    
+    
+    @objc func post() {
+//        Network.shared.registerItem(item: Item(id: nil, title: "", content: "", categoryId: 1, price: 10000, regdate: nil, views: nil, wishes: nil, userId: (UserDefaults.standard.object(forKey: Const.userId.asItIs) as? String), nickname: nil, images: nil), images: selectedImages) { result in
+//            switch result {
+//            case .success:
+//                self.doneButtonTapped()
+//                self.dismiss(animated: true, completion: nil)
+//            case .failure(let error):
+//                print(error)
+//            }
+//        }
+    }
+    
     private func setupNaviBar() {
-        
-        view.addSubview(navibar)
-        navibar.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: newPostTableView.topAnchor, leading: view.safeAreaLayoutGuide.leadingAnchor, trailing: view.trailingAnchor)
+        title = "중고거래 글쓰기"
+        navigationController?.navigationBar.tintColor = .label
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .plain, target: self, action: #selector(close))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(post))
+        navigationItem.rightBarButtonItem?.tintColor = UIColor.appColor(.carrot)
     }
     
     private func setupNewPostTableView() {
         
-        newPostTableView.anchor(top: self.navibar.bottomAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
+        newPostTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
     }
     
     private func setupImagePicker() {
@@ -85,27 +106,11 @@ extension NewPostTableViewController {
     
     @objc func removeImage(_ notification: NSNotification) {
         
-        if let indexPath = notification.userInfo?[UserInfo.indexPath] as? IndexPath {
-            selectedImages?.remove(at: indexPath.item - 1)
-        }
+//        if let indexPath = notification.userInfo?[UserInfo.indexPath] as? IndexPath {
+//            selectedImages?.remove(at: indexPath.item - 1)
+//        }
     }
     
-    @objc func close() {
-        dismiss(animated: true, completion: nil)
-    }
-    
-    @objc func post() {
-        Network.shared.registerItem(item: Item(id: nil, title: "", content: "", categoryId: 1, price: 10000, regdate: nil, views: nil, wishes: nil, userId: (UserDefaults.standard.object(forKey: Const.userId.asItIs) as? String), nickname: nil, images: nil), images: selectedImages) { result in
-            switch result {
-            case .success:
-                self.doneButtonTapped()
-                self.dismiss(animated: true, completion: nil)
-            case .failure(let error):
-                print(error)
-            }
-        }
-        
-    }
 }
 
 extension NewPostTableViewController: UITableViewDataSource {

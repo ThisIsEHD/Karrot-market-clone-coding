@@ -89,7 +89,7 @@ class SignUpViewController: UIViewController {
         appearance.configureWithDefaultBackground()
         appearance.setBackIndicatorImage(UIImage(systemName: "arrow.left"), transitionMaskImage: nil)
         navigationController?.navigationBar.tintColor = .label
-        navigationItem.backBarButtonItem?.title = "dk"
+//        navigationItem.backBarButtonItem?.title = "dk"
     }
 }
 

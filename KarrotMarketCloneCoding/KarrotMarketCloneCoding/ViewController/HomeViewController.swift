@@ -49,8 +49,10 @@ final class HomeViewController: UIViewController {
     }
     
     @objc func addButtonDidTapped() {
-        
         let newPostVC = NewPostTableViewController()
+        let nav = UINavigationController(rootViewController: newPostVC)
+        nav.navigationBar.barTintColor = .label
+        
         newPostVC.doneButtonTapped = { [weak self] in
             
             guard let weakSelf = self else { return }
@@ -62,8 +64,9 @@ final class HomeViewController: UIViewController {
             
             weakSelf.viewModel.loadData(lastID: weakSelf.viewModel.lastItemID, completion: job)
         }
-        newPostVC.modalPresentationStyle  = .fullScreen
-        present(newPostVC, animated: true, completion: nil)
+        nav.modalPresentationStyle  = .fullScreen
+        
+        present(nav, animated: true, completion: nil)
     }
     
     // MARK: - Life Cycle
