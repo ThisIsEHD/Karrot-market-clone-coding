@@ -15,7 +15,16 @@ final class TabbarController: UITabBarController {
             configureTabbarController()
         }
     }
-
+    var isLoggedIn = false
+    
+    // MARK: - Life Cycle    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if !isLoggedIn {
+            checkIfUserIsLoggedIn()
+        }
+    }
+    
     // MARK: - Actions
    
     func presentUserCheckVC() {
@@ -40,6 +49,7 @@ final class TabbarController: UITabBarController {
                 switch result {
                 case .success(let user):
                     self.user = user
+                    self.isLoggedIn = true
                 case .failure(let error):
                     
                     switch error {
@@ -48,17 +58,12 @@ final class TabbarController: UITabBarController {
                         DispatchQueue.main.async { self.present(alert, animated: true) }
                     default:
                         print(error)
+                        self.isLoggedIn = true
                         self.presentUserCheckVC()
                     }
                 }
             }
         }
-    }
-    
-    // MARK: - Life Cycle    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        checkIfUserIsLoggedIn()
     }
     
     // MARK: - Configure TabbarViewController

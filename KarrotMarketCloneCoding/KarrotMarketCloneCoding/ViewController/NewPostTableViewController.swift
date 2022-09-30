@@ -15,6 +15,7 @@ final class NewPostTableViewController: UIViewController {
             newPostTableView.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
         }
     }
+    internal var doneButtonTapped: () -> () = { }
     
     private let newPostTableView = NewPostTableView(frame: .zero)
     
@@ -95,7 +96,16 @@ extension NewPostTableViewController {
     }
     
     @objc func post() {
-        dismiss(animated: true, completion: nil)
+        Network.shared.registerItem(item: Item(id: nil, title: "서초동", content: "서초동은 역삼동 옆", categoryId: 1, price: 10000, regdate: nil, views: nil, wishes: nil, userId: (UserDefaults.standard.object(forKey: Const.userId.asItIs) as? String), nickname: nil, images: nil), images: nil) { result in
+            switch result {
+            case .success:
+                self.doneButtonTapped()
+                self.dismiss(animated: true, completion: nil)
+            case .failure(let error):
+                print(error)
+            }
+        }
+        
     }
 }
 

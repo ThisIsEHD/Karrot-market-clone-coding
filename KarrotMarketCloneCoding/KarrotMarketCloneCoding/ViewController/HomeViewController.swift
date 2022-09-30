@@ -54,7 +54,17 @@ final class HomeViewController: UIViewController {
     @objc func addButtonDidTapped() {
         
         let newPostVC = NewPostTableViewController()
-        
+        newPostVC.doneButtonTapped = { [weak self] in
+            
+            guard let weakSelf = self else { return }
+            
+            weakSelf.viewModel.isViewBusy = false
+            weakSelf.viewModel.lastItemID = nil
+            
+            let job = { weakSelf.reloadTableViewData() }
+            
+            weakSelf.viewModel.loadData(lastID: weakSelf.viewModel.lastItemID, completion: job)
+        }
         newPostVC.modalPresentationStyle  = .fullScreen
         present(newPostVC, animated: true, completion: nil)
     }
@@ -68,10 +78,11 @@ final class HomeViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
-        reloadTableViewData()
+        
         configureNavigationItems()
         configureItemTableView()
         configureTableViewDiffableDataSource()
+        reloadTableViewData()
         configureAddButton()
         
         setConstraints()

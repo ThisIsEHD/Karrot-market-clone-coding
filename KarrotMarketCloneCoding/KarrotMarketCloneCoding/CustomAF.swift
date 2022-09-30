@@ -22,6 +22,8 @@ enum Purpose: Requestable {
     case update(User)
     case fetchItems([String : Any])
     case fetchItem(ProductID)
+    case fetchUserItem(ID, [String : Any])
+    case registerItem(ID, Item)
 }
 
 extension Purpose {
@@ -31,57 +33,60 @@ extension Purpose {
     
     var header: RequestHeaders {
         switch self {
-            case .login:
-                return .json
-            case .registerUser:
-                return .multipart
-            case .fetchUser:
-                return .jsonWithToken
-            case .update:
-                return .jsonWithToken
-            case .fetchItems:
-                return .none
-            case .fetchItem:
-                return .none
+        case .login:
+            return .json
+        case .registerUser:
+            return .multipart
+        case .fetchUser:
+            return .jsonWithToken
+        case .update:
+            return .jsonWithToken
+        case .fetchItems:
+            return .none
+        case .fetchItem:
+            return .none
+        case .fetchUserItem:
+            return .none
+        case .registerItem:
+            return .multipartWithToken
         }
     }
     
     var path: String {
         switch self {
-            case .login:
-                return "/api/v1/users/auth/login"
-            case .registerUser:
-                return "/api/v1/users"
-            case .fetchUser(let id):
-                return "/api/v1/users/\(id)"
-            case .update(let user):
-                return "/api/v1/users/\(user.id ?? "")"
-            case .fetchItems:
-                return "/api/v1/products"
-            case .fetchItem(let productID):
-                return "/api/v1/products/\(productID)"
+        case .login:
+            return "/api/v1/users/auth/login"
+        case .registerUser:
+            return "/api/v1/users"
+        case .fetchUser(let id):
+            return "/api/v1/users/\(id)"
+        case .update(let user):
+            return "/api/v1/users/\(user.id ?? "")"
+        case .fetchItems:
+            return "/api/v1/products"
+        case .fetchItem(let productID):
+            return "/api/v1/products/\(productID)"
+        case .fetchUserItem(let id, _):
+            return "/api/v1/users/\(id)/products"
+        case .registerItem(let userID, _):
+            return "/api/v1/users/\(userID)/products"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-            case .login: return .post
-            case .fetchUser: return .get
-            case .registerUser: return .post
-            case .update: return .put
-            case .fetchItems: return .get
-            case .fetchItem: return .get
+        case .login, .registerUser, .registerItem: return .post
+        case .fetchUser, .fetchItem, .fetchItems, .fetchUserItem: return .get
+        case .update: return .put
         }
     }
     
     var parameters: RequestParameters {
         switch self {
-            case .login(let credential): return .body(credential)
-            case .registerUser: return .none
-            case .fetchUser: return .none
-            case .update(let user): return .body(user)
-            case .fetchItems(let queryItem): return .query(queryItem)
-            case .fetchItem: return .none
+        case .login(let credential): return .body(credential)
+        case .update(let user): return .body(user)
+        case .fetchItems(let queryItem), .fetchUserItem(_, let queryItem): return .query(queryItem)
+        case .fetchUser, .registerUser, .fetchItem, .registerItem: return .none
         }
     }
     
@@ -93,28 +98,27 @@ extension Purpose {
         var headers = HTTPHeaders()
         
         switch header {
-            case .json:
-                headers = [ Header.contentType.type : Header.json.type ]
-            case .jsonWithToken:
-                headers = [ Header.contentType.type: Header.json.type, Header.authorization.type : accessToken ]
-            case .multipart:
-                headers = [ Header.contentType.type: Header.multipart.type ]
-            case .multipartWithToken:
-                headers = [ Header.contentType.type: Header.multipart.type, Header.authorization.type : accessToken ]
-            case .none: break
+        case .json:
+            headers = [ Header.contentType.type : Header.json.type ]
+        case .jsonWithToken:
+            headers = [ Header.contentType.type: Header.json.type, Header.authorization.type : accessToken ]
+        case .multipart:
+            headers = [ Header.contentType.type: Header.multipart.type ]
+        case .multipartWithToken:
+            headers = [ Header.contentType.type: Header.multipart.type, Header.authorization.type : accessToken ]
+        case .none: break
         }
         
         urlRequest.headers = headers
         
         switch parameters {
-            case .body(let parameter):
-                let jsonParameter = parameter?.toJSONData()
-                urlRequest.httpBody = jsonParameter
-            case .none:
-                return urlRequest
-            case .query(let query):
-                
-                return try URLEncoding.default.encode(urlRequest, with: query)
+        case .body(let parameter):
+            let jsonParameter = parameter?.toJSONData()
+            urlRequest.httpBody = jsonParameter
+        case .none:
+            return urlRequest
+        case .query(let query):
+            return try URLEncoding.default.encode(urlRequest, with: query)
         }
         return urlRequest
     }
@@ -130,7 +134,6 @@ enum RequestHeaders {
 
 enum RequestParameters {
     case body(_ parameter: Encodable?)
-    //    case query(_ parameter: QueryItem)
     case query([String : Any])
     case none
 }

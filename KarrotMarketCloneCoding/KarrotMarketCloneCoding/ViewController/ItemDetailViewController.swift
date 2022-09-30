@@ -75,7 +75,7 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        Network.shared.fetchItem(id: item!.id) { [self] result in
+        Network.shared.fetchItem(id: item!.id!) { [self] result in
             switch result {
                 case .success(let item):
                     self.item = item
@@ -172,7 +172,7 @@ extension ItemDetailViewController: UICollectionViewDataSource {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ItemDetailViewImagesCollectionViewCell", for: indexPath) as! ItemDetailViewImagesCollectionViewCell
         
-        AF.request(item?.images?.first?.url ?? "").validate().validate(contentType: ["application/octet-stream"]).responseData { response in
+        AF.request(item?.images?[indexPath.row].url ?? "").validate().validate(contentType: ["application/octet-stream"]).responseData { response in
             
             switch response.result {
                     

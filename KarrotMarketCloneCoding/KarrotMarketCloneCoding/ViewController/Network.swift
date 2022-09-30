@@ -18,6 +18,9 @@ enum KarrotError: Error {
     case duplicatedEmail
     case duplicatedNickname
     case unknownUser
+    case titleTooLong
+    case contentTooLong
+    case tooCheap
     
     case serverError
 }
@@ -191,6 +194,44 @@ struct Network {
                 let json = data.toDictionary()
                 
                 print("Register Failure Response: \(json)")
+                completion(.failure(.serverError))
+            }
+        }
+    }
+    
+    func registerItem(item: Item, images: [UIImage]?, completion: @escaping (Result<Data?,KarrotError>) -> ()) {
+        
+        AF.upload(multipartFormData: { data in
+            
+            guard let jsonData = try? JSONEncoder().encode(item) else { return }
+            data.append(jsonData, withName: "json")
+            
+            if let images = images {
+                for image in images {
+                    data.append(image.jpegData(compressionQuality: 0.5)!, withName: "files", fileName: "files")
+                }
+            }
+        }, with: Purpose.registerItem(item.userId ?? "", item)).response { response in
+            guard let httpResponse = response.response else { return }
+            
+            switch httpResponse.statusCode {
+            case 201:
+                completion(.success(.none))
+            case 400:
+                completion(.failure(.serverError))
+            case 401:
+                completion(.failure(.invalidToken))
+            case 403:
+                completion(.failure(.invalidToken))
+            case 422:
+                guard let data = response.data else { return }
+                let item = jsonDecode(type: Item.self, data: data)
+                
+                if item?.title != nil { completion(.failure(.titleTooLong)) }
+                else if item?.content != nil { completion(.failure(.contentTooLong))}
+                else if item?.price != nil { completion(.failure(.tooCheap))}
+                else { completion(.failure(.serverError)) }
+            default:
                 completion(.failure(.serverError))
             }
         }

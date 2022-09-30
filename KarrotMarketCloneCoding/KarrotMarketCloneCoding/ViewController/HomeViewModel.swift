@@ -14,7 +14,7 @@ class HomeViewModel {
     var isViewBusy = true
     var lastItemID: Int?
     
-    func loadData(lastID: Int?) {
+    func loadData(lastID: Int?, completion: (() -> Void)? = nil) {
         guard isViewBusy == false else { return }
         
         isViewBusy = true
@@ -23,6 +23,10 @@ class HomeViewModel {
             case .success(let list):
                 guard let weakSelf = self else { return }
                 guard var snapshot = weakSelf.dataSource?.snapshot() else { return }
+                
+                if let _ = completion {
+                    snapshot.deleteAllItems()
+                }
                 
                 DispatchQueue.global(qos: .background).async {
                     self?.dataSource?.apply(snapshot, animatingDifferences: false)
@@ -38,6 +42,11 @@ class HomeViewModel {
 
                         DispatchQueue.global(qos: .background).async {
                             weakSelf.dataSource?.apply(snapshot, animatingDifferences: false)
+                            if let completion = completion {
+                                DispatchQueue.main.async {
+                                    completion()
+                                }
+                            }
                         }
                     }
                 }
