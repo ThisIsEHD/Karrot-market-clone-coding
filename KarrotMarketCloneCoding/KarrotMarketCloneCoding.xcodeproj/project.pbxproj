@@ -14,7 +14,7 @@
 		723FE61F287DACA100A987E7 /* MyKarrotTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE61E287DACA100A987E7 /* MyKarrotTableViewCell.swift */; };
 		723FE62728801F1600A987E7 /* MyKarrotHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE62628801F1600A987E7 /* MyKarrotHeaderView.swift */; };
 		723FE629288044AB00A987E7 /* MyKarrotTableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE628288044AB00A987E7 /* MyKarrotTableViewHeaderFooterView.swift */; };
-		723FE62B2880F64C00A987E7 /* MyKarrotTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE62A2880F64C00A987E7 /* MyKarrotTableViewController.swift */; };
+		723FE62B2880F64C00A987E7 /* MyKarrotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE62A2880F64C00A987E7 /* MyKarrotViewController.swift */; };
 		723FE67B288531F300A987E7 /* ReusableProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE67A288531F300A987E7 /* ReusableProfileView.swift */; };
 		723FE67D2885385000A987E7 /* ItemDetailViewProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE67C2885385000A987E7 /* ItemDetailViewProfileCell.swift */; };
 		723FE681288539A900A987E7 /* ItemDetailViewOtherPostsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE680288539A900A987E7 /* ItemDetailViewOtherPostsCell.swift */; };
@@ -89,7 +89,7 @@
 		723FE61E287DACA100A987E7 /* MyKarrotTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyKarrotTableViewCell.swift; sourceTree = "<group>"; };
 		723FE62628801F1600A987E7 /* MyKarrotHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyKarrotHeaderView.swift; sourceTree = "<group>"; };
 		723FE628288044AB00A987E7 /* MyKarrotTableViewHeaderFooterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyKarrotTableViewHeaderFooterView.swift; sourceTree = "<group>"; };
-		723FE62A2880F64C00A987E7 /* MyKarrotTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyKarrotTableViewController.swift; sourceTree = "<group>"; };
+		723FE62A2880F64C00A987E7 /* MyKarrotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyKarrotViewController.swift; sourceTree = "<group>"; };
 		723FE67A288531F300A987E7 /* ReusableProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableProfileView.swift; sourceTree = "<group>"; };
 		723FE67C2885385000A987E7 /* ItemDetailViewProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewProfileCell.swift; sourceTree = "<group>"; };
 		723FE680288539A900A987E7 /* ItemDetailViewOtherPostsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewOtherPostsCell.swift; sourceTree = "<group>"; };
@@ -296,7 +296,7 @@
 				723FE6972889091D00A987E7 /* TabbarController.swift */,
 				723FE6992889341000A987E7 /* HomeViewController.swift */,
 				7248CA46288F5CED00DDF939 /* HomeViewModel.swift */,
-				723FE62A2880F64C00A987E7 /* MyKarrotTableViewController.swift */,
+				723FE62A2880F64C00A987E7 /* MyKarrotViewController.swift */,
 				723FE68728853E0800A987E7 /* ItemDetailViewController.swift */,
 				723FE6952889085400A987E7 /* SearchViewController.swift */,
 				7248CA44288E57BB00DDF939 /* Network.swift */,
@@ -506,7 +506,7 @@
 				D3F0E7C828E28B89006AEB3D /* Const.swift in Sources */,
 				723FE6962889085400A987E7 /* SearchViewController.swift in Sources */,
 				7248CA47288F5CED00DDF939 /* HomeViewModel.swift in Sources */,
-				723FE62B2880F64C00A987E7 /* MyKarrotTableViewController.swift in Sources */,
+				723FE62B2880F64C00A987E7 /* MyKarrotViewController.swift in Sources */,
 				72ED25CB2898D95F00031AD1 /* ExtensionMethod.swift in Sources */,
 				723FE69A2889341000A987E7 /* HomeViewController.swift in Sources */,
 				723FE69E2889484700A987E7 /* Copyright.swift in Sources */,

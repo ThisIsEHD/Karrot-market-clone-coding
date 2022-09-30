@@ -1,5 +1,5 @@
 //
-//  MyKarrotTableViewController.swift
+//  MyKarrotVC.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/07/15.
@@ -8,7 +8,7 @@
 import UIKit
 import Alamofire
 
-final class MyKarrotTableViewController: UIViewController {
+final class MyKarrotViewController: UIViewController {
     
     // MARK: - Properties
     private var user: User?
@@ -23,6 +23,7 @@ final class MyKarrotTableViewController: UIViewController {
                                            ["shop", "megaphone"],
                                            ["email", "microphone", "support", "setting"]]
     private let statusBarView = UIView(frame: CGRect(x:0, y:0, width: UIScreen.main.bounds.width, height: UIApplication.shared.statusBarFrame.height))
+    
     private lazy var profileView = MyKarrotHeaderView(width: self.view.bounds.width, height: 230)
     
     private let titleLabel: UILabel = {
@@ -84,7 +85,7 @@ final class MyKarrotTableViewController: UIViewController {
 
 //MARK: - UITableViewDataSource
 
-extension MyKarrotTableViewController: UITableViewDataSource {
+extension MyKarrotViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 5
@@ -132,7 +133,7 @@ extension MyKarrotTableViewController: UITableViewDataSource {
 }
 
 //MARK: - UITableViewDelegate
-extension MyKarrotTableViewController: UITableViewDelegate {
+extension MyKarrotViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
@@ -161,7 +162,7 @@ extension MyKarrotTableViewController: UITableViewDelegate {
 }
 
 
-extension MyKarrotTableViewController: ProfileViewDelegate {
+extension MyKarrotViewController: ProfileViewDelegate {
     
     func configureUserInfo(of user: User?) {
         guard let user = user else { return }
