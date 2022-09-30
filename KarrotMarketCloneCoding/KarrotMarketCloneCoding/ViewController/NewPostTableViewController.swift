@@ -10,16 +10,16 @@ import PhotosUI
 
 final class NewPostTableViewController: UIViewController {
     
-    private var selectedImages = [UIImage?]() {
+    private var selectedImages: [UIImage]? = [UIImage]() {
         didSet {
             newPostTableView.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
         }
     }
+    private var item = Item(id: nil, title: nil, content: nil, categoryId: nil, price: nil, regdate: nil, views: nil, wishes: nil, userId: nil, nickname: nil, images: nil)
+    
     internal var doneButtonTapped: () -> () = { }
     
     private let newPostTableView = NewPostTableView(frame: .zero)
-    
-//    private let navibar = CustomNavigationBar(navigationBarTitle: "중고거래 글쓰기",  leftBarButtonImage: "xmark", leftButtonColor: .label, rightBarButtonTitle: "완료", rightButtonColor: UIColor.appColor(.carrot), lefeButtonAction: #selector(close), rightButtonAction: #selector(post))
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +34,6 @@ final class NewPostTableViewController: UIViewController {
                                                selector: #selector(handle(keyboardShowNotification:)),
                                                name: UIResponder.keyboardDidShowNotification,
                                                object: nil)
-        setupNaviBar()
     }
 
     override func viewDidLayoutSubviews() {
@@ -43,24 +42,6 @@ final class NewPostTableViewController: UIViewController {
         view.backgroundColor = .systemBackground
         setupNaviBar()
         setupNewPostTableView()
-    }
-    
-    @objc private func close() {
-        dismiss(animated: true, completion: nil)
-    }
-    
-    
-    
-    @objc func post() {
-//        Network.shared.registerItem(item: Item(id: nil, title: "", content: "", categoryId: 1, price: 10000, regdate: nil, views: nil, wishes: nil, userId: (UserDefaults.standard.object(forKey: Const.userId.asItIs) as? String), nickname: nil, images: nil), images: selectedImages) { result in
-//            switch result {
-//            case .success:
-//                self.doneButtonTapped()
-//                self.dismiss(animated: true, completion: nil)
-//            case .failure(let error):
-//                print(error)
-//            }
-//        }
     }
     
     private func setupNaviBar() {
@@ -106,11 +87,28 @@ extension NewPostTableViewController {
     
     @objc func removeImage(_ notification: NSNotification) {
         
-//        if let indexPath = notification.userInfo?[UserInfo.indexPath] as? IndexPath {
-//            selectedImages?.remove(at: indexPath.item - 1)
-//        }
+        if let indexPath = notification.userInfo?[UserInfo.indexPath] as? IndexPath {
+            selectedImages?.remove(at: indexPath.item - 1)
+        }
     }
     
+    @objc func close() {
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @objc func post() {
+        view.endEditing(true)
+        Network.shared.registerItem(item: Item(id: nil, title: item.title, content: item.content, categoryId: item.categoryId, price: item.price, regdate: nil, views: nil, wishes: nil, userId: (UserDefaults.standard.object(forKey: Const.userId.asItIs) as? String), nickname: nil, images: nil), images: selectedImages) { result in
+            switch result {
+            case .success:
+                self.doneButtonTapped()
+                self.dismiss(animated: true, completion: nil)
+            case .failure(let error):
+                print(error)
+            }
+        }
+        
+    }
 }
 
 extension NewPostTableViewController: UITableViewDataSource {
@@ -141,10 +139,11 @@ extension NewPostTableViewController: UITableViewDataSource {
             cell.collectionView.photoPickerCellTapped = { [weak self] sender in
                 self?.setupImagePicker()
             }
-            
-            cell.collectionView.images = selectedImages
-            cell.selectionStyle = .none
-            cell.clipsToBounds = false
+            if let selectedImages = selectedImages {
+                cell.collectionView.images = selectedImages
+                cell.selectionStyle = .none
+                cell.clipsToBounds = false
+            }
             
             return cell
             
@@ -153,7 +152,7 @@ extension NewPostTableViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: TitleTableViewCell.identifier, for: indexPath) as! TitleTableViewCell
             
             cell.selectionStyle = .none
-            
+            cell.textChanged = { self.item.title = $0 }
             return cell
             
         } else if indexPath.row == 2 {
@@ -171,6 +170,7 @@ extension NewPostTableViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: PriceTableViewCell.identifier, for: indexPath) as! PriceTableViewCell
             
             cell.selectionStyle = .none
+            cell.textChanged = { self.item.price = Int($0 ?? "0") }
             
             return cell
         } else {
@@ -179,7 +179,7 @@ extension NewPostTableViewController: UITableViewDataSource {
             
             cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 999)
             cell.selectionStyle = .none
-            cell.descriptionTextView.delegate = newPostTableView
+            cell.textChanged = { self.item.content = $0 }
             
             return cell
         }
@@ -190,23 +190,20 @@ extension NewPostTableViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-
-        
         if indexPath.row == 2 {
             
             if let cell = tableView.cellForRow(at: indexPath) as? CategoryTableViewCell {
                 
                 let vc = CategoryTableViewController()
                 
-                vc.cellTapped = { sender in
-                    
-                    cell.textLabel?.text = "\(vc.selectedCategory)"
+                vc.cellTapped = { indexPathRow in
+
+                    cell.textLabel?.text = "\(vc.categories[indexPathRow])"
+                    self.item.categoryId = indexPathRow + 1
                     vc.tableView.reloadRows(at: [indexPath], with: .fade)
                 }
                 navigationController?.pushViewController(vc, animated: true)
             }
-            
-            
         }
     }
 }
@@ -225,7 +222,7 @@ extension NewPostTableViewController: PHPickerViewControllerDelegate {
 
                 itemProvider.loadObject(ofClass: UIImage.self) { image, error in
                     
-                    DispatchQueue.main.async { self.selectedImages.append(image as? UIImage) }
+                    DispatchQueue.main.async { self.selectedImages?.append((image as? UIImage)!) }
                 }
             } else {
                 print("이미지 못 불러왔음!!!!")

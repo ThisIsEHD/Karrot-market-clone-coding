@@ -207,8 +207,10 @@ struct Network {
             data.append(jsonData, withName: "json")
             
             if let images = images {
-                for image in images {
-                    data.append(image.jpegData(compressionQuality: 0.5)!, withName: "files", fileName: "files")
+                if images.count != 0 {
+                    for image in images {
+                        data.append(image.jpegData(compressionQuality: 0.5)!, withName: "files", fileName: "files")
+                    }
                 }
             }
         }, with: Purpose.registerItem(item.userId ?? "", item)).response { response in

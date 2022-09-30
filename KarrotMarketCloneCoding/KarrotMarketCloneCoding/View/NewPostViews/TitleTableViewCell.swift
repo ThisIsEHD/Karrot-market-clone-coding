@@ -10,12 +10,13 @@ import UIKit
 final class TitleTableViewCell: UITableViewCell {
 
     static let identifier = "TitleTableViewCell"
-    internal var endEditing: ((String)?) -> Void = { _ in }
+    internal var textChanged: ((String)?) -> Void = { _ in }
     
     @IBOutlet var title: UITextField!
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        title.delegate = self
         title.borderStyle = .none
         setTitleTextField()
     }
@@ -40,7 +41,11 @@ final class TitleTableViewCell: UITableViewCell {
 }
 
 extension TitleTableViewCell: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        return textField.text!.count < 201
+    }
+    
     func textFieldDidEndEditing(_ textField: UITextField) {
-        endEditing(title.text)
+        textChanged(textField.text)
     }
 }

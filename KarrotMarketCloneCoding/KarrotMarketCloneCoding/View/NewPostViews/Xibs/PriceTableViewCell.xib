@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="19529" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="19519"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,21 +17,30 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zNb-dp-WAg">
-                        <rect key="frame" x="16" y="16" width="279" height="12"/>
+                        <rect key="frame" x="36" y="16" width="259" height="12"/>
                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                         <textInputTraits key="textInputTraits"/>
                     </textField>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="₩" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WDj-Rw-j8I">
+                        <rect key="frame" x="16" y="10" width="17" height="24"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="WDj-Rw-j8I" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="M3v-SC-a6N"/>
                     <constraint firstAttribute="trailing" secondItem="zNb-dp-WAg" secondAttribute="trailing" constant="25" id="MCI-rG-kfP"/>
-                    <constraint firstItem="zNb-dp-WAg" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="P1c-b1-DZO"/>
+                    <constraint firstItem="zNb-dp-WAg" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="20" id="P1c-b1-DZO"/>
                     <constraint firstItem="zNb-dp-WAg" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="16" id="V5z-7E-1VS"/>
                     <constraint firstAttribute="bottom" secondItem="zNb-dp-WAg" secondAttribute="bottom" constant="16" id="afa-JS-OjT"/>
+                    <constraint firstItem="WDj-Rw-j8I" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="lec-jv-gBD"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="priceTextField" destination="zNb-dp-WAg" id="7ZR-hg-sLC"/>
+                <outlet property="wonLabel" destination="WDj-Rw-j8I" id="Mu9-n7-7O5"/>
             </connections>
             <point key="canvasLocation" x="139" y="123"/>
         </tableViewCell>
