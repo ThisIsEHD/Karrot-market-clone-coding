@@ -11,6 +11,12 @@ class SearchViewController: UIViewController{
     
 // MARK: - Properties
     
+    private var viewModel = HomeViewModel()
+    private var dataSource: DataSource!
+    private var snapshot = Snapshot()
+    
+    var isViewBusy = true
+    
     private lazy var searchBar: UISearchBar = {
         let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 0))
         searchBar.placeholder = "검색"
@@ -19,7 +25,7 @@ class SearchViewController: UIViewController{
     
     private lazy var navigationBottomView = SearchBarBottomView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width , height: 60))
         
-    private let ItemTableView : UITableView = {
+    private let itemTableView : UITableView = {
         let tv = UITableView(frame:CGRect.zero, style: .plain)
         tv.register(ItemTableViewCell.self, forCellReuseIdentifier: "ItemTableViewCell")
         tv.separatorColor = .systemGray5
@@ -32,6 +38,7 @@ class SearchViewController: UIViewController{
         super.viewDidLoad()
         configureSearchController()
         configureItemTableView()
+        configureTableViewDiffableDataSource()
         setConstraints()
     }
     
@@ -55,51 +62,80 @@ class SearchViewController: UIViewController{
         definesPresentationContext = false
     }
     
-    // MARK: - Configure TableView
-    private func configureItemTableView() {
-        ItemTableView.delegate = self
-        ItemTableView.dataSource = self
-               
-        view.addSubview(ItemTableView)
+    // MARK: - DiffableDataSource
+    
+    func configureTableViewDiffableDataSource() {
+        
+        viewModel.dataSource = UITableViewDiffableDataSource(tableView: self.itemTableView, cellProvider: { tableView, indexPath, item in
+            
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ItemTableViewCell", for: indexPath) as! ItemTableViewCell
+            
+            cell.item = item
+            
+            return cell
+        })
     }
+    
+    func reloadTableViewData(keyword: String?) {
+        viewModel.isViewBusy = false
+        viewModel.loadData(lastID: viewModel.lastItemID, keyword: keyword)
+    }
+    
+    // MARK: - Configure TableView
+    
+    private func configureItemTableView() {
+        itemTableView.delegate = self
+        itemTableView.dataSource = viewModel.dataSource
+        view.addSubview(itemTableView)
+    }
+    
     // MARK: - Setting Constraints
     
     private func setConstraints() {
         navigationBottomView.anchor(top: navigationController?.navigationBar.bottomAnchor, leading: navigationController?.navigationBar.leadingAnchor, trailing: navigationController?.navigationBar.trailingAnchor, height: 60)
+        
+        itemTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, topConstant: 60, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
     }
 }
 
-// MARK: - UITableViewDataSource
-
-extension SearchViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 5
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ItemTableViewCell", for: indexPath) as! ItemTableViewCell
-        return cell
-    }
-}
 
 // MARK: - UITableViewDelegate
 
 extension SearchViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return CGFloat(150.0)
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let contentHeight = scrollView.contentSize.height
+        let yOffset = scrollView.contentOffset.y
+        let heightRemainFromBottom = contentHeight - yOffset
+
+        let frameHeight = scrollView.frame.size.height
+        if heightRemainFromBottom < frameHeight {
+            
+            viewModel.loadData(lastID: viewModel.lastItemID, keyword: searchBar.text)
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         let vc = ItemDetailViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
-        tableView.deselectRow(at: indexPath, animated: false)
+        
+        vc.item = viewModel.dataSource?.itemIdentifier(for: indexPath)
+        navigationController?.pushViewController(vc, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        return 150
     }
 }
+
 
 // MARK: - UISearchBarDelegate
     
 extension SearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        
+        reloadTableViewData(keyword: searchBar.text)
     }
 }

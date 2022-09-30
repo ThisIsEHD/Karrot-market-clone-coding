@@ -28,6 +28,7 @@ class SearchBarBottomView: UIView {
     // MARK: - configure Views
     
     private func configureViews() {
+        self.backgroundColor = .systemBackground
         addSubview(sortButton)
         
         sortButton.setTitle("정확도순", for: .normal)
