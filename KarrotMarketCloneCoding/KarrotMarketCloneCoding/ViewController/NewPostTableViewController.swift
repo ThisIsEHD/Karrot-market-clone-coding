@@ -86,8 +86,7 @@ extension NewPostTableViewController {
     @objc func removeImage(_ notification: NSNotification) {
         
         if let indexPath = notification.userInfo?[UserInfo.indexPath] as? IndexPath {
-
-            selectedImages.remove(at: indexPath.item - 1)
+            selectedImages?.remove(at: indexPath.item - 1)
         }
     }
     
@@ -96,7 +95,7 @@ extension NewPostTableViewController {
     }
     
     @objc func post() {
-        Network.shared.registerItem(item: Item(id: nil, title: "서초동", content: "서초동은 역삼동 옆", categoryId: 1, price: 10000, regdate: nil, views: nil, wishes: nil, userId: (UserDefaults.standard.object(forKey: Const.userId.asItIs) as? String), nickname: nil, images: nil), images: nil) { result in
+        Network.shared.registerItem(item: Item(id: nil, title: "", content: "", categoryId: 1, price: 10000, regdate: nil, views: nil, wishes: nil, userId: (UserDefaults.standard.object(forKey: Const.userId.asItIs) as? String), nickname: nil, images: nil), images: selectedImages) { result in
             switch result {
             case .success:
                 self.doneButtonTapped()

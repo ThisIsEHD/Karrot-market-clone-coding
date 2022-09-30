@@ -22,8 +22,6 @@ final class HomeViewController: UIViewController {
         
         return tv
     }()
-    
-    
     private lazy var addPostButton: UIButton = {
         let btn = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
         let image = UIImage(systemName: "plus.circle.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 50, weight: .medium))
@@ -37,7 +35,6 @@ final class HomeViewController: UIViewController {
 
         return btn
     }()
-    
     private var dataSource: DataSource!
     private var snapshot = Snapshot()
     
@@ -74,11 +71,13 @@ final class HomeViewController: UIViewController {
         view.addSubview(addPostButton)
     }
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .systemBackground
         
+        configureNavigationBar()
         configureNavigationItems()
         configureItemTableView()
         configureTableViewDiffableDataSource()
@@ -114,7 +113,15 @@ final class HomeViewController: UIViewController {
         view.addSubview(itemTableView)
     }
     
-    // MARK: - configure NavigationItems
+    // MARK: - configure NavigationController
+    private func configureNavigationBar() {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .white
+        self.navigationItem.standardAppearance = appearance
+        self.navigationItem.scrollEdgeAppearance = appearance
+    }
+    
     private func configureNavigationItems() {
         navigationItem.rightBarButtonItems = [
             UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonDidTapped)),
@@ -122,6 +129,7 @@ final class HomeViewController: UIViewController {
     }
         
     // MARK: - Setup NavigationItems
+    
     private func setupNavigationItems() {
         
         let searchBarButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonDidTapped))

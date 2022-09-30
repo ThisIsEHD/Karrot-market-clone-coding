@@ -99,6 +99,8 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate {
         super.viewWillDisappear(animated)
         
         tabBarController?.tabBar.isHidden = false
+        statusBarView.backgroundColor = .systemBackground
+        statusBarView.alpha = 1
         
         navigationController?.navigationBar.backgroundColor = .systemBackground
         navigationController?.navigationBar.tintColor = .black

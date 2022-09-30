@@ -10,6 +10,7 @@ import UIKit
 final class TitleTableViewCell: UITableViewCell {
 
     static let identifier = "TitleTableViewCell"
+    internal var endEditing: ((String)?) -> Void = { _ in }
     
     @IBOutlet var title: UITextField!
     
@@ -35,5 +36,11 @@ final class TitleTableViewCell: UITableViewCell {
         title.borderStyle = .none
         title.leftViewMode = .always
         title.attributedPlaceholder = NSAttributedString(string: "제목", attributes: [.foregroundColor : UIColor.systemGray])
+    }
+}
+
+extension TitleTableViewCell: UITextFieldDelegate {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        endEditing(title.text)
     }
 }

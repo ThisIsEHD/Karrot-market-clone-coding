@@ -22,17 +22,17 @@ struct FetchedItemsList: Codable, Hashable {
 
 // MARK: - Item
 struct Item: Codable {
-    let id: Int?
-    let title: String?
-    let content: String?
-    let categoryId: Int?
-    let price: Int?
+    var id: Int?
+    var title: String?
+    var content: String?
+    var categoryId: Int?
+    var price: Int?
     let regdate: String? //일단여기 잠깐 string
     let views: Int?
     let wishes: Int?
     let userId: String?
     let nickname: String?
-    let images: [Image]?
+    var images: [Image]?
 }
 
 extension Item: Hashable {
