@@ -14,6 +14,11 @@ class ItemTableViewCell: UITableViewCell {
     
     var item: Item? {
         didSet {
+            
+            nameLabel.text = item?.title
+            priceLabel.text = "\(item?.price ?? 0)"
+            wishLabel.text = "\(item?.wishes ?? 0)"
+            
             getThumbnailImage { image in
                 self.loadData(image: image)
             }
@@ -195,19 +200,24 @@ class ItemTableViewCell: UITableViewCell {
     }
     
     private func getThumbnailImage(completion: @escaping (UIImage?) -> ()) {
-        
-        AF.request(item?.images?.first?.url ?? "").validate().validate(contentType: ["application/octet-stream"]).responseData { response in
-            
-            switch response.result {
+        if item?.images?.count != 0 {
+            AF.request(item?.images?.first?.url ?? "").validate().validate(contentType: ["application/octet-stream"]).responseData { response in
                 
-            case .success(let data):
-                completion(UIImage(data: data))
-                
-            case .failure(let error):
-                
-                print(error.localizedDescription)
+                switch response.result {
+                    
+                case .success(let data):
+                    completion(UIImage(data: data))
+                    
+                case .failure(let error):
+                    
+                    print("🥶",error.localizedDescription, self.item?.images)
+                }
             }
+        } else {
+            let image = UIImage(systemName: "clear.fill")?.withTintColor(.systemGray, renderingMode: .alwaysOriginal)
+            completion(image)
         }
+        
     }
     
     private func loadData(image: UIImage?) {
@@ -215,8 +225,5 @@ class ItemTableViewCell: UITableViewCell {
         if let image = image {
             thumbnailImageView.image = image
         }
-        nameLabel.text = item?.title
-        priceLabel.text = "\(item?.price ?? 0)"
-        wishLabel.text = "\(item?.wishes ?? 0)"
     }
 }

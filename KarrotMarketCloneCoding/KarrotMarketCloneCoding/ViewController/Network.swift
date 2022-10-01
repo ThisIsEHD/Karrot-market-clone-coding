@@ -209,7 +209,7 @@ struct Network {
             if let images = images {
                 if images.count != 0 {
                     for image in images {
-                        data.append(image.jpegData(compressionQuality: 0.5)!, withName: "files", fileName: "files")
+                        data.append(image.jpegData(compressionQuality: 0.2)!, withName: "files", fileName: "files")
                     }
                 }
             }
