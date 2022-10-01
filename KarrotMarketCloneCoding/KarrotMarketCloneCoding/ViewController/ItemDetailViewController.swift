@@ -13,6 +13,7 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate {
     
     var item: Item? {
         didSet {
+            itemDetailViewBottomStickyView.configure(price: item?.price)
             itemDetailViewContentsTableView.reloadData()
         }
     }
@@ -55,17 +56,23 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate {
         tv.register(ItemDetailViewDescriptionCell.self, forCellReuseIdentifier: "ItemDetailViewDescriptionCell")
         tv.register(ItemDetailViewOtherPostsCell.self, forCellReuseIdentifier: "ItemDetailViewOtherPostsCell")
         
-        tv.contentInsetAdjustmentBehavior = .never
         tv.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         
         return tv
     }()
     
     /// 상세페이지의 테이블 헤더뷰
-    private lazy var itemDetailTableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.width))
+    private lazy var itemDetailTableHeaderView = UIView()
     
     /// 상태바 뷰
     let statusBarView = UIView(frame: CGRect(x:0, y:0, width: UIScreen.main.bounds.width, height: UIApplication.shared.statusBarFrame.height))
+    
+    let gradient: CAGradientLayer = {
+        let gl = CAGradientLayer()
+        gl.locations = [0.0,1.0]
+        gl.colors = [UIColor.lightGray.withAlphaComponent(0.4).cgColor, UIColor.clear.cgColor]
+        return gl
+    }()
     
     /// 하단 고정 뷰
     private let itemDetailViewBottomStickyView = ItemDetailViewBottomStickyView()
@@ -109,11 +116,19 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate {
     
     // MARK: - Configure Views
     private func configureViews() {
-        
         itemDetailViewContentsTableView.dataSource = self
         itemDetailViewContentsTableView.delegate = self
         
         itemDetailViewContentsTableView.tableHeaderView = itemDetailTableHeaderView
+        
+     
+        if item?.images?.count != 0 {
+            itemDetailViewContentsTableView.contentInsetAdjustmentBehavior = .never
+            itemDetailTableHeaderView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.width)
+        } else {
+            itemDetailViewContentsTableView.contentInsetAdjustmentBehavior = .automatic
+            itemDetailTableHeaderView.frame = .zero
+        }
         
         itemImagesCollectionView.dataSource = self
         itemImagesCollectionView.delegate = self
@@ -137,13 +152,23 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate {
             navigationController?.navigationBar.tintColor = .black
             navigationController?.navigationBar.shadowImage = .none
             self.statusBarView.alpha = 1
-        }
-        else {
-            navigationController?.navigationBar.backgroundColor = .clear
-            navigationController?.navigationBar.tintColor = .white
-            navigationController?.navigationBar.shadowImage = UIImage()
-            self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-            self.statusBarView.alpha = 0
+        } else {
+            if item?.images?.count == 0 {
+                navigationController?.navigationBar.backgroundColor = .systemBackground
+                navigationController?.navigationBar.tintColor = .black
+                navigationController?.navigationBar.shadowImage = .none
+                self.statusBarView.alpha = 1
+            } else {
+                navigationController?.navigationBar.backgroundColor = .clear
+                navigationController?.navigationBar.tintColor = .white
+                navigationController?.navigationBar.shadowImage = UIImage()
+                self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+                self.statusBarView.alpha = 0
+                
+                gradient.frame = CGRect(x: 0, y: 0, width: UIApplication.shared.statusBarFrame.width, height: UIApplication.shared.statusBarFrame.height + self.navigationController!.navigationBar.frame.height)
+                /// layer에 추가
+                self.view.layer.addSublayer(gradient)
+            }
         }
     }
     
@@ -167,7 +192,7 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate {
 
 extension ItemDetailViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return item?.images?.count ?? 1
+        return item?.images?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -197,7 +222,14 @@ extension ItemDetailViewController: UICollectionViewDataSource {
 extension ItemDetailViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return collectionView.bounds.size
+        print(#function)
+        
+        if item?.images?[indexPath.row] != nil {
+            return collectionView.bounds.size
+        } else {
+            return CGSize(width: 0, height: 0)
+        }
+       
     }
 }
 
@@ -247,16 +279,18 @@ extension ItemDetailViewController: UITableViewDataSource {
 
 extension ItemDetailViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let headerView = self.itemDetailViewContentsTableView.tableHeaderView
         
-        let width = scrollView.bounds.size.width
-        let x = scrollView.contentOffset.x + (width/2.0)
-        let newPage = Int(x / width)
-        
-        if itemImagesCollectionViewPageControl.currentPage != newPage {
-            itemImagesCollectionViewPageControl.currentPage = newPage
+        if scrollView == itemImagesCollectionView {
+            
+            let width = scrollView.bounds.size.width
+            let x = scrollView.contentOffset.x + (width/2.0)
+            let newPage = Int(x / width)
+            
+            if itemImagesCollectionViewPageControl.currentPage != newPage {
+                itemImagesCollectionViewPageControl.currentPage = newPage
+            }
+        } else {
+            setNavigation(scrollView)
         }
-        
-        setNavigation(scrollView)
     }
 }
