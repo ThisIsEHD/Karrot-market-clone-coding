@@ -10,13 +10,14 @@ import PhotosUI
 
 final class NewPostTableViewController: UIViewController {
     
-    private var selectedImages: [UIImage]? = [UIImage]() {
+    private var selectedImages: [UIImage] = [UIImage]() {
         didSet {
+            maxChoosableImages = 10 - selectedImages.count
             newPostTableView.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
         }
     }
     private var item = Item(id: nil, title: nil, content: nil, categoryId: nil, price: nil, regdate: nil, views: nil, wishes: nil, userId: nil, nickname: nil, images: nil)
-    
+    internal var maxChoosableImages = 10
     internal var doneButtonTapped: () -> () = { }
     
     private let newPostTableView = NewPostTableView(frame: .zero)
@@ -61,7 +62,7 @@ final class NewPostTableViewController: UIViewController {
         
         var configuration = PHPickerConfiguration()
         
-        configuration.selectionLimit = 10
+        configuration.selectionLimit = maxChoosableImages
         configuration.filter = .any(of: [.images])
         
         let picker = PHPickerViewController(configuration: configuration)
@@ -88,7 +89,7 @@ extension NewPostTableViewController {
     @objc func removeImage(_ notification: NSNotification) {
         
         if let indexPath = notification.userInfo?[UserInfo.indexPath] as? IndexPath {
-            selectedImages?.remove(at: indexPath.item - 1)
+            selectedImages.remove(at: indexPath.item - 1)
         }
     }
     
@@ -139,11 +140,9 @@ extension NewPostTableViewController: UITableViewDataSource {
             cell.collectionView.photoPickerCellTapped = { [weak self] sender in
                 self?.setupImagePicker()
             }
-            if let selectedImages = selectedImages {
-                cell.collectionView.images = selectedImages
-                cell.selectionStyle = .none
-                cell.clipsToBounds = false
-            }
+            cell.collectionView.images = selectedImages
+            cell.selectionStyle = .none
+            cell.clipsToBounds = false
             
             return cell
             
@@ -222,7 +221,7 @@ extension NewPostTableViewController: PHPickerViewControllerDelegate {
 
                 itemProvider.loadObject(ofClass: UIImage.self) { image, error in
                     
-                    DispatchQueue.main.async { self.selectedImages?.append((image as? UIImage)!) }
+                    DispatchQueue.main.async { self.selectedImages.append((image as? UIImage)!) }
                 }
             } else {
                 print("이미지 못 불러왔음!!!!")

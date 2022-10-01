@@ -199,18 +199,16 @@ struct Network {
         }
     }
     
-    func registerItem(item: Item, images: [UIImage]?, completion: @escaping (Result<Data?,KarrotError>) -> ()) {
+    func registerItem(item: Item, images: [UIImage], completion: @escaping (Result<Data?,KarrotError>) -> ()) {
         
         AF.upload(multipartFormData: { data in
             
             guard let jsonData = try? JSONEncoder().encode(item) else { return }
-            data.append(jsonData, withName: "json")
             
-            if let images = images {
-                if images.count != 0 {
-                    for image in images {
-                        data.append(image.jpegData(compressionQuality: 0.2)!, withName: "files", fileName: "files")
-                    }
+            data.append(jsonData, withName: "json")
+            if images.count != 0 {
+                for image in images {
+                    data.append(image.jpegData(compressionQuality: 0.2)!, withName: "files", fileName: "files")
                 }
             }
         }, with: Purpose.registerItem(item.userId ?? "", item)).response { response in
