@@ -203,26 +203,24 @@ class ItemTableViewCell: UITableViewCell {
     }
     
     private func getThumbnailImage(completion: @escaping (UIImage?) -> ()) {
-        
-        if let url = item?.images?.first?.url {
-            DispatchQueue.global().async {
-                AF.request(url).validate().validate(contentType: ["application/octet-stream"]).responseData { response in
+        if item?.images?.count != 0 {
+            AF.request(item?.images?.first?.url ?? "").validate().validate(contentType: ["application/octet-stream"]).responseData { response in
+                
+                switch response.result {
                     
-                    switch response.result {
-                            
-                        case .success(let data):
-        
-                            completion(UIImage(data: data))
-                            
-                        case .failure(let error):
-                            
-                            print(error.localizedDescription)
-                    }
+                case .success(let data):
+                    completion(UIImage(data: data))
+                    
+                case .failure(let error):
+                    
+                    print("🥶",error.localizedDescription, self.item?.images)
                 }
             }
         } else {
-            completion(UIImage(named: "logo"))
+            let image = UIImage(systemName: "clear.fill")?.withTintColor(.systemGray, renderingMode: .alwaysOriginal)
+            completion(image)
         }
+        
     }
     
     private func loadData(image: UIImage?) {
