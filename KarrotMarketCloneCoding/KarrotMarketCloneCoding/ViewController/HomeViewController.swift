@@ -22,6 +22,7 @@ final class HomeViewController: UIViewController {
         
         return tv
     }()
+    
     private lazy var addPostButton: UIButton = {
         let btn = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
         let image = UIImage(systemName: "plus.circle.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 50, weight: .medium))
@@ -35,17 +36,22 @@ final class HomeViewController: UIViewController {
 
         return btn
     }()
+    
     private var dataSource: DataSource!
     private var snapshot = Snapshot()
     
     // MARK: - Actions
+    
     @objc func searchButtonDidTapped() {
+        
         let searchVC = SearchViewController()
         
         navigationController?.pushViewController(searchVC, animated: true)
     }
     
     @objc func notiButtonDidTapped() {
+        let notificationVC = NotificationViewController()
+        navigationController?.pushViewController(notificationVC, animated: true)
     }
     
     @objc func addButtonDidTapped() {

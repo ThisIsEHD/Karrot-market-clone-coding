@@ -101,13 +101,16 @@ final class MyKarrotHeaderView: UIView {
     
     // MARK: Actions
     
-    func configureUserInfo(user: User) {
-        profileView.configure(user: user)
+    func configureUser(nickname: String?) {
+        profileView.configure(nickname: nickname)
+    }
+    
+    func configureUser(image: UIImage?) {
+        profileView.configure(image: image)
     }
     
     @objc func profileViewDidTapped() {
         self.delegate?.goToMyProfileVC()
-        print(#function)
     }
     
     @objc func stackViewDidTapped(_ sender: UITapGestureRecognizer) {

@@ -215,24 +215,42 @@ struct Network {
             guard let httpResponse = response.response else { return }
             
             switch httpResponse.statusCode {
-            case 201:
-                completion(.success(.none))
-            case 400:
+                case 201:
+                    completion(.success(.none))
+                case 400:
+                    completion(.failure(.serverError))
+                case 401:
+                    completion(.failure(.invalidToken))
+                case 403:
+                    completion(.failure(.invalidToken))
+                case 422:
+                    guard let data = response.data else { return }
+                    let item = jsonDecode(type: Item.self, data: data)
+                    
+                    if item?.title != nil { completion(.failure(.titleTooLong)) }
+                    else if item?.content != nil { completion(.failure(.contentTooLong))}
+                    else if item?.price != nil { completion(.failure(.tooCheap))}
+                    else { completion(.failure(.serverError)) }
+                default:
+                    completion(.failure(.serverError))
+            }
+        }
+    }
+    
+    func fetchImage(url: String, completion: @escaping (Result<UIImage?, KarrotError>) -> Void) {
+        AF.request(url).validate().responseData { response in
+
+            if let err = response.error {
+                print(err)
                 completion(.failure(.serverError))
-            case 401:
-                completion(.failure(.invalidToken))
-            case 403:
-                completion(.failure(.invalidToken))
-            case 422:
+                return
+            }
+            
+            if let statusCode = response.response?.statusCode, (200...299).contains(statusCode) {
                 guard let data = response.data else { return }
-                let item = jsonDecode(type: Item.self, data: data)
                 
-                if item?.title != nil { completion(.failure(.titleTooLong)) }
-                else if item?.content != nil { completion(.failure(.contentTooLong))}
-                else if item?.price != nil { completion(.failure(.tooCheap))}
-                else { completion(.failure(.serverError)) }
-            default:
-                completion(.failure(.serverError))
+                let image = UIImage(data: data)
+                completion(.success(image))
             }
         }
     }

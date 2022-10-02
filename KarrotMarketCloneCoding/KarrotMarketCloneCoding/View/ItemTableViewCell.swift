@@ -14,11 +14,11 @@ class ItemTableViewCell: UITableViewCell {
     
     var item: Item? {
         didSet {
-            
             nameLabel.text = item?.title
-            priceLabel.text = "\(item?.price ?? 0)"
+            priceLabel.text = item?.price != nil ? "\(item?.price ?? 0) 원" : "무료 나눔"
             wishLabel.text = "\(item?.wishes ?? 0)"
             
+            /// 이미지 다운로드에서 많은 메모리를 차지함.
             getThumbnailImage { image in
                 self.loadData(image: image)
             }
@@ -32,7 +32,7 @@ class ItemTableViewCell: UITableViewCell {
         iv.layer.cornerRadius = 8
         iv.layer.masksToBounds = true
         iv.clipsToBounds = true
-        iv.backgroundColor = .systemGray3
+        iv.backgroundColor = .white
         return iv
     }()
     
@@ -78,6 +78,7 @@ class ItemTableViewCell: UITableViewCell {
         let lbl = UILabel()
         lbl.numberOfLines = 0
         lbl.text = ""
+        lbl.tintColor = .systemGray4
         lbl.font = UIFont.systemFont(ofSize: 15)
         return lbl
     }()
@@ -86,6 +87,7 @@ class ItemTableViewCell: UITableViewCell {
         let btn = UIButton()
         btn.frame = CGRect(x: 0, y: 0, width: 38, height: 38)
         btn.imageView?.contentMode = .scaleAspectFit
+        btn.tintColor = .systemGray4
         btn.setImage(UIImage(named: "chat-gray"), for: .normal)
         return btn
     }()
@@ -94,6 +96,7 @@ class ItemTableViewCell: UITableViewCell {
         let lbl = UILabel()
         lbl.numberOfLines = 0
         lbl.text = ""
+        lbl.tintColor = .systemGray4
         lbl.font = UIFont.systemFont(ofSize: 15)
         return lbl
     }()
@@ -177,20 +180,20 @@ class ItemTableViewCell: UITableViewCell {
     }
     
     private func setIconStackViewConstraints() {
-        wishIcon.anchor(top: wishView.topAnchor, bottom: wishView.bottomAnchor, leading: wishView.leadingAnchor, height: 15)
-        wishLabel.centerY(inView: wishIcon)
-        wishLabel.anchor(leading: wishIcon.trailingAnchor, leadingConstant: 2, trailing: wishView.trailingAnchor)
+        wishIcon.anchor(top: wishView.topAnchor, bottom: wishView.bottomAnchor, leading: wishView.leadingAnchor, height: 17)
+        wishLabel.anchor(bottom: wishIcon.bottomAnchor)
+        wishLabel.anchor(leading: wishIcon.trailingAnchor, trailing: wishView.trailingAnchor)
         
-        chatIcon.anchor(top: chatView.topAnchor, bottom: chatView.bottomAnchor, leading: chatView.leadingAnchor, height: 15)
-        chatLabel.centerY(inView: chatIcon)
-        chatLabel.anchor(leading: chatIcon.trailingAnchor, leadingConstant: 2, trailing: chatView.trailingAnchor)
+        chatIcon.anchor(top: chatView.topAnchor, bottom: chatView.bottomAnchor, leading: chatView.leadingAnchor, height: 17)
+        chatLabel.anchor(bottom: chatIcon.bottomAnchor)
+        chatLabel.anchor(leading: chatIcon.trailingAnchor, trailing: chatView.trailingAnchor)
     }
     
     private func setContentViewConstraints() {
         thumbnailImageView.anchor(top: topAnchor, topConstant: 18, bottom: bottomAnchor, bottomConstant: 18 ,leading: leadingAnchor, leadingConstant: 18, width: 114)
         //width를 동적으로 가져오지 못함 해결해야함.
         
-        nameLabel.anchor(top: thumbnailImageView.topAnchor, leading: thumbnailImageView.trailingAnchor, leadingConstant: 15, trailing: trailingAnchor, trailingConstant: 15)
+        nameLabel.anchor(top: thumbnailImageView.topAnchor, topConstant: 5,  leading: thumbnailImageView.trailingAnchor, leadingConstant: 15, trailing: trailingAnchor, trailingConstant: 15)
         
 //        locationLabel.anchor()
 //        timeLabel.anchor()

@@ -28,9 +28,15 @@ class ReusableProfileView: UIView {
     
     // MARK: - Actions
     
-    func configure(user: User) {
-        nicknameLabel.text = user.nickname
+    func configure(image: UIImage?) {
+        profileImageView.image = image
     }
+    
+    func configure(nickname: String?) {
+        nicknameLabel.text = nickname
+    }
+    
+    
     
     // MARK: - Life Cycle
     
