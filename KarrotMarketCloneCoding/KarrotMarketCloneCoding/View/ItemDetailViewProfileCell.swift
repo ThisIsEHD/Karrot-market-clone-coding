@@ -17,8 +17,9 @@ class ItemDetailViewProfileCell: UITableViewCell {
     
     // MARK: - Actions
     
-    func setProfile(id: String?, nickname: String?) {
-        profileView.configure(user: User(id: id, nickname: nickname))
+    func setProfile(nickname: String?, image: UIImage?) {
+        profileView.configure(nickname: nickname)
+        profileView.configure(image: image)
     }
     
     // MARK: - Life Cycle

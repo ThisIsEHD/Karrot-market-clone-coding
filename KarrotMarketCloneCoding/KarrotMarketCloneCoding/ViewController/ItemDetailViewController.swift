@@ -222,7 +222,6 @@ extension ItemDetailViewController: UICollectionViewDataSource {
 extension ItemDetailViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        print(#function)
         
         if item?.images?[indexPath.row] != nil {
             return collectionView.bounds.size
@@ -246,7 +245,7 @@ extension ItemDetailViewController: UITableViewDataSource {
             case 0:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewProfileCell", for: indexPath) as! ItemDetailViewProfileCell
                 cell.selectionStyle = .none
-                cell.setProfile(id: item?.userId, nickname: item?.nickname)
+                cell.setProfile(nickname: item?.nickname, image: UIImage(named: "defaultProfileImage"))
                 return cell
                 
             case 1:

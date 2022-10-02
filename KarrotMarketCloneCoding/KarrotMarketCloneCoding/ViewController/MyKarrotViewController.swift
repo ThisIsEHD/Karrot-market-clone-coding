@@ -163,14 +163,28 @@ extension MyKarrotViewController: UITableViewDelegate {
 
 
 extension MyKarrotViewController: ProfileViewDelegate {
-    
     func configureUserInfo(of user: User?) {
         guard let user = user else { return }
-        profileView.configureUserInfo(user: user)
+        profileView.configureUser(nickname: user.nickname)
+        DispatchQueue.global().async {
+            guard let url = user.profileImageUrl else {
+                print(#function, "url is nil")
+                return
+            }
+            Network.shared.fetchImage(url: url) { result in
+                switch result {
+                    case .success(let image):
+                        self.profileView.configureUser(image: image)
+                    case .failure(_):
+                        print("error method:", #function)
+                }
+            }
+        }
     }
     
     func goToMyProfileVC() {
         let profileEditingVC = ProfileEditingViewController()
+        profileEditingVC.profileEditingView.nicknameTextField.text = user?.nickname
         navigationController?.pushViewController(profileEditingVC, animated: true)
     }
     
