@@ -18,10 +18,11 @@ enum KarrotError: Error {
     case duplicatedEmail
     case duplicatedNickname
     case unknownUser
-    case titleTooLong
-    case contentTooLong
-    case tooCheap
+//    case titleTooLong
+//    case contentTooLong
+    case wrongForm([String : String])
     
+    case unknownError
     case serverError
 }
 
@@ -184,6 +185,7 @@ struct Network {
                 
                 do {
                     let item = try JSONDecoder().decode(Item.self, from: data)
+                    print(item.price)
                     completion(.success(item))
                 } catch {
                     print(error)
@@ -224,13 +226,9 @@ struct Network {
                 case 403:
                     completion(.failure(.invalidToken))
                 case 422:
-                    guard let data = response.data else { return }
-                    let item = jsonDecode(type: Item.self, data: data)
-                    
-                    if item?.title != nil { completion(.failure(.titleTooLong)) }
-                    else if item?.content != nil { completion(.failure(.contentTooLong))}
-                    else if item?.price != nil { completion(.failure(.tooCheap))}
-                    else { completion(.failure(.serverError)) }
+                guard let data = response.data, let dicData = try? JSONSerialization.jsonObject(with: data) as? [String: String]  else { completion(.failure(.serverError)); return }
+                
+                completion(.failure(.wrongForm(dicData)))
                 default:
                     completion(.failure(.serverError))
             }
