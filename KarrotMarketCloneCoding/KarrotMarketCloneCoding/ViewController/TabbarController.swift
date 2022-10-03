@@ -20,10 +20,25 @@ final class TabbarController: UITabBarController {
     // MARK: - Life Cycle    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        print("🇨🇦🇨🇦🇨🇦🇨🇦")
+
         if !isLoggedIn {
             checkIfUserIsLoggedIn()
         }
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(logout), name: NotificationType.logout.name, object: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc private func logout() {
+        isLoggedIn = false
+        user = nil
+        
+        checkIfUserIsLoggedIn()
     }
     
     // MARK: - Actions
@@ -77,10 +92,7 @@ final class TabbarController: UITabBarController {
         
         let chatViewController = templateNavigationController(selectedImage: #imageLiteral(resourceName: "chat-selected"), unselectedImage: #imageLiteral(resourceName: "chat-unselected"), rootViewController: ChatViewController(), title: "채팅")
         
-        let myKarrotVC = MyKarrotViewController(user: user)
-        myKarrotVC.delegate = self
-        
-        let profileViewController = templateNavigationController(selectedImage: #imageLiteral(resourceName: "user-selected"), unselectedImage: #imageLiteral(resourceName: "user-unselected"), rootViewController: myKarrotVC, title: "나의당근")
+        let profileViewController = templateNavigationController(selectedImage: #imageLiteral(resourceName: "user-selected"), unselectedImage: #imageLiteral(resourceName: "user-unselected"), rootViewController: MyKarrotViewController(user: user), title: "나의당근")
         
         viewControllers = [homeViewController, chatViewController, profileViewController]
     }
@@ -99,15 +111,15 @@ final class TabbarController: UITabBarController {
     }
 }
 
-extension TabbarController: AuthenticationDelegate {
-    func logout() {
-        isLoggedIn = false
-        user = nil
-        
-        checkIfUserIsLoggedIn()
-    }
-}
+//extension TabbarController: AuthenticationDelegate {
+//    func logout() {
+//        isLoggedIn = false
+//        user = nil
+//
+//        checkIfUserIsLoggedIn()
+//    }
+//}
 
-protocol AuthenticationDelegate {
-    func logout()
-}
+//protocol AuthenticationDelegate {
+//    func logout()
+//}

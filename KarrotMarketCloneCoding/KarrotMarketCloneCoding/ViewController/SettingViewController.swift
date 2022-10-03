@@ -9,7 +9,6 @@ import UIKit
 
 final class SettingViewController: UITableViewController {
     private let titles = ["로그아웃", "회원탈퇴"]
-    internal var delegate: AuthenticationDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,7 +45,7 @@ final class SettingViewController: UITableViewController {
             
             UserDefaults.standard.removeObject(forKey: Const.userId)
             tabBarController?.selectedIndex = 0
-            delegate?.logout()
+            NotificationCenter.default.post(name: NotificationType.logout.name, object: nil)
             
         } else {
             print("회원탈퇴")

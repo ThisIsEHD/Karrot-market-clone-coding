@@ -12,7 +12,6 @@ final class MyKarrotViewController: UIViewController {
     
     // MARK: - Properties
     private var user: User?
-    internal var delegate: AuthenticationDelegate?
     
     private let tableView = UITableView(frame: .zero, style: .grouped)
     private let myProfileTableList = [["내 동네 설정", "동네인증하기", "키워드 알림", "모아보기", "당근가계부", "관심 카테고리 설정"],
@@ -37,9 +36,7 @@ final class MyKarrotViewController: UIViewController {
     
     // MARK: - Actions
     @objc func settingButtonDidTapped() {
-        let settingVC = SettingViewController()
-        settingVC.delegate = delegate
-        navigationController?.pushViewController(settingVC, animated: true)
+        navigationController?.pushViewController(SettingViewController(), animated: true)
     }
 
     // MARK: - LifeCycle
@@ -166,6 +163,7 @@ extension MyKarrotViewController: UITableViewDelegate {
 
 
 extension MyKarrotViewController: ProfileViewDelegate {
+    
     func configureUserInfo(of user: User?) {
         guard let user = user else { return }
         profileView.configureUser(nickname: user.nickname)
@@ -190,4 +188,8 @@ extension MyKarrotViewController: ProfileViewDelegate {
         profileEditingVC.profileEditingView.nicknameTextField.text = user?.nickname
         navigationController?.pushViewController(profileEditingVC, animated: true)
     }
+    
+    func selectedItemTableVC() {
+    }
+    
 }
