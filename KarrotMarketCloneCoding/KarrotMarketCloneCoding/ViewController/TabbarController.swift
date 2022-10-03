@@ -20,6 +20,7 @@ final class TabbarController: UITabBarController {
     // MARK: - Life Cycle    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        print("🇨🇦🇨🇦🇨🇦🇨🇦")
         if !isLoggedIn {
             checkIfUserIsLoggedIn()
         }
@@ -29,9 +30,8 @@ final class TabbarController: UITabBarController {
    
     func presentUserCheckVC() {
         DispatchQueue.main.async { [weak self] in
-            let userCheckVC = UserCheckViewController()
             
-            let nav = UINavigationController(rootViewController: userCheckVC)
+            let nav = UINavigationController(rootViewController: UserCheckViewController())
             nav.modalPresentationStyle = .fullScreen
             
             self?.present(nav, animated: false, completion: nil)
@@ -39,7 +39,8 @@ final class TabbarController: UITabBarController {
     }
     
     private func checkIfUserIsLoggedIn() {
-        let userId = UserDefaults.standard.object(forKey: Const.userId.asItIs) as? String ?? ""
+        print(#function)
+        let userId = UserDefaults.standard.object(forKey: Const.userId) as? String ?? ""
         let token = KeyChain.read(key: userId)
         
         if token == nil {
@@ -76,7 +77,10 @@ final class TabbarController: UITabBarController {
         
         let chatViewController = templateNavigationController(selectedImage: #imageLiteral(resourceName: "chat-selected"), unselectedImage: #imageLiteral(resourceName: "chat-unselected"), rootViewController: ChatViewController(), title: "채팅")
         
-        let profileViewController = templateNavigationController(selectedImage: #imageLiteral(resourceName: "user-selected"), unselectedImage: #imageLiteral(resourceName: "user-unselected"), rootViewController: MyKarrotViewController(user: user), title: "나의당근")
+        let myKarrotVC = MyKarrotViewController(user: user)
+        myKarrotVC.delegate = self
+        
+        let profileViewController = templateNavigationController(selectedImage: #imageLiteral(resourceName: "user-selected"), unselectedImage: #imageLiteral(resourceName: "user-unselected"), rootViewController: myKarrotVC, title: "나의당근")
         
         viewControllers = [homeViewController, chatViewController, profileViewController]
     }
@@ -93,4 +97,17 @@ final class TabbarController: UITabBarController {
         nav.navigationBar.topItem?.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         return nav
     }
+}
+
+extension TabbarController: AuthenticationDelegate {
+    func logout() {
+        isLoggedIn = false
+        user = nil
+        
+        checkIfUserIsLoggedIn()
+    }
+}
+
+protocol AuthenticationDelegate {
+    func logout()
 }

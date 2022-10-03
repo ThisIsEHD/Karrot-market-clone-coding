@@ -80,8 +80,7 @@ struct Network {
                         let jwt = try decode(jwt: token)
                         print(jwt)
                         guard let id = jwt.body["user_id"] else { return }
-                        UserDefaults.standard.removeObject(forKey: Const.userId.asItIs)  //로그아웃시로 빼버릴거. keychain에서 토큰도 삭제해야.
-                        UserDefaults.standard.set(id, forKey: Const.userId.asItIs)
+                        UserDefaults.standard.set(id, forKey: Const.userId)
                         KeyChain.create(key: id as! String, token: token)
                         
                         completion(.success(.none))

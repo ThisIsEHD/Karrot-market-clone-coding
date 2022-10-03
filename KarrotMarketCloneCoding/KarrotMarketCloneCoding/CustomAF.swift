@@ -93,7 +93,7 @@ extension Purpose {
     func asURLRequest() throws -> URLRequest {
         let url = try baseUrl.asURL()
         var urlRequest = try URLRequest(url: url.appendingPathComponent(path), method: method)
-        let userId = UserDefaults.standard.object(forKey: Const.userId.asItIs) as? String ?? ""
+        let userId = UserDefaults.standard.object(forKey: Const.userId) as? String ?? ""
         let accessToken = KeyChain.read(key: userId) ?? ""
         var headers = HTTPHeaders()
         

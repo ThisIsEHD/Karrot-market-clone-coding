@@ -100,7 +100,7 @@ extension NewPostTableViewController {
     @objc func post() {
         view.endEditing(true)
         
-        Network.shared.registerItem(item: Item(id: nil, title: item.title, content: item.content, categoryId: item.categoryId, price: item.price, regdate: nil, views: nil, wishes: nil, userId: (UserDefaults.standard.object(forKey: Const.userId.asItIs) as? String), nickname: nil, images: nil), images: selectedImages) { result in
+        Network.shared.registerItem(item: Item(id: nil, title: item.title, content: item.content, categoryId: item.categoryId, price: item.price, regdate: nil, views: nil, wishes: nil, userId: (UserDefaults.standard.object(forKey: Const.userId) as? String), nickname: nil, images: nil), images: selectedImages) { result in
             
             switch result {
             case .success:

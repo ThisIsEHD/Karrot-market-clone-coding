@@ -7,10 +7,6 @@
 
 import Foundation
 
-enum Const: String {
-    case userId = "userId"
-    
-    var asItIs: String {
-        return self.rawValue
-    }
+enum Const {
+    static let userId = "userId"
 }

@@ -8,12 +8,20 @@
 import UIKit
 
 final class SettingViewController: UITableViewController {
-    let titles = ["로그아웃", "회원탈퇴"]
+    private let titles = ["로그아웃", "회원탈퇴"]
+    internal var delegate: AuthenticationDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "설정"
         tableView.register(BasicTableViewCell.self, forCellReuseIdentifier: BasicTableViewCell.identifier)
+    }
+    
+    private func showUserCheckVC() {
+        let nav = UINavigationController(rootViewController: UserCheckViewController())
+        nav.modalPresentationStyle = .fullScreen
+        
+        self.present(nav, animated: false, completion: nil)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -29,8 +37,17 @@ final class SettingViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-            print("로그아웃")
             tableView.deselectRow(at: indexPath, animated: true)
+            
+            if let id = UserDefaults.standard.object(forKey: Const.userId) as? String {
+                KeyChain.delete(key: id)
+                UserDefaults.standard.removeObject(forKey: Const.userId)
+            }
+            
+            UserDefaults.standard.removeObject(forKey: Const.userId)
+            tabBarController?.selectedIndex = 0
+            delegate?.logout()
+            
         } else {
             print("회원탈퇴")
             tableView.deselectRow(at: indexPath, animated: true)
