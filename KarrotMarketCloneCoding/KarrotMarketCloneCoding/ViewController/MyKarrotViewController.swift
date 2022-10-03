@@ -36,7 +36,7 @@ final class MyKarrotViewController: UIViewController {
     
     // MARK: - Actions
     @objc func settingButtonDidTapped() {
-        UserDefaults.standard.removeObject(forKey: "AccessToken")
+        navigationController?.pushViewController(SettingViewController(), animated: true)
     }
 
     // MARK: - LifeCycle

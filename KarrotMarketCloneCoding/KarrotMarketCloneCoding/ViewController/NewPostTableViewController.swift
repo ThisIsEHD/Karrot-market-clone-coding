@@ -190,7 +190,7 @@ extension NewPostTableViewController: UITableViewDataSource {
             
         } else if indexPath.row == 2 {
             
-            let cell = tableView.dequeueReusableCell(withIdentifier: CategoryTableViewCell.identifier, for: indexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: BasicTableViewCell.identifier, for: indexPath)
             
             cell.textLabel?.text = "카테고리 선택"
             cell.textLabel?.font = UIFont.systemFont(ofSize: 20)
@@ -225,7 +225,7 @@ extension NewPostTableViewController: UITableViewDelegate {
         
         if indexPath.row == 2 {
             
-            if let cell = tableView.cellForRow(at: indexPath) as? CategoryTableViewCell {
+            if let cell = tableView.cellForRow(at: indexPath) as? BasicTableViewCell {
                 
                 let vc = CategoryTableViewController()
                 

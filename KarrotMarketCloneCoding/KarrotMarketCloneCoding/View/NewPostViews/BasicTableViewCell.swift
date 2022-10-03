@@ -7,9 +7,9 @@
 
 import UIKit
 
-final class CategoryTableViewCell: UITableViewCell {
+final class BasicTableViewCell: UITableViewCell {
 
-    static let identifier = "CategoryTableViewCell"
+    static let identifier = "BasicTableViewCell"
     
     override func awakeFromNib() {
         super.awakeFromNib()
