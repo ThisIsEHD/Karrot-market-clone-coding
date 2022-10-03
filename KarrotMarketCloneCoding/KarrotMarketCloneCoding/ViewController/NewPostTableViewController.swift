@@ -99,13 +99,47 @@ extension NewPostTableViewController {
     
     @objc func post() {
         view.endEditing(true)
+        
         Network.shared.registerItem(item: Item(id: nil, title: item.title, content: item.content, categoryId: item.categoryId, price: item.price, regdate: nil, views: nil, wishes: nil, userId: (UserDefaults.standard.object(forKey: Const.userId.asItIs) as? String), nickname: nil, images: nil), images: selectedImages) { result in
+            
             switch result {
             case .success:
                 self.doneButtonTapped()
                 self.dismiss(animated: true, completion: nil)
             case .failure(let error):
-                print(error)
+                var alertMessage = ""
+                
+                switch error {
+                case .wrongForm(let data):
+
+                    if let titleError = data["title"] {
+                        alertMessage.append("📌")
+                        alertMessage.append(titleError)
+                        alertMessage.append("\n")
+                    }
+                    if let categoryError = data["categoryId"] {
+                        alertMessage.append("📌")
+                        alertMessage.append(categoryError)
+                        alertMessage.append("\n")
+                    }
+                    if let priceError = data["price"] {
+                        alertMessage.append("📌")
+                        alertMessage.append(priceError)
+                        alertMessage.append("\n")
+                    }
+                    if let contentError = data["content"] {
+                        alertMessage.append("📌")
+                        alertMessage.append(contentError)
+                    }
+                case .invalidToken:
+                    alertMessage = "로그인 시간 만료. 다시 로그인 해주세요."
+                case .serverError, .unknownError:
+                    alertMessage = "알 수 없는 에러. 나중에 다시 시도해 주세요."
+                default:
+                    alertMessage = "알 수 없는 에러. 나중에 다시 시도해 주세요."
+                }
+                let alert = SimpleAlert(message: alertMessage)
+                self.present(alert, animated: true)
             }
         }
         
