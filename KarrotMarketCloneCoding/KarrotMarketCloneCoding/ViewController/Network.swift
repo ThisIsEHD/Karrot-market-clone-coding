@@ -251,6 +251,27 @@ struct Network {
         }
     }
     
+    func deleteUser(completion: @escaping (KarrotError?) -> Void ) {
+        AF.request(Purpose.deleteUser(UserDefaults.standard.object(forKey: Const.userId) as? String ?? "")).response { response in
+            
+            if let _ = response.error{    //응답 에러
+                completion(.serverError)
+            }
+            guard let httpResponse = response.response else { return }
+
+            switch httpResponse.statusCode {
+                case 200:
+                    completion(nil)
+                case 401:
+                    completion(.invalidToken)
+                case 403, 404:
+                    completion(.unknownUser)
+                default:
+                    completion(.serverError)
+            }
+        }
+    }
+    
     func jsonDecode<T: Codable>(type: T.Type, data: Data) -> T? {
         
         let jsonDecoder = JSONDecoder()

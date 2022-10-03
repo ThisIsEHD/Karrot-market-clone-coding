@@ -44,6 +44,7 @@
 		D3A2158D288D905400D06AD3 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A21588288D905400D06AD3 /* Color.swift */; };
 		D3A2158F288D90E800D06AD3 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A2158E288D90E800D06AD3 /* ChatViewController.swift */; };
 		D3C23A5828EB28B5009B53B4 /* JWTDecode in Frameworks */ = {isa = PBXBuildFile; productRef = D3C23A5728EB28B5009B53B4 /* JWTDecode */; };
+		D3C23A5A28EB5888009B53B4 /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C23A5928EB5888009B53B4 /* Authentication.swift */; };
 		D3D93CDF28EB21DD00B3CE7B /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D93CDE28EB21DD00B3CE7B /* SettingViewController.swift */; };
 		D3DF36292881AF5100F20065 /* ProfileEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF36282881AF5100F20065 /* ProfileEditingViewController.swift */; };
 		D3DF362B2881B35200F20065 /* ReusableSettingProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF362A2881B35200F20065 /* ReusableSettingProfileView.swift */; };
@@ -117,6 +118,7 @@
 		D3A21587288D905400D06AD3 /* UserInterfaceObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInterfaceObjects.swift; sourceTree = "<group>"; };
 		D3A21588288D905400D06AD3 /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		D3A2158E288D90E800D06AD3 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		D3C23A5928EB5888009B53B4 /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
 		D3D93CDE28EB21DD00B3CE7B /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		D3DF36282881AF5100F20065 /* ProfileEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditingViewController.swift; sourceTree = "<group>"; };
 		D3DF362A2881B35200F20065 /* ReusableSettingProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableSettingProfileView.swift; sourceTree = "<group>"; };
@@ -188,6 +190,7 @@
 			isa = PBXGroup;
 			children = (
 				723FE607287D4EDA00A987E7 /* User.swift */,
+				D3C23A5928EB5888009B53B4 /* Authentication.swift */,
 				D3F0E7C328E0ABF4006AEB3D /* KeyChain.swift */,
 				723FE609287D4EEF00A987E7 /* Item.swift */,
 				D3A21584288D905400D06AD3 /* Notification.swift */,
@@ -489,6 +492,7 @@
 				723FE68828853E0800A987E7 /* ItemDetailViewController.swift in Sources */,
 				D3D93CDF28EB21DD00B3CE7B /* SettingViewController.swift in Sources */,
 				723FE6902887E4AE00A987E7 /* ItemDetailViewImagesCollectionViewCell.swift in Sources */,
+				D3C23A5A28EB5888009B53B4 /* Authentication.swift in Sources */,
 				7248CA45288E57BB00DDF939 /* Network.swift in Sources */,
 				723FE6942888488600A987E7 /* ItemDetailViewBottomStickyView.swift in Sources */,
 				723FE61F287DACA100A987E7 /* MyKarrotTableViewCell.swift in Sources */,

@@ -24,6 +24,7 @@ enum Purpose: Requestable {
     case fetchItem(ProductID)
     case fetchUserItem(ID, [String : Any])
     case registerItem(ID, Item)
+    case deleteUser(ID)
 }
 
 extension Purpose {
@@ -49,6 +50,8 @@ extension Purpose {
             return .none
         case .registerItem:
             return .multipartWithToken
+        case .deleteUser:
+            return .jsonWithToken
         }
     }
     
@@ -70,6 +73,8 @@ extension Purpose {
             return "/api/v1/users/\(id)/products"
         case .registerItem(let userID, _):
             return "/api/v1/users/\(userID)/products"
+        case .deleteUser(let id):
+            return "/api/v1/users/\(id)"
         }
     }
     
@@ -78,6 +83,7 @@ extension Purpose {
         case .login, .registerUser, .registerItem: return .post
         case .fetchUser, .fetchItem, .fetchItems, .fetchUserItem: return .get
         case .update: return .put
+        case .deleteUser: return .delete
         }
     }
     
@@ -86,7 +92,7 @@ extension Purpose {
         case .login(let user): return .body(user)
         case .update(let user): return .body(user)
         case .fetchItems(let queryItem), .fetchUserItem(_, let queryItem): return .query(queryItem)
-        case .fetchUser, .registerUser, .fetchItem, .registerItem: return .none
+        case .fetchUser, .registerUser, .fetchItem, .registerItem, .deleteUser: return .none
         }
     }
     
