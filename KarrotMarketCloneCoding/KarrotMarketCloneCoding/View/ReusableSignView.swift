@@ -25,23 +25,24 @@ final class ReusableSignView: UIView {
     }()
     internal let passwordTextField: UITextField = {
         let textField = CustomTextField(placeholder: "비밀번호")
-        
+        textField.isSecureTextEntry = true
         return textField
     }()
-    internal let signUpButton: UIButton = {
+    internal let signButton: UIButton = {
         let button = UIButton(type: .system)
         
         button.setTitle("회원가입", for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        button.backgroundColor = UIColor.appColor(.carrot)
+        button.backgroundColor = .systemGray
+        button.isEnabled = false
         button.layer.cornerRadius = 10
         
         return button
     }()
     private lazy var stackView: UIStackView = {
-        let stackView = UIStackView(arrangedSubviews: [emailTextField, passwordTextField, signUpButton])
+        let stackView = UIStackView(arrangedSubviews: [emailTextField, passwordTextField, signButton])
         
         stackView.spacing = 15
         stackView.distribution = .fillEqually

@@ -13,7 +13,7 @@ final class MyKarrotHeaderView: UIView {
     
     weak var delegate: ProfileViewDelegate?
     
-    private lazy var profileView: UIView = {
+    private lazy var profileView: ReusableProfileView = {
         let v = ReusableProfileView(imageSize: 80)
         v.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(profileViewDidTapped)))
         return v
@@ -44,7 +44,8 @@ final class MyKarrotHeaderView: UIView {
         let sv = UIStackView(arrangedSubviews: [soldListImageView, soldListLabel])
         sv.axis = .vertical
         sv.spacing = 10
-        sv.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(stackViewDidTapped)))
+        sv.tag = 0
+        sv.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(stackViewDidTapped(_:))))
         return sv
     }()
     
@@ -68,7 +69,8 @@ final class MyKarrotHeaderView: UIView {
         sv.axis = .vertical
         sv.isUserInteractionEnabled = true
         sv.spacing = 10
-        sv.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(stackViewDidTapped)))
+        sv.tag = 1
+        sv.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(stackViewDidTapped(_:))))
         return sv
     }()
     
@@ -92,19 +94,36 @@ final class MyKarrotHeaderView: UIView {
         sv.axis = .vertical
         sv.isUserInteractionEnabled = true
         sv.spacing = 10
-        sv.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(stackViewDidTapped)))
+        sv.tag = 2
+        sv.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(stackViewDidTapped(_:))))
         return sv
     }()
     
     // MARK: Actions
     
-    @objc func profileViewDidTapped() {
-        self.delegate?.goToMyProfileVC()
-        print(#function)
+    func configureUser(nickname: String?) {
+        profileView.configure(nickname: nickname)
     }
     
-    @objc func stackViewDidTapped() {
-        self.delegate?.goToDetailVC()
+    func configureUser(image: UIImage?) {
+        profileView.configure(image: image)
+    }
+    
+    @objc func profileViewDidTapped() {
+        self.delegate?.goToMyProfileVC()
+    }
+    
+    @objc func stackViewDidTapped(_ sender: UITapGestureRecognizer) {
+        switch sender.view?.tag {
+            case 0:
+                print("판매내역")
+            case 1:
+                print("구매내역")
+            case 2:
+                print("관심목록")
+            default:
+                break
+        }
     }
     
     // MARK: - Life Cycle
@@ -135,7 +154,7 @@ final class MyKarrotHeaderView: UIView {
         profileView.addSubview(indicatorImageView)
     }
     
-    // MARK: Set Constraints
+    // MARK: Setting Constraints
     
     private func setConstraints() {
         setProfileViewConstraints()
@@ -194,5 +213,6 @@ final class MyKarrotHeaderView: UIView {
 // MARK: - ProfileViewDelegate
 protocol ProfileViewDelegate: AnyObject {
     func goToMyProfileVC()
-    func goToDetailVC()
+    func selectedItemTableVC()
+    func configureUserInfo(of: User?)
 }

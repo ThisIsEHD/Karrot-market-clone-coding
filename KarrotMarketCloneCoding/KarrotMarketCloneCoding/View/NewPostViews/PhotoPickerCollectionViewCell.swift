@@ -11,7 +11,6 @@ final class PhotoPickerCollectionViewCell: UICollectionViewCell {
 
     var selectedPhotosNumber = 0
     
-    @IBOutlet weak var selectedPhotosNumberLabel: UILabel!
     @IBOutlet weak var pickerButton: UIButton!
     
     static func nib() -> UINib {
@@ -34,14 +33,10 @@ final class PhotoPickerCollectionViewCell: UICollectionViewCell {
     }
     
     private func setPhotosNumberLabel() {
-        
-        selectedPhotosNumberLabel.text = "\(selectedPhotosNumber)"
-        selectedPhotosNumberLabel.textColor = UIColor.appColor(.carrot)
+        pickerButton.titleLabel?.text = "\(selectedPhotosNumber)/10"
     }
     
     private func setPhotosNumberLabelLayout() {
-        
-        selectedPhotosNumberLabel.anchor(bottom: pickerButton.bottomAnchor, bottomConstant: 9, leading: pickerButton.leadingAnchor, leadingConstant: 12)
         pickerButton.layer.borderWidth = 1
         pickerButton.layer.borderColor = CGColor(gray: 0.5, alpha: 0.5)
         pickerButton.layer.cornerRadius = 5

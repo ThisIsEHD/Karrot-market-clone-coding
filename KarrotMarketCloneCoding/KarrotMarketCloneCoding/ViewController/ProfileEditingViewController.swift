@@ -8,10 +8,11 @@
 import UIKit
 import PhotosUI
 
-final class ProfileEditingViewController: UIViewController {
+class ProfileEditingViewController: UIViewController {
     
-    let member = User(id: 1, nickName: "욘두", profileImageUrl: nil)
-    let profileEditingView = ProfileEditingView(frame: .zero)
+    // profile update기능
+    
+    let profileEditingView = ReusableSettingProfileView(frame: .zero)
     
     override func loadView() {
         
@@ -22,8 +23,8 @@ final class ProfileEditingViewController: UIViewController {
         super.viewDidLoad()
         
         title = "프로필 수정"
-        profileEditingView.nickNameTextField.delegate = self
-        profileEditingView.nickNameTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        profileEditingView.nicknameTextField.delegate = self
+        profileEditingView.nicknameTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         profileEditingView.setupTapGestures(target: self, selector: #selector(touchUpImageView))
     }
     
@@ -38,7 +39,7 @@ final class ProfileEditingViewController: UIViewController {
     }
     
     private func setupNaviBar() {
-
+        
         let appearance = UINavigationBarAppearance()
         
         appearance.configureWithDefaultBackground()
@@ -51,7 +52,7 @@ final class ProfileEditingViewController: UIViewController {
         var configuration = PHPickerConfiguration()
         
         configuration.selectionLimit = 0
-        configuration.filter = .any(of: [.images, .videos])
+        configuration.filter = .any(of: [.images])
         
         let picker = PHPickerViewController(configuration: configuration)
         
@@ -61,23 +62,23 @@ final class ProfileEditingViewController: UIViewController {
     }
     
     @objc func textFieldDidChange() {
-        constrainWrongNaming()
+//        constrainWrongNaming()
     }
     
     func constrainWrongNaming() {
         
-        if let nickName = profileEditingView.nickNameTextField.text, nickName != member.nickName {
-            
-            if nickName.count >= 2 {
-                
-                profileEditingView.editingDoneButton.isEnabled = true
-                profileEditingView.editingDoneButton.backgroundColor = UIColor.appColor(.carrot)
-            }
-        } else {
-            
-            profileEditingView.editingDoneButton.isEnabled = false
-            profileEditingView.editingDoneButton.backgroundColor = UIColor.systemGray
-        }
+//        if let nickName = profileEditingView.nickNameTextField.text, nickName != member.nickName {
+//
+//            if nickName.count >= 2 {
+//
+//                profileEditingView.editingDoneButton.isEnabled = true
+//                profileEditingView.editingDoneButton.backgroundColor = UIColor.appColor(.carrot)
+//            }
+//        } else {
+//
+//            profileEditingView.editingDoneButton.isEnabled = false
+//            profileEditingView.editingDoneButton.backgroundColor = UIColor.systemGray
+//        }
     }
     
     @objc func close() {
@@ -91,12 +92,7 @@ extension ProfileEditingViewController: UITextFieldDelegate {
         
         let currentText = NSString(string: textField.text ?? "")
         let finalText = currentText.replacingCharacters(in: range, with: string)
-        
-        if finalText.count > 12 {
-            return false
-        }
-        
-        return true
+        return finalText.count <= 10
     }
 }
 
@@ -111,13 +107,10 @@ extension ProfileEditingViewController: PHPickerViewControllerDelegate {
         if let itemProvider = itemProvider, itemProvider.canLoadObject(ofClass: UIImage.self) {
             
             itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
-                DispatchQueue.main.async {
-                    self.profileEditingView.imagePickerView.image = image as? UIImage
-                }
+                DispatchQueue.main.async { self.profileEditingView.imagePickerView.image = image as? UIImage }
             }
         } else {
             print("이미지 못 불러왔음!!!!")
         }
     }
 }
-

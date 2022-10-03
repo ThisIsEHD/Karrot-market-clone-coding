@@ -1,30 +1,44 @@
 //
-//  MerchandiseTableViewCell.swift
+//  itemTableViewCell.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/07/22.
 //
 
 import UIKit
+import Alamofire
 
-class MerchandiseTableViewCell: UITableViewCell {
+class ItemTableViewCell: UITableViewCell {
     
     // MARK: - Properties
     
+    var item: Item? {
+        didSet {
+            nameLabel.text = item?.title
+            priceLabel.text = item?.price != nil ? "\(item?.price ?? 0) 원" : "무료 나눔"
+            wishLabel.text = "\(item?.wishes ?? 0)"
+            
+            getThumbnailImage { [self] image in
+                thumbnailImageView.image = image
+            }
+        }
+    }
+    
     private let thumbnailImageView: UIImageView = {
+        
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
         iv.layer.cornerRadius = 8
         iv.layer.masksToBounds = true
         iv.clipsToBounds = true
-        iv.backgroundColor = .systemGray3
+        iv.backgroundColor = .white
         return iv
     }()
     
-    private  let nameLabel: UILabel = {
+    let nameLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 2
-        lbl.text = "당근마켓 상품의 이름은 여기에 입력하시오"
+        lbl.text = ""
         lbl.font = UIFont.systemFont(ofSize: 17)
         return lbl
     }()
@@ -43,10 +57,10 @@ class MerchandiseTableViewCell: UITableViewCell {
     //            return lb
     //        }()
     
-    private let priceLabel: UILabel = {
+    let priceLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
-        lbl.text = "150,000원"
+        lbl.text = ""
         lbl.font = UIFont.systemFont(ofSize: 17)
         return lbl
     }()
@@ -55,14 +69,16 @@ class MerchandiseTableViewCell: UITableViewCell {
         let btn = UIButton()
         btn.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
         btn.imageView?.contentMode = .scaleAspectFit
+        btn.imageView?.tintColor = .systemGray3
         btn.setImage(UIImage(named: "wish-gray"), for: .normal)
         return btn
     }()
     
-    private let wishLabel: UILabel = {
+    let wishLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
-        lbl.text = "3"
+        lbl.text = ""
+        lbl.tintColor = .systemGray3
         lbl.font = UIFont.systemFont(ofSize: 15)
         return lbl
     }()
@@ -71,6 +87,7 @@ class MerchandiseTableViewCell: UITableViewCell {
         let btn = UIButton()
         btn.frame = CGRect(x: 0, y: 0, width: 38, height: 38)
         btn.imageView?.contentMode = .scaleAspectFit
+        btn.imageView?.tintColor = .systemGray3
         btn.setImage(UIImage(named: "chat-gray"), for: .normal)
         return btn
     }()
@@ -78,7 +95,8 @@ class MerchandiseTableViewCell: UITableViewCell {
     private let chatLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
-        lbl.text = "5"
+        lbl.text = "0"
+        lbl.tintColor = .systemGray3
         lbl.font = UIFont.systemFont(ofSize: 15)
         return lbl
     }()
@@ -102,15 +120,15 @@ class MerchandiseTableViewCell: UITableViewCell {
     
     private lazy var wishView: UIView = {
         let view = UIView()
-        view.addSubview(wishIcon)
         view.addSubview(wishLabel)
+        view.addSubview(wishIcon)
         return view
     }()
     
     private lazy var chatView: UIView = {
         let view = UIView()
-        view.addSubview(chatIcon)
         view.addSubview(chatLabel)
+        view.addSubview(chatIcon)
         return view
     }()
     
@@ -128,6 +146,8 @@ class MerchandiseTableViewCell: UITableViewCell {
         sv.isUserInteractionEnabled = false
         return sv
     }()
+    
+    // MARK: - Actions
     
     // MARK: - Life Cycle
     
@@ -151,8 +171,8 @@ class MerchandiseTableViewCell: UITableViewCell {
             contentView.addSubview(view)
         }
     }
-
-    // MARK: - Set Constraints
+    
+    // MARK: - Setting Constraints
     
     private func setConstraints() {
         setIconStackViewConstraints()
@@ -160,25 +180,47 @@ class MerchandiseTableViewCell: UITableViewCell {
     }
     
     private func setIconStackViewConstraints() {
-        wishIcon.anchor(top: wishView.topAnchor, bottom: wishView.bottomAnchor, leading: wishView.leadingAnchor, height: 15)
-        wishLabel.centerY(inView: wishIcon)
-        wishLabel.anchor(leading: wishIcon.trailingAnchor, leadingConstant: 2, trailing: wishView.trailingAnchor)
+        wishIcon.anchor(top: wishView.topAnchor, bottom: wishView.bottomAnchor, leading: wishView.leadingAnchor, height: 17)
+        wishLabel.anchor(bottom: wishIcon.bottomAnchor)
+        wishLabel.anchor(leading: wishIcon.trailingAnchor, trailing: wishView.trailingAnchor)
         
-        chatIcon.anchor(top: chatView.topAnchor, bottom: chatView.bottomAnchor, leading: chatView.leadingAnchor, height: 15)
-        chatLabel.centerY(inView: chatIcon)
-        chatLabel.anchor(leading: chatIcon.trailingAnchor, leadingConstant: 2, trailing: chatView.trailingAnchor)
+        chatIcon.anchor(top: chatView.topAnchor, bottom: chatView.bottomAnchor, leading: chatView.leadingAnchor, height: 17)
+        chatLabel.anchor(bottom: chatIcon.bottomAnchor)
+        chatLabel.anchor(leading: chatIcon.trailingAnchor, trailing: chatView.trailingAnchor)
     }
     
     private func setContentViewConstraints() {
-        thumbnailImageView.anchor(top: topAnchor, topConstant: 18, bottom: iconStackView.topAnchor, bottomConstant: 18 ,leading: leadingAnchor, leadingConstant: 18, width: 114)
+        thumbnailImageView.anchor(top: topAnchor, topConstant: 18, bottom: bottomAnchor, bottomConstant: 18 ,leading: leadingAnchor, leadingConstant: 18, width: 114)
         //width를 동적으로 가져오지 못함 해결해야함.
         
-        nameLabel.anchor(top: thumbnailImageView.topAnchor, leading: thumbnailImageView.trailingAnchor, leadingConstant: 15, trailing: trailingAnchor, trailingConstant: 15)
+        nameLabel.anchor(top: thumbnailImageView.topAnchor, topConstant: 5,  leading: thumbnailImageView.trailingAnchor, leadingConstant: 15, trailing: trailingAnchor, trailingConstant: 15)
         
-//        locationLabel.anchor()
-//        timeLabel.anchor()
+        //        locationLabel.anchor()
+        //        timeLabel.anchor()
         priceLabel.anchor(top: nameLabel.bottomAnchor, topConstant: 10, leading: nameLabel.leadingAnchor)
         
         iconStackView.anchor(bottom: bottomAnchor, bottomConstant: 10, trailing: trailingAnchor, trailingConstant: 15)
+    }
+    
+    private func getThumbnailImage(completion: @escaping (UIImage?) -> ()) {
+        
+        if let url = item?.images?.first?.url {
+            Network.shared.fetchImage(url: url) { result in
+                switch result {
+                        
+                    case .success(let image):
+                        
+                        completion(image)
+                        
+                    case .failure(let error):
+                        
+                        print("🥶",error.localizedDescription, self.item?.images)
+                }
+            }
+        } else {
+            let image = UIImage(systemName: "clear.fill")?.withTintColor(.systemGray, renderingMode: .alwaysOriginal)
+            completion(image)
+        }
+        
     }
 }

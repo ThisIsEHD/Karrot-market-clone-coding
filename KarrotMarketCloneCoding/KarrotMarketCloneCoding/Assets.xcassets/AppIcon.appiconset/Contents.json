@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "Karrot40.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "20x20"
@@ -31,6 +32,7 @@
       "size" : "40x40"
     },
     {
+      "filename" : "Karrot120.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "60x60"

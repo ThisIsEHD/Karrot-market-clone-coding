@@ -46,7 +46,7 @@ class OtherPostsCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - Set Constraints
+    // MARK: - Setting Constraints
     
     private func setConstraints() {
         postImageView.anchor(top: topAnchor, leading: leadingAnchor, trailing: trailingAnchor, height: 150)

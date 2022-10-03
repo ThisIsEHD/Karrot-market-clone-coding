@@ -10,17 +10,21 @@ import PhotosUI
 
 final class NewPostTableViewController: UIViewController {
     
-    private var selectedImages = [UIImage?]() {
+    private var selectedImages: [UIImage] = [UIImage]() {
         didSet {
+            maxChoosableImages = 10 - selectedImages.count
             newPostTableView.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
         }
     }
+    private var item = Item(id: nil, title: nil, content: nil, categoryId: nil, price: nil, regdate: nil, views: nil, wishes: nil, userId: nil, nickname: nil, images: nil)
+    internal var maxChoosableImages = 10
+    internal var doneButtonTapped: () -> () = { }
     
     private let newPostTableView = NewPostTableView(frame: .zero)
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         view.addSubview(newPostTableView)
         
         newPostTableView.tableView.delegate = self
@@ -42,15 +46,10 @@ final class NewPostTableViewController: UIViewController {
     }
     
     private func setupNaviBar() {
-
-        let appearance = UINavigationBarAppearance()
-        
-        appearance.configureWithDefaultBackground()
-        navigationController?.navigationBar.tintColor = .label
         title = "중고거래 글쓰기"
-
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .plain, target: nil, action: #selector(close))
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: nil, action: #selector(post))
+        navigationController?.navigationBar.tintColor = .label
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .plain, target: self, action: #selector(close))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(post))
         navigationItem.rightBarButtonItem?.tintColor = UIColor.appColor(.carrot)
     }
     
@@ -63,7 +62,7 @@ final class NewPostTableViewController: UIViewController {
         
         var configuration = PHPickerConfiguration()
         
-        configuration.selectionLimit = 10
+        configuration.selectionLimit = maxChoosableImages
         configuration.filter = .any(of: [.images])
         
         let picker = PHPickerViewController(configuration: configuration)
@@ -90,7 +89,6 @@ extension NewPostTableViewController {
     @objc func removeImage(_ notification: NSNotification) {
         
         if let indexPath = notification.userInfo?[UserInfo.indexPath] as? IndexPath {
-
             selectedImages.remove(at: indexPath.item - 1)
         }
     }
@@ -100,7 +98,51 @@ extension NewPostTableViewController {
     }
     
     @objc func post() {
-        dismiss(animated: true, completion: nil)
+        view.endEditing(true)
+        
+        Network.shared.registerItem(item: Item(id: nil, title: item.title, content: item.content, categoryId: item.categoryId, price: item.price, regdate: nil, views: nil, wishes: nil, userId: (UserDefaults.standard.object(forKey: Const.userId.asItIs) as? String), nickname: nil, images: nil), images: selectedImages) { result in
+            
+            switch result {
+            case .success:
+                self.doneButtonTapped()
+                self.dismiss(animated: true, completion: nil)
+            case .failure(let error):
+                var alertMessage = ""
+                
+                switch error {
+                case .wrongForm(let data):
+
+                    if let titleError = data["title"] {
+                        alertMessage.append("📌")
+                        alertMessage.append(titleError)
+                        alertMessage.append("\n")
+                    }
+                    if let categoryError = data["categoryId"] {
+                        alertMessage.append("📌")
+                        alertMessage.append(categoryError)
+                        alertMessage.append("\n")
+                    }
+                    if let priceError = data["price"] {
+                        alertMessage.append("📌")
+                        alertMessage.append(priceError)
+                        alertMessage.append("\n")
+                    }
+                    if let contentError = data["content"] {
+                        alertMessage.append("📌")
+                        alertMessage.append(contentError)
+                    }
+                case .invalidToken:
+                    alertMessage = "로그인 시간 만료. 다시 로그인 해주세요."
+                case .serverError, .unknownError:
+                    alertMessage = "알 수 없는 에러. 나중에 다시 시도해 주세요."
+                default:
+                    alertMessage = "알 수 없는 에러. 나중에 다시 시도해 주세요."
+                }
+                let alert = SimpleAlert(message: alertMessage)
+                self.present(alert, animated: true)
+            }
+        }
+        
     }
 }
 
@@ -132,7 +174,6 @@ extension NewPostTableViewController: UITableViewDataSource {
             cell.collectionView.photoPickerCellTapped = { [weak self] sender in
                 self?.setupImagePicker()
             }
-            
             cell.collectionView.images = selectedImages
             cell.selectionStyle = .none
             cell.clipsToBounds = false
@@ -144,7 +185,7 @@ extension NewPostTableViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: TitleTableViewCell.identifier, for: indexPath) as! TitleTableViewCell
             
             cell.selectionStyle = .none
-            
+            cell.textChanged = { self.item.title = $0 }
             return cell
             
         } else if indexPath.row == 2 {
@@ -162,6 +203,7 @@ extension NewPostTableViewController: UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: PriceTableViewCell.identifier, for: indexPath) as! PriceTableViewCell
             
             cell.selectionStyle = .none
+            cell.textChanged = { self.item.price = Int($0 ?? "0") }
             
             return cell
         } else {
@@ -170,7 +212,7 @@ extension NewPostTableViewController: UITableViewDataSource {
             
             cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 999)
             cell.selectionStyle = .none
-            cell.descriptionTextView.delegate = newPostTableView
+            cell.textChanged = { self.item.content = $0 }
             
             return cell
         }
@@ -181,29 +223,26 @@ extension NewPostTableViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-
-        
         if indexPath.row == 2 {
             
             if let cell = tableView.cellForRow(at: indexPath) as? CategoryTableViewCell {
                 
                 let vc = CategoryTableViewController()
                 
-                vc.cellTapped = { sender in
-                    
-                    cell.textLabel?.text = "\(vc.selectedCategory)"
+                vc.cellTapped = { indexPathRow in
+
+                    cell.textLabel?.text = "\(vc.categories[indexPathRow])"
+                    self.item.categoryId = indexPathRow + 1
                     vc.tableView.reloadRows(at: [indexPath], with: .fade)
                 }
                 navigationController?.pushViewController(vc, animated: true)
             }
-            
-            
         }
     }
 }
 
 extension NewPostTableViewController: PHPickerViewControllerDelegate {
-    
+//    deinit시 제거해줘야하나?
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         
         picker.dismiss(animated: true)
@@ -216,12 +255,7 @@ extension NewPostTableViewController: PHPickerViewControllerDelegate {
 
                 itemProvider.loadObject(ofClass: UIImage.self) { image, error in
                     
-                    
-                    DispatchQueue.main.async {
-                        
-                        self.selectedImages.append(image as? UIImage)
-                    }
-                    
+                    DispatchQueue.main.async { self.selectedImages.append((image as? UIImage)!) }
                 }
             } else {
                 print("이미지 못 불러왔음!!!!")

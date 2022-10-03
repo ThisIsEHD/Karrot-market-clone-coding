@@ -19,19 +19,31 @@ class ReusableProfileView: UIView {
         return iv
     }()
     
-    private let nickNameLabel: UILabel = {
+    private let nicknameLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = "욘듀"
         lbl.font = UIFont.boldSystemFont(ofSize: 18)
         return lbl
     }()
     
+    // MARK: - Actions
+    
+    func configure(image: UIImage?) {
+        profileImageView.image = image
+    }
+    
+    func configure(nickname: String?) {
+        nicknameLabel.text = nickname
+    }
+    
+    
+    
     // MARK: - Life Cycle
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         confifureViews()
-        setNickNameLabelConstraints()
+        setNicknameLabelConstraints()
     }
     
     convenience init(imageSize: CGFloat) {
@@ -47,10 +59,10 @@ class ReusableProfileView: UIView {
     
     private func confifureViews() {
         self.addSubview(profileImageView)
-        self.addSubview(nickNameLabel)
+        self.addSubview(nicknameLabel)
     }
     
-    // MARK: - Set Constraints
+    // MARK: - Setting Constraints
     
     private func setProfileImageViewConstraints(size: CGFloat) {
         profileImageView.anchor(leading: self.leadingAnchor,
@@ -60,9 +72,9 @@ class ReusableProfileView: UIView {
         profileImageView.layer.cornerRadius = (size - 10) / 2
     }
     
-    private func setNickNameLabelConstraints() {
-        nickNameLabel.centerY(inView: profileImageView)
-        nickNameLabel.anchor(leading: profileImageView.trailingAnchor,
+    private func setNicknameLabelConstraints() {
+        nicknameLabel.centerY(inView: profileImageView)
+        nicknameLabel.anchor(leading: profileImageView.trailingAnchor,
                              leadingConstant: 15)
     }
     

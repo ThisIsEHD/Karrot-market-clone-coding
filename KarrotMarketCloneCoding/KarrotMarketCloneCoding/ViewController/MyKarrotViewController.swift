@@ -1,5 +1,5 @@
 //
-//  MyKarrotTableViewController.swift
+//  MyKarrotVC.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/07/15.
@@ -8,14 +8,11 @@
 import UIKit
 import Alamofire
 
-final class MyKarrotTableViewController: UIViewController {
+final class MyKarrotViewController: UIViewController {
     
     // MARK: - Properties
-    private var user: [User]? {
-        didSet {
-            print(user)
-        }
-    }
+    private var user: User?
+
     private let tableView = UITableView(frame: .zero, style: .grouped)
     private let myProfileTableList = [["내 동네 설정", "동네인증하기", "키워드 알림", "모아보기", "당근가계부", "관심 카테고리 설정"],
                                       ["동네생활 글/댓글", "동네홍보 글", "동네 가게 후기", "저장한 장소", "내 단골가게", "받은 쿠폰함"],
@@ -25,6 +22,7 @@ final class MyKarrotTableViewController: UIViewController {
                                            ["writing", "file", "messenger", "bookmark", "shop", "voucher"],
                                            ["shop", "megaphone"],
                                            ["email", "microphone", "support", "setting"]]
+    private let statusBarView = UIView(frame: CGRect(x:0, y:0, width: UIScreen.main.bounds.width, height: UIApplication.shared.statusBarFrame.height))
     
     private lazy var profileView = MyKarrotHeaderView(width: self.view.bounds.width, height: 230)
     
@@ -37,22 +35,34 @@ final class MyKarrotTableViewController: UIViewController {
     }()
     
     // MARK: - Actions
- 
+    @objc func settingButtonDidTapped() {
+        UserDefaults.standard.removeObject(forKey: "AccessToken")
+    }
+
     // MARK: - LifeCycle
    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         profileView.delegate = self
         
+        configureUserInfo(of: user)
         setupNavigationItems()
         configureTableView()
+        statusBarView.backgroundColor = .systemBackground
+        view.addSubview(statusBarView)
         setTableViewConstraints()
+    }
+    
+    convenience init(user: User?) {
+        self.init()
+        self.user = user
     }
     
     // MARK: - Setup NavigationItems
     private func setupNavigationItems() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleLabel)
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "setting"), style: .plain, target: self, action: nil)
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "setting"), style: .plain, target: self, action: #selector(settingButtonDidTapped))
     }
     
     // MARK: - Configure TableView
@@ -69,13 +79,13 @@ final class MyKarrotTableViewController: UIViewController {
     
     // MARK: - Setting TableView Constraints
     private func setTableViewConstraints() {
-        tableView.anchor(top: view.topAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
+        tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
     }
 }
 
 //MARK: - UITableViewDataSource
 
-extension MyKarrotTableViewController: UITableViewDataSource {
+extension MyKarrotViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 5
@@ -123,7 +133,7 @@ extension MyKarrotTableViewController: UITableViewDataSource {
 }
 
 //MARK: - UITableViewDelegate
-extension MyKarrotTableViewController: UITableViewDelegate {
+extension MyKarrotViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
@@ -152,15 +162,32 @@ extension MyKarrotTableViewController: UITableViewDelegate {
 }
 
 
-extension MyKarrotTableViewController: ProfileViewDelegate {
+extension MyKarrotViewController: ProfileViewDelegate {
+    func configureUserInfo(of user: User?) {
+        guard let user = user else { return }
+        profileView.configureUser(nickname: user.nickname)
+        DispatchQueue.global().async {
+            guard let url = user.profileImageUrl else {
+                print(#function, "url is nil")
+                return
+            }
+            Network.shared.fetchImage(url: url) { result in
+                switch result {
+                    case .success(let image):
+                        self.profileView.configureUser(image: image)
+                    case .failure(_):
+                        print("error method:", #function)
+                }
+            }
+        }
+    }
     
     func goToMyProfileVC() {
-        user = [User(id: "kk@kk.com", nickName: "조각가", phone: "01038281234", name: "케이"),
-                User(id: "kk@kk.com", nickName: "조각가", phone: "01038281234", name: "케이"),
-                User(id: "kk@kk.com", nickName: "조각가", phone: "01038281234", name: "케이")]
+        let profileEditingVC = ProfileEditingViewController()
+        profileEditingVC.profileEditingView.nicknameTextField.text = user?.nickname
+        navigationController?.pushViewController(profileEditingVC, animated: true)
     }
     
-    func goToDetailVC() {
+    func selectedItemTableVC() {
     }
-    
 }
