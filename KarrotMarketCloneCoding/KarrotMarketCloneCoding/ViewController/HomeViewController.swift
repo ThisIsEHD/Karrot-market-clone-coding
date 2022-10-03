@@ -162,15 +162,25 @@ final class HomeViewController: UIViewController {
 extension HomeViewController: UITableViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
-        let contentHeight = scrollView.contentSize.height
-        let yOffset = scrollView.contentOffset.y
-        let heightRemainFromBottom = contentHeight - yOffset
 
-        let frameHeight = scrollView.frame.size.height
-        if heightRemainFromBottom < frameHeight {
+        if !scrollView.frame.isEmpty && scrollView.contentOffset.y >= scrollView.frame.size.height {
             
-            viewModel.loadData(lastID: viewModel.lastItemID)
+            let contentHeight = scrollView.contentSize.height
+            ///스크롤 하기전엔 0
+            ///스크롤 하면서 증가
+            ///
+            let yOffset = scrollView.contentOffset.y
+            ///스크롤 하기전엔 0
+            ///스크롤 하면서 증가
+            ///셀의 y 좌표
+            ///
+            let heightRemainFromBottom = contentHeight - yOffset
+            let frameHeight = scrollView.frame.size.height
+            
+            if heightRemainFromBottom < frameHeight, heightRemainFromBottom > 0, viewModel.lastItemID != nil {
+                
+                viewModel.loadData(lastID: viewModel.lastItemID)
+            }
         }
     }
     

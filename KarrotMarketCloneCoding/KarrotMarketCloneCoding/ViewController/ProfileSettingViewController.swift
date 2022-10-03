@@ -59,7 +59,7 @@ class ProfileSettingViewController: UIViewController {
     
     
     @objc private func doneButtonTapped() {
-        let user = User(id: nil, email: email, pw: pw, nickname: profileView.nicknameTextField.text)
+        let user = User(email: email, pw: pw, nickname: profileView.nicknameTextField.text)
         var alert: UIAlertController?
         Network.shared.register(user: user, image: profileImage) { result in
             

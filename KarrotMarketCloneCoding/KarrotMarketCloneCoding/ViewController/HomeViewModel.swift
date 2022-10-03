@@ -14,7 +14,7 @@ class HomeViewModel {
     var isViewBusy = true
     var lastItemID: Int?
     
-    func loadData(lastID: Int?, keyword: String? = nil, category: Int? = nil, sort: String? = nil, completion: (() -> Void)? = nil) {
+    func loadData(lastID: Int? = nil, keyword: String? = nil, category: Int? = nil, sort: String? = nil, completion: (() -> Void)? = nil) {
         guard isViewBusy == false else { return }
         
         isViewBusy = true
@@ -35,7 +35,7 @@ class HomeViewModel {
                             if snapshot.numberOfSections == 0 {
                                 snapshot.appendSections([.main])
                             }
-                            
+            
                             snapshot.appendItems(items)
                             weakSelf.lastItemID = items.last?.id
                             weakSelf.isViewBusy = false

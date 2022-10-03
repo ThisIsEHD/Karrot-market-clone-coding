@@ -18,9 +18,8 @@ class ItemTableViewCell: UITableViewCell {
             priceLabel.text = item?.price != nil ? "\(item?.price ?? 0) 원" : "무료 나눔"
             wishLabel.text = "\(item?.wishes ?? 0)"
             
-            /// 이미지 다운로드에서 많은 메모리를 차지함.
-            getThumbnailImage { image in
-                self.loadData(image: image)
+            getThumbnailImage { [self] image in
+                thumbnailImageView.image = image
             }
         }
     }
@@ -70,6 +69,7 @@ class ItemTableViewCell: UITableViewCell {
         let btn = UIButton()
         btn.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
         btn.imageView?.contentMode = .scaleAspectFit
+        btn.imageView?.tintColor = .systemGray3
         btn.setImage(UIImage(named: "wish-gray"), for: .normal)
         return btn
     }()
@@ -78,7 +78,7 @@ class ItemTableViewCell: UITableViewCell {
         let lbl = UILabel()
         lbl.numberOfLines = 0
         lbl.text = ""
-        lbl.tintColor = .systemGray4
+        lbl.tintColor = .systemGray3
         lbl.font = UIFont.systemFont(ofSize: 15)
         return lbl
     }()
@@ -87,7 +87,7 @@ class ItemTableViewCell: UITableViewCell {
         let btn = UIButton()
         btn.frame = CGRect(x: 0, y: 0, width: 38, height: 38)
         btn.imageView?.contentMode = .scaleAspectFit
-        btn.tintColor = .systemGray4
+        btn.imageView?.tintColor = .systemGray3
         btn.setImage(UIImage(named: "chat-gray"), for: .normal)
         return btn
     }()
@@ -95,8 +95,8 @@ class ItemTableViewCell: UITableViewCell {
     private let chatLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
-        lbl.text = ""
-        lbl.tintColor = .systemGray4
+        lbl.text = "0"
+        lbl.tintColor = .systemGray3
         lbl.font = UIFont.systemFont(ofSize: 15)
         return lbl
     }()
@@ -171,7 +171,7 @@ class ItemTableViewCell: UITableViewCell {
             contentView.addSubview(view)
         }
     }
-
+    
     // MARK: - Setting Constraints
     
     private func setConstraints() {
@@ -195,25 +195,26 @@ class ItemTableViewCell: UITableViewCell {
         
         nameLabel.anchor(top: thumbnailImageView.topAnchor, topConstant: 5,  leading: thumbnailImageView.trailingAnchor, leadingConstant: 15, trailing: trailingAnchor, trailingConstant: 15)
         
-//        locationLabel.anchor()
-//        timeLabel.anchor()
+        //        locationLabel.anchor()
+        //        timeLabel.anchor()
         priceLabel.anchor(top: nameLabel.bottomAnchor, topConstant: 10, leading: nameLabel.leadingAnchor)
         
         iconStackView.anchor(bottom: bottomAnchor, bottomConstant: 10, trailing: trailingAnchor, trailingConstant: 15)
     }
     
     private func getThumbnailImage(completion: @escaping (UIImage?) -> ()) {
-        if item?.images?.count != 0 {
-            AF.request(item?.images?.first?.url ?? "").validate().validate(contentType: ["application/octet-stream"]).responseData { response in
-                
-                switch response.result {
-                    
-                case .success(let data):
-                    completion(UIImage(data: data))
-                    
-                case .failure(let error):
-                    
-                    print("🥶",error.localizedDescription, self.item?.images)
+        
+        if let url = item?.images?.first?.url {
+            Network.shared.fetchImage(url: url) { result in
+                switch result {
+                        
+                    case .success(let image):
+                        
+                        completion(image)
+                        
+                    case .failure(let error):
+                        
+                        print("🥶",error.localizedDescription, self.item?.images)
                 }
             }
         } else {
@@ -221,12 +222,5 @@ class ItemTableViewCell: UITableViewCell {
             completion(image)
         }
         
-    }
-    
-    private func loadData(image: UIImage?) {
-        
-        if let image = image {
-            thumbnailImageView.image = image
-        }
     }
 }

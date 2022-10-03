@@ -61,9 +61,9 @@ struct Network {
     
     func auth(email: String, pw: String, completion: @escaping (Result<Data?,KarrotError>) -> Void) {
         
-        let credential = Credential(email: email, pw: pw)
+        let user = User(email: email, pw: pw)
         
-        AF.request(Purpose.login(credential)).response { response in
+        AF.request(Purpose.login(user)).response { response in
             if let _ = response.error{    //응답 에러
                 completion(.failure(.serverError))
             }

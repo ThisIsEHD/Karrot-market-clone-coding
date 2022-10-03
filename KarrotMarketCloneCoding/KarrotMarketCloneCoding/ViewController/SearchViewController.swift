@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SearchViewController: UIViewController{
+class SearchViewController: UIViewController {
     
 // MARK: - Properties
     
@@ -54,9 +54,11 @@ class SearchViewController: UIViewController{
     private func configureSearchController() {
         navigationController?.navigationBar.addSubview(navigationBottomView)
         view.backgroundColor = .systemBackground
+        
         searchBar.delegate = self
         searchBar.autocapitalizationType = .none
         searchBar.placeholder = "검색"
+        
         tabBarController?.tabBar.isHidden = true
         navigationItem.setRightBarButtonItems([UIBarButtonItem(customView: searchBar)], animated: true)
         definesPresentationContext = false
@@ -71,14 +73,15 @@ class SearchViewController: UIViewController{
             let cell = tableView.dequeueReusableCell(withIdentifier: "ItemTableViewCell", for: indexPath) as! ItemTableViewCell
             
             cell.item = item
-            
             return cell
         })
     }
     
     func reloadTableViewData(keyword: String?) {
         viewModel.isViewBusy = false
-        viewModel.loadData(lastID: viewModel.lastItemID, keyword: keyword)
+        viewModel.loadData(keyword: keyword) {
+            self.itemTableView.reloadData()
+        }
     }
     
     // MARK: - Configure TableView
@@ -86,6 +89,7 @@ class SearchViewController: UIViewController{
     private func configureItemTableView() {
         itemTableView.delegate = self
         itemTableView.dataSource = viewModel.dataSource
+        
         view.addSubview(itemTableView)
     }
     
@@ -104,15 +108,26 @@ class SearchViewController: UIViewController{
 extension SearchViewController: UITableViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
-        let contentHeight = scrollView.contentSize.height
-        let yOffset = scrollView.contentOffset.y
-        let heightRemainFromBottom = contentHeight - yOffset
+       
+        if !scrollView.frame.isEmpty, scrollView.contentOffset.y >= scrollView.frame.size.height {
+          
+            let contentHeight = scrollView.contentSize.height
+            ///스크롤 하기전엔 0
+            ///스크롤 하면서 증가
 
-        let frameHeight = scrollView.frame.size.height
-        if heightRemainFromBottom < frameHeight {
+            let yOffset = scrollView.contentOffset.y
+            ///스크롤 하기전엔 0
+            ///스크롤 하면서 증가
+            ///셀의 y 좌표
+
+            let heightRemainFromBottom = contentHeight - yOffset
+
+            let frameHeight = scrollView.frame.size.height
             
-            viewModel.loadData(lastID: viewModel.lastItemID, keyword: searchBar.text)
+            if heightRemainFromBottom < frameHeight, viewModel.lastItemID != nil {
+                
+                viewModel.loadData(lastID: viewModel.lastItemID, keyword: searchBar.text)
+            }
         }
     }
     

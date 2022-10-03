@@ -7,22 +7,6 @@
 
 import Foundation
 
-struct QueryItem {
-    let keyword: String?
-    let size: Int?
-    let category: Int?
-    let sort: String?
-    let last: Int?
-    
-//    init(keyword: String? = nil, size: Int? = nil, category: Int? = nil, sort: Sort? = nil, last: Int? = nil) {
-//        self.keyword = keyword
-//        self.size = "\(size!)"
-//        self.category = "\(category)"
-//        self.sort = sort?.rawValue
-//        self.last = "\(last)"
-//    }
-}
-
 extension String {
     func getUserId() -> UserId? {
         let encodedUserId = self.components(separatedBy: ".")[1]

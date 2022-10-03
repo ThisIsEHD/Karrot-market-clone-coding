@@ -16,7 +16,7 @@ protocol Requestable: URLRequestConvertible {
 }
 
 enum Purpose: Requestable {
-    case login(Credential)
+    case login(User)
     case fetchUser(ID)
     case registerUser
     case update(User)
@@ -83,7 +83,7 @@ extension Purpose {
     
     var parameters: RequestParameters {
         switch self {
-        case .login(let credential): return .body(credential)
+        case .login(let user): return .body(user)
         case .update(let user): return .body(user)
         case .fetchItems(let queryItem), .fetchUserItem(_, let queryItem): return .query(queryItem)
         case .fetchUser, .registerUser, .fetchItem, .registerItem: return .none

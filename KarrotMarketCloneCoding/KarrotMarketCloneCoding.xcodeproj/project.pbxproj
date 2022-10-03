@@ -20,7 +20,6 @@
 		723FE681288539A900A987E7 /* ItemDetailViewOtherPostsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE680288539A900A987E7 /* ItemDetailViewOtherPostsCell.swift */; };
 		723FE683288539F200A987E7 /* ItemDetailViewDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE682288539F200A987E7 /* ItemDetailViewDescriptionCell.swift */; };
 		723FE68828853E0800A987E7 /* ItemDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE68728853E0800A987E7 /* ItemDetailViewController.swift */; };
-		723FE68C2887B3EF00A987E7 /* ItemDetailTableHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE68B2887B3EF00A987E7 /* ItemDetailTableHeaderView.swift */; };
 		723FE6902887E4AE00A987E7 /* ItemDetailViewImagesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE68F2887E4AE00A987E7 /* ItemDetailViewImagesCollectionViewCell.swift */; };
 		723FE692288806CB00A987E7 /* OtherPostsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE691288806CA00A987E7 /* OtherPostsCollectionViewCell.swift */; };
 		723FE6942888488600A987E7 /* ItemDetailViewBottomStickyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE6932888488600A987E7 /* ItemDetailViewBottomStickyView.swift */; };
@@ -32,7 +31,6 @@
 		723FE6A2288AC87C00A987E7 /* ItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE6A1288AC87C00A987E7 /* ItemTableViewCell.swift */; };
 		7248CA45288E57BB00DDF939 /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7248CA44288E57BB00DDF939 /* Network.swift */; };
 		7248CA47288F5CED00DDF939 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7248CA46288F5CED00DDF939 /* HomeViewModel.swift */; };
-		7248CA4F2893992100DDF939 /* Credential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7248CA4E2893992100DDF939 /* Credential.swift */; };
 		72ED25C92898D87800031AD1 /* CustomAF.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72ED25C82898D87800031AD1 /* CustomAF.swift */; };
 		72ED25CB2898D95F00031AD1 /* ExtensionMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72ED25CA2898D95F00031AD1 /* ExtensionMethod.swift */; };
 		D347FE84288BE8A100EF06B5 /* UserCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE83288BE8A100EF06B5 /* UserCheckView.swift */; };
@@ -78,7 +76,6 @@
 		D3F0E7C828E28B89006AEB3D /* Const.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F0E7C728E28B89006AEB3D /* Const.swift */; };
 		D3F0E7CB28E32CF1006AEB3D /* JWTDecode in Frameworks */ = {isa = PBXBuildFile; productRef = D3F0E7CA28E32CF1006AEB3D /* JWTDecode */; };
 		D3FB4CE428919C3F003300B0 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB4CE328919C3F003300B0 /* DateFormatter.swift */; };
-		D3FB4CE6289656C9003300B0 /* ItemDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FB4CE5289656C9003300B0 /* ItemDetailViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -95,7 +92,6 @@
 		723FE680288539A900A987E7 /* ItemDetailViewOtherPostsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewOtherPostsCell.swift; sourceTree = "<group>"; };
 		723FE682288539F200A987E7 /* ItemDetailViewDescriptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewDescriptionCell.swift; sourceTree = "<group>"; };
 		723FE68728853E0800A987E7 /* ItemDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewController.swift; sourceTree = "<group>"; };
-		723FE68B2887B3EF00A987E7 /* ItemDetailTableHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailTableHeaderView.swift; sourceTree = "<group>"; };
 		723FE68F2887E4AE00A987E7 /* ItemDetailViewImagesCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewImagesCollectionViewCell.swift; sourceTree = "<group>"; };
 		723FE691288806CA00A987E7 /* OtherPostsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherPostsCollectionViewCell.swift; sourceTree = "<group>"; };
 		723FE6932888488600A987E7 /* ItemDetailViewBottomStickyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewBottomStickyView.swift; sourceTree = "<group>"; };
@@ -107,7 +103,6 @@
 		723FE6A1288AC87C00A987E7 /* ItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemTableViewCell.swift; sourceTree = "<group>"; };
 		7248CA44288E57BB00DDF939 /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		7248CA46288F5CED00DDF939 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
-		7248CA4E2893992100DDF939 /* Credential.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Credential.swift; sourceTree = "<group>"; };
 		72ED25C82898D87800031AD1 /* CustomAF.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAF.swift; sourceTree = "<group>"; };
 		72ED25CA2898D95F00031AD1 /* ExtensionMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionMethod.swift; sourceTree = "<group>"; };
 		84FFF65EC2D21DA804E8D34F /* Pods_KarrotMarketCloneCoding.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KarrotMarketCloneCoding.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -154,7 +149,6 @@
 		D3F0E7C528E28717006AEB3D /* Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		D3F0E7C728E28B89006AEB3D /* Const.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Const.swift; sourceTree = "<group>"; };
 		D3FB4CE328919C3F003300B0 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
-		D3FB4CE5289656C9003300B0 /* ItemDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewModel.swift; sourceTree = "<group>"; };
 		E9C03AEF92EC0A43D0E03512 /* Pods-KarrotMarketCloneCoding.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-KarrotMarketCloneCoding.debug.xcconfig"; path = "Target Support Files/Pods-KarrotMarketCloneCoding/Pods-KarrotMarketCloneCoding.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -271,8 +265,6 @@
 				723FE69D2889484700A987E7 /* Copyright.swift */,
 				72ED25C82898D87800031AD1 /* CustomAF.swift */,
 				72ED25CA2898D95F00031AD1 /* ExtensionMethod.swift */,
-				7248CA4E2893992100DDF939 /* Credential.swift */,
-				D3FB4CE5289656C9003300B0 /* ItemDetailViewModel.swift */,
 				D3FB4CE328919C3F003300B0 /* DateFormatter.swift */,
 				D3E12301287BF66100A1EDC8 /* Assets.xcassets */,
 				D3E12303287BF66100A1EDC8 /* LaunchScreen.storyboard */,
@@ -318,7 +310,6 @@
 				723FE67A288531F300A987E7 /* ReusableProfileView.swift */,
 				723FE62628801F1600A987E7 /* MyKarrotHeaderView.swift */,
 				723FE6932888488600A987E7 /* ItemDetailViewBottomStickyView.swift */,
-				723FE68B2887B3EF00A987E7 /* ItemDetailTableHeaderView.swift */,
 				723FE628288044AB00A987E7 /* MyKarrotTableViewHeaderFooterView.swift */,
 				723FE67C2885385000A987E7 /* ItemDetailViewProfileCell.swift */,
 				723FE682288539F200A987E7 /* ItemDetailViewDescriptionCell.swift */,
@@ -482,7 +473,6 @@
 				D3E12319287FF55E00A1EDC8 /* SignUpViewController.swift in Sources */,
 				D3DF366328842A7300F20065 /* TitleTableViewCell.swift in Sources */,
 				D3A2158A288D905400D06AD3 /* Notification.swift in Sources */,
-				7248CA4F2893992100DDF939 /* Credential.swift in Sources */,
 				D3DF368A288ACC0900F20065 /* CategoryTableViewController.swift in Sources */,
 				D3E12313287D9AF800A1EDC8 /* UserCheckViewController.swift in Sources */,
 				D3F0E7C628E28717006AEB3D /* Alert.swift in Sources */,
@@ -499,7 +489,6 @@
 				723FE6942888488600A987E7 /* ItemDetailViewBottomStickyView.swift in Sources */,
 				723FE61F287DACA100A987E7 /* MyKarrotTableViewCell.swift in Sources */,
 				723FE67B288531F300A987E7 /* ReusableProfileView.swift in Sources */,
-				723FE68C2887B3EF00A987E7 /* ItemDetailTableHeaderView.swift in Sources */,
 				723FE62728801F1600A987E7 /* MyKarrotHeaderView.swift in Sources */,
 				723FE629288044AB00A987E7 /* MyKarrotTableViewHeaderFooterView.swift in Sources */,
 				D3A2158C288D905400D06AD3 /* UserInterfaceObjects.swift in Sources */,
@@ -515,7 +504,6 @@
 				723FE681288539A900A987E7 /* ItemDetailViewOtherPostsCell.swift in Sources */,
 				D3E122F9287BF66000A1EDC8 /* AppDelegate.swift in Sources */,
 				D3F0E7C228E03507006AEB3D /* ProfileSettingViewController.swift in Sources */,
-				D3FB4CE6289656C9003300B0 /* ItemDetailViewModel.swift in Sources */,
 				723FE692288806CB00A987E7 /* OtherPostsCollectionViewCell.swift in Sources */,
 				723FE6A02889523800A987E7 /* SearchBarBottomView.swift in Sources */,
 				D3A2158F288D90E800D06AD3 /* ChatViewController.swift in Sources */,
@@ -661,9 +649,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 887U9L3L57;
+				DEVELOPMENT_TEAM = G8228CR939;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KarrotMarketCloneCoding/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "당근마켓에서 앨범에의 접근권한을 요청합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -673,7 +662,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = BrianEHD.KarrotMarketCloneCoding1;
+				PRODUCT_BUNDLE_IDENTIFIER = BrianEHD.KarrotMarketCloneCoding12;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -689,9 +678,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 887U9L3L57;
+				DEVELOPMENT_TEAM = G8228CR939;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KarrotMarketCloneCoding/Info.plist;
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "당근마켓에서 앨범에의 접근권한을 요청합니다.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -701,7 +691,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = BrianEHD.KarrotMarketCloneCoding1;
+				PRODUCT_BUNDLE_IDENTIFIER = BrianEHD.KarrotMarketCloneCoding12;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
