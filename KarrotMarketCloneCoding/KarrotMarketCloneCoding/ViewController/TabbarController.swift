@@ -20,18 +20,11 @@ final class TabbarController: UITabBarController {
     // MARK: - Life Cycle    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
+        
         if !isLoggedIn {
             checkIfUserIsLoggedIn()
         }
-        
         NotificationCenter.default.addObserver(self, selector: #selector(logout), name: NotificationType.logout.name, object: nil)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        NotificationCenter.default.removeObserver(self)
     }
     
     @objc private func logout() {

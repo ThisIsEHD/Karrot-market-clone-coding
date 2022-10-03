@@ -18,8 +18,6 @@ enum KarrotError: Error {
     case duplicatedEmail
     case duplicatedNickname
     case unknownUser
-//    case titleTooLong
-//    case contentTooLong
     case wrongForm([String : String])
     
     case unknownError
@@ -80,6 +78,7 @@ struct Network {
                         let jwt = try decode(jwt: token)
                         print(jwt)
                         guard let id = jwt.body["user_id"] else { return }
+                        UserDefaults.standard.removeObject(forKey: Const.userId)
                         UserDefaults.standard.set(id, forKey: Const.userId)
                         KeyChain.create(key: id as! String, token: token)
                         

@@ -43,7 +43,6 @@ final class SettingViewController: UITableViewController {
                 UserDefaults.standard.removeObject(forKey: Const.userId)
             }
             
-            UserDefaults.standard.removeObject(forKey: Const.userId)
             tabBarController?.selectedIndex = 0
             NotificationCenter.default.post(name: NotificationType.logout.name, object: nil)
             

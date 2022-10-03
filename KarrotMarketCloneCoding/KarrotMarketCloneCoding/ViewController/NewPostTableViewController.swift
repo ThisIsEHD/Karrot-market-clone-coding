@@ -7,6 +7,7 @@
 
 import UIKit
 import PhotosUI
+import Alamofire
 
 final class NewPostTableViewController: UIViewController {
     
@@ -99,7 +100,7 @@ extension NewPostTableViewController {
     
     @objc func post() {
         view.endEditing(true)
-        
+        KeyChain.delete(key: UserDefaults.standard.object(forKey: Const.userId) as! String)
         Network.shared.registerItem(item: Item(id: nil, title: item.title, content: item.content, categoryId: item.categoryId, price: item.price, regdate: nil, views: nil, wishes: nil, userId: (UserDefaults.standard.object(forKey: Const.userId) as? String), nickname: nil, images: nil), images: selectedImages) { result in
             
             switch result {
@@ -108,6 +109,7 @@ extension NewPostTableViewController {
                 self.dismiss(animated: true, completion: nil)
             case .failure(let error):
                 var alertMessage = ""
+                var completion: ((UIAlertAction) -> ())?
                 
                 switch error {
                 case .wrongForm(let data):
@@ -133,16 +135,31 @@ extension NewPostTableViewController {
                     }
                 case .invalidToken:
                     alertMessage = "로그인 시간 만료. 다시 로그인 해주세요."
+                    completion = { _ in
+                        
+                        if let id = UserDefaults.standard.object(forKey: Const.userId) as? String {
+                            
+                            UserDefaults.standard.removeObject(forKey: Const.userId)
+                        }
+                        let job = { self.dismiss(animated: true) }
+                        self.logout(completion: job)
+                    }
                 case .serverError, .unknownError:
                     alertMessage = "알 수 없는 에러. 나중에 다시 시도해 주세요."
                 default:
                     alertMessage = "알 수 없는 에러. 나중에 다시 시도해 주세요."
                 }
-                let alert = SimpleAlert(message: alertMessage)
+                
+                let alert = completion == nil ?
+                SimpleAlert(message: alertMessage) : SimpleAlert(message: alertMessage, completion: completion)
+                
                 self.present(alert, animated: true)
             }
         }
-        
+    }
+    private func logout(completion: @escaping () -> Void) {
+        NotificationCenter.default.post(name: NotificationType.logout.name, object: nil)
+        completion()
     }
 }
 
