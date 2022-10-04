@@ -24,8 +24,8 @@ final class HomeViewController: UIViewController {
     }()
     
     private lazy var addPostButton: UIButton = {
-        let btn = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
-        let image = UIImage(systemName: "plus.circle.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 50, weight: .medium))
+        let btn = UIButton(frame: CGRect(x: 0, y: 0, width: 70, height: 70))
+        let image = UIImage(systemName: "plus.circle.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 60, weight: .medium))
         
         btn.backgroundColor = .white
         btn.layer.cornerRadius = 60 / 2
@@ -152,8 +152,8 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Setting Constraints
     private func setConstraints() {
-        itemTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
-        addPostButton.anchor(bottom: view.bottomAnchor, bottomConstant: 100, trailing: view.trailingAnchor, trailingConstant: 20)
+        itemTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
+        addPostButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, bottomConstant: 10, trailing: view.trailingAnchor, trailingConstant: 20)
     }
 }
 
