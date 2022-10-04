@@ -134,7 +134,7 @@ final class UserCheckView: UIView {
     private func setSignUpButtonLayout() {
         
         signUpButton.anchor(top: appDetailLabel.bottomAnchor,
-                            topConstant: CGFloat.getSize(of: .deviceHeight) / 4,
+                            topConstant: CGFloat.getSize(of: .deviceHeight) / 5,
                             leading: leadingAnchor,
                             leadingConstant: 5,
                             trailing: trailingAnchor,

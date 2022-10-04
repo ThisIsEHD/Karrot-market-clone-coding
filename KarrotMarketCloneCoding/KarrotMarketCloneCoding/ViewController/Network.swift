@@ -60,7 +60,7 @@ struct Network {
         }
     }
     
-    func auth(email: String, pw: String, completion: @escaping (Result<Data?,KarrotError>) -> Void) {
+    func auth(email: String?, pw: String?, completion: @escaping (Result<Data?,KarrotError>) -> Void) {
         
         let user = User(email: email, pw: pw)
         
@@ -97,6 +97,29 @@ struct Network {
                 case 401:
                     completion(.failure(.wrongPassword))
                 case 404:
+                    completion(.failure(.unknownUser))
+                default:
+                    completion(.failure(.serverError))
+            }
+        }
+    }
+    
+    func updateUserProfile(nickname: String?, image: UIImage?, completion: @escaping (Result<Data?,KarrotError>) -> Void) {
+        /// domb: 멸린말치 api 수정후 반영
+        let imageUrl = "이미지 파일로 대체해야함."
+        let user = User(nickname: nickname, profileImageUrl: imageUrl)
+
+        AF.request(Purpose.update(user)).response { response in
+            if let _ = response.error{    //응답 에러
+                completion(.failure(.serverError))
+            }
+            guard let httpResponse = response.response else { return }
+            switch httpResponse.statusCode {
+                case 200:
+                    completion(.success(.none))
+                case 401:
+                    completion(.failure(.invalidToken))
+                case 403, 404:
                     completion(.failure(.unknownUser))
                 default:
                     completion(.failure(.serverError))
@@ -185,7 +208,6 @@ struct Network {
                 
                 do {
                     let item = try JSONDecoder().decode(Item.self, from: data)
-                    print(item.price)
                     completion(.success(item))
                 } catch {
                     print(error)
@@ -236,7 +258,7 @@ struct Network {
     }
     
     func fetchImage(url: String, completion: @escaping (Result<UIImage?, KarrotError>) -> Void) {
-        AF.request(url).validate().responseData { response in
+        AF.request(url).validate().response { response in
 
             if let err = response.error {
                 print(err)

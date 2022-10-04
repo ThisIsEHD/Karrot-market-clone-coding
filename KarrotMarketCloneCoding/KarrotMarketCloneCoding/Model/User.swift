@@ -23,16 +23,19 @@ struct User: Codable {
         self.profileImageUrl = profileImageUrl
     }
     
-    init(id: String?, nickname: String?) {
-        self.init(id: id, email: nil, pw: nil, nickname: nickname, profileImageUrl: nil)
-    }
-    
+    /// 로그인
     init(email: String?, pw: String?) {
         self.init(id: nil, email: email, pw: pw, nickname: nil, profileImageUrl: nil)
     }
     
+    /// 회원가입
     init(email: String?, pw: String?, nickname: String?) {
         self.init(id: nil, email: email, pw: pw, nickname: nickname, profileImageUrl: nil)
+    }
+    
+    /// 프로필 수정
+    init(nickname: String?, profileImageUrl: String?) {
+        self.init(id: nil, email: nil, pw: nil, nickname: nickname, profileImageUrl: profileImageUrl)
     }
     
     enum CodingKeys: String, CodingKey {
