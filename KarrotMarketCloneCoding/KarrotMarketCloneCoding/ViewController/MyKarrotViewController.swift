@@ -12,7 +12,7 @@ final class MyKarrotViewController: UIViewController {
     
     // MARK: - Properties
     private var user: User?
-
+    
     private let tableView = UITableView(frame: .zero, style: .grouped)
     private let myProfileTableList = [["내 동네 설정", "동네인증하기", "키워드 알림", "모아보기", "당근가계부", "관심 카테고리 설정"],
                                       ["동네생활 글/댓글", "동네홍보 글", "동네 가게 후기", "저장한 장소", "내 단골가게", "받은 쿠폰함"],
@@ -163,6 +163,7 @@ extension MyKarrotViewController: UITableViewDelegate {
 
 
 extension MyKarrotViewController: ProfileViewDelegate {
+    
     func configureUserInfo(of user: User?) {
         
         guard let user = user else { return }
@@ -206,4 +207,5 @@ extension MyKarrotViewController: ProfileViewDelegate {
     
     func selectedItemTableVC() {
     }
+    
 }

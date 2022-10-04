@@ -20,18 +20,26 @@ final class TabbarController: UITabBarController {
     // MARK: - Life Cycle    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         if !isLoggedIn {
             checkIfUserIsLoggedIn()
         }
+        NotificationCenter.default.addObserver(self, selector: #selector(logout), name: NotificationType.logout.name, object: nil)
+    }
+    
+    @objc private func logout() {
+        isLoggedIn = false
+        user = nil
+        
+        checkIfUserIsLoggedIn()
     }
     
     // MARK: - Actions
    
     func presentUserCheckVC() {
         DispatchQueue.main.async { [weak self] in
-            let userCheckVC = UserCheckViewController()
             
-            let nav = UINavigationController(rootViewController: userCheckVC)
+            let nav = UINavigationController(rootViewController: UserCheckViewController())
             nav.modalPresentationStyle = .fullScreen
             
             self?.present(nav, animated: false, completion: nil)
@@ -39,7 +47,8 @@ final class TabbarController: UITabBarController {
     }
     
     private func checkIfUserIsLoggedIn() {
-        let userId = UserDefaults.standard.object(forKey: Const.userId.asItIs) as? String ?? ""
+        print(#function)
+        let userId = UserDefaults.standard.object(forKey: Const.userId) as? String ?? ""
         let token = KeyChain.read(key: userId)
         
         if token == nil {
@@ -94,3 +103,16 @@ final class TabbarController: UITabBarController {
         return nav
     }
 }
+
+//extension TabbarController: AuthenticationDelegate {
+//    func logout() {
+//        isLoggedIn = false
+//        user = nil
+//
+//        checkIfUserIsLoggedIn()
+//    }
+//}
+
+//protocol AuthenticationDelegate {
+//    func logout()
+//}

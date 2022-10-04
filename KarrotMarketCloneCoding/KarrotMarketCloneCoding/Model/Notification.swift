@@ -10,7 +10,7 @@ import Foundation
 enum NotificationType: String
 {
     case deleteButtonTapped = "deleteButtonTapped"
-    
+    case logout = "logout"
     
     var name: Notification.Name
     {

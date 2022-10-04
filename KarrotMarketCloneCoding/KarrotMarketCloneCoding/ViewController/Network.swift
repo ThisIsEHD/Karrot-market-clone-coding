@@ -18,8 +18,6 @@ enum KarrotError: Error {
     case duplicatedEmail
     case duplicatedNickname
     case unknownUser
-//    case titleTooLong
-//    case contentTooLong
     case wrongForm([String : String])
     
     case unknownError
@@ -80,8 +78,8 @@ struct Network {
                         let jwt = try decode(jwt: token)
                         print(jwt)
                         guard let id = jwt.body["user_id"] else { return }
-                        UserDefaults.standard.removeObject(forKey: Const.userId.asItIs)  //로그아웃시로 빼버릴거. keychain에서 토큰도 삭제해야.
-                        UserDefaults.standard.set(id, forKey: Const.userId.asItIs)
+                        UserDefaults.standard.removeObject(forKey: Const.userId)
+                        UserDefaults.standard.set(id, forKey: Const.userId)
                         KeyChain.create(key: id as! String, token: token)
                         
                         completion(.success(.none))
@@ -271,6 +269,27 @@ struct Network {
                 
                 let image = UIImage(data: data)
                 completion(.success(image))
+            }
+        }
+    }
+    
+    func deleteUser(completion: @escaping (KarrotError?) -> Void ) {
+        AF.request(Purpose.deleteUser(UserDefaults.standard.object(forKey: Const.userId) as? String ?? "")).response { response in
+            
+            if let _ = response.error{    //응답 에러
+                completion(.serverError)
+            }
+            guard let httpResponse = response.response else { return }
+
+            switch httpResponse.statusCode {
+                case 200:
+                    completion(nil)
+                case 401:
+                    completion(.invalidToken)
+                case 403, 404:
+                    completion(.unknownUser)
+                default:
+                    completion(.serverError)
             }
         }
     }
