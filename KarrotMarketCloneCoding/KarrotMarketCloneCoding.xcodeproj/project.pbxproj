@@ -17,11 +17,11 @@
 		723FE62B2880F64C00A987E7 /* MyKarrotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE62A2880F64C00A987E7 /* MyKarrotViewController.swift */; };
 		723FE67B288531F300A987E7 /* ReusableProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE67A288531F300A987E7 /* ReusableProfileView.swift */; };
 		723FE67D2885385000A987E7 /* ItemDetailViewProfileCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE67C2885385000A987E7 /* ItemDetailViewProfileCell.swift */; };
-		723FE681288539A900A987E7 /* ItemDetailViewOtherPostsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE680288539A900A987E7 /* ItemDetailViewOtherPostsCell.swift */; };
+		723FE681288539A900A987E7 /* ItemDetailViewOtherItemsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE680288539A900A987E7 /* ItemDetailViewOtherItemsCell.swift */; };
 		723FE683288539F200A987E7 /* ItemDetailViewDescriptionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE682288539F200A987E7 /* ItemDetailViewDescriptionCell.swift */; };
 		723FE68828853E0800A987E7 /* ItemDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE68728853E0800A987E7 /* ItemDetailViewController.swift */; };
 		723FE6902887E4AE00A987E7 /* ItemDetailViewImagesCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE68F2887E4AE00A987E7 /* ItemDetailViewImagesCollectionViewCell.swift */; };
-		723FE692288806CB00A987E7 /* OtherPostsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE691288806CA00A987E7 /* OtherPostsCollectionViewCell.swift */; };
+		723FE692288806CB00A987E7 /* ItemDetailViewOtherItemsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE691288806CA00A987E7 /* ItemDetailViewOtherItemsCollectionViewCell.swift */; };
 		723FE6942888488600A987E7 /* ItemDetailViewBottomStickyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE6932888488600A987E7 /* ItemDetailViewBottomStickyView.swift */; };
 		723FE6962889085400A987E7 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE6952889085400A987E7 /* SearchViewController.swift */; };
 		723FE6982889091D00A987E7 /* TabbarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 723FE6972889091D00A987E7 /* TabbarController.swift */; };
@@ -91,11 +91,11 @@
 		723FE62A2880F64C00A987E7 /* MyKarrotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyKarrotViewController.swift; sourceTree = "<group>"; };
 		723FE67A288531F300A987E7 /* ReusableProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableProfileView.swift; sourceTree = "<group>"; };
 		723FE67C2885385000A987E7 /* ItemDetailViewProfileCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewProfileCell.swift; sourceTree = "<group>"; };
-		723FE680288539A900A987E7 /* ItemDetailViewOtherPostsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewOtherPostsCell.swift; sourceTree = "<group>"; };
+		723FE680288539A900A987E7 /* ItemDetailViewOtherItemsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewOtherItemsCell.swift; sourceTree = "<group>"; };
 		723FE682288539F200A987E7 /* ItemDetailViewDescriptionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewDescriptionCell.swift; sourceTree = "<group>"; };
 		723FE68728853E0800A987E7 /* ItemDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewController.swift; sourceTree = "<group>"; };
 		723FE68F2887E4AE00A987E7 /* ItemDetailViewImagesCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewImagesCollectionViewCell.swift; sourceTree = "<group>"; };
-		723FE691288806CA00A987E7 /* OtherPostsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OtherPostsCollectionViewCell.swift; sourceTree = "<group>"; };
+		723FE691288806CA00A987E7 /* ItemDetailViewOtherItemsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewOtherItemsCollectionViewCell.swift; sourceTree = "<group>"; };
 		723FE6932888488600A987E7 /* ItemDetailViewBottomStickyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewBottomStickyView.swift; sourceTree = "<group>"; };
 		723FE6952889085400A987E7 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		723FE6972889091D00A987E7 /* TabbarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabbarController.swift; sourceTree = "<group>"; };
@@ -263,7 +263,6 @@
 			children = (
 				D3E122F8287BF66000A1EDC8 /* AppDelegate.swift */,
 				D3E122FA287BF66000A1EDC8 /* SceneDelegate.swift */,
-				D3E122FE287BF66000A1EDC8 /* Main.storyboard */,
 				D3A21586288D905400D06AD3 /* Extensions */,
 				D3A21582288D905400D06AD3 /* Model */,
 				D3E12310287D71AD00A1EDC8 /* View */,
@@ -320,8 +319,8 @@
 				723FE628288044AB00A987E7 /* MyKarrotTableViewHeaderFooterView.swift */,
 				723FE67C2885385000A987E7 /* ItemDetailViewProfileCell.swift */,
 				723FE682288539F200A987E7 /* ItemDetailViewDescriptionCell.swift */,
-				723FE680288539A900A987E7 /* ItemDetailViewOtherPostsCell.swift */,
-				723FE691288806CA00A987E7 /* OtherPostsCollectionViewCell.swift */,
+				723FE680288539A900A987E7 /* ItemDetailViewOtherItemsCell.swift */,
+				723FE691288806CA00A987E7 /* ItemDetailViewOtherItemsCollectionViewCell.swift */,
 				723FE61E287DACA100A987E7 /* MyKarrotTableViewCell.swift */,
 				723FE68F2887E4AE00A987E7 /* ItemDetailViewImagesCollectionViewCell.swift */,
 				723FE6A1288AC87C00A987E7 /* ItemTableViewCell.swift */,
@@ -510,10 +509,10 @@
 				723FE69E2889484700A987E7 /* Copyright.swift in Sources */,
 				723FE67D2885385000A987E7 /* ItemDetailViewProfileCell.swift in Sources */,
 				D3A2158B288D905400D06AD3 /* Enum.swift in Sources */,
-				723FE681288539A900A987E7 /* ItemDetailViewOtherPostsCell.swift in Sources */,
+				723FE681288539A900A987E7 /* ItemDetailViewOtherItemsCell.swift in Sources */,
 				D3E122F9287BF66000A1EDC8 /* AppDelegate.swift in Sources */,
 				D3F0E7C228E03507006AEB3D /* ProfileSettingViewController.swift in Sources */,
-				723FE692288806CB00A987E7 /* OtherPostsCollectionViewCell.swift in Sources */,
+				723FE692288806CB00A987E7 /* ItemDetailViewOtherItemsCollectionViewCell.swift in Sources */,
 				723FE6A02889523800A987E7 /* SearchBarBottomView.swift in Sources */,
 				D3A2158F288D90E800D06AD3 /* ChatViewController.swift in Sources */,
 				723FE6A2288AC87C00A987E7 /* ItemTableViewCell.swift in Sources */,

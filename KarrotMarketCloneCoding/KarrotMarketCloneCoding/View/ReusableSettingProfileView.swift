@@ -20,7 +20,6 @@ final class ReusableSettingProfileView: UIView {
         
         return imageView
     }()
-    
     internal let cameraIconView: UIImageView = {
         
         let imageView = UIImageView()
@@ -33,7 +32,6 @@ final class ReusableSettingProfileView: UIView {
         
         return imageView
     }()
-    
     internal let nicknameTextField: UITextField = {
         
         let textField = CustomTextField(placeholder: "")
@@ -42,7 +40,6 @@ final class ReusableSettingProfileView: UIView {
         
         return textField
     }()
-    
     private let guidelineLabel: UILabel = {
         
         let label = UILabel()
@@ -79,19 +76,23 @@ final class ReusableSettingProfileView: UIView {
     }
     
     private func setImagePickerViewLayout() {
+        
         imagePickerView.anchor(top: safeAreaLayoutGuide.topAnchor, topConstant: 30, width: 150, height: 150)
         imagePickerView.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
     }
     
     private func setCameraIconViewLayout() {
+        
         cameraIconView.anchor(bottom: imagePickerView.bottomAnchor, bottomConstant: 4, trailing: imagePickerView.trailingAnchor, trailingConstant: 4, width: 40, height: 40)
     }
     
     private func setNicknameTextFieldLayout() {
+        
         nicknameTextField.anchor(top: imagePickerView.bottomAnchor, topConstant: 25, leading: self.leadingAnchor, leadingConstant: 20, trailing: self.trailingAnchor, trailingConstant: 20)
     }
     
     private func setGuidelineLabelLayout() {
+        
         guidelineLabel.centerX(inView: self, topAnchor: nicknameTextField.bottomAnchor, topConstant: 12)
     }
     

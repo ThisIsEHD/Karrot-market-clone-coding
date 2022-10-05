@@ -29,6 +29,7 @@ class SearchBarBottomView: UIView {
     
     private func configureViews() {
         self.backgroundColor = .systemBackground
+        
         addSubview(sortButton)
         
         sortButton.setTitle("정확도순", for: .normal)
@@ -41,6 +42,7 @@ class SearchBarBottomView: UIView {
     // MARK: - Setting Constraints
     
     private func setConstraints() {
+        
         sortButton.anchor(trailing: self.trailingAnchor, trailingConstant: 20,width: 80, height: 30)
         sortButton.centerY(inView: self)
     }

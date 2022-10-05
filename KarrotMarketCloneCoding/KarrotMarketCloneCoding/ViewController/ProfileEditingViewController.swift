@@ -73,6 +73,7 @@ class ProfileEditingViewController: UIViewController {
     }
     
     @objc func textFieldDidChange(_ sender: UITextField) {
+        
         if originNickname != sender.text {
             navigationItem.rightBarButtonItem?.isEnabled = true
         } else {
@@ -81,16 +82,17 @@ class ProfileEditingViewController: UIViewController {
     }
     
     @objc func close() {
+        
         Network.shared.updateUserProfile(nickname: profileEditingView.nicknameTextField.text, image: profileImage) { result in
             switch result {
-                case .success(_):
+                case .success:
                     print("update success")
+                    self.dismiss(animated: true, completion: nil)
                 case .failure(let error):
-                    print(#function, error)
+                    print(error)
+                    /// 에러별 다른처리?
             }
         }
-        
-        self.dismiss(animated: true, completion: nil)
     }
 }
 

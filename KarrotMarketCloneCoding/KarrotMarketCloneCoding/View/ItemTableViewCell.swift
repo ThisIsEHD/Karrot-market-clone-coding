@@ -15,7 +15,7 @@ class ItemTableViewCell: UITableViewCell {
     var item: Item? {
         didSet {
             nameLabel.text = item?.title
-            priceLabel.text = item?.price != nil ? "\(item?.price ?? 0) 원" : "무료 나눔"
+            priceLabel.text = item?.price != nil ? "\(item?.price ?? 0) 원" : "무료 나눔🧡"
             wishLabel.text = "\(item?.wishes ?? 0)"
             
             getThumbnailImage { [self] image in
@@ -34,7 +34,6 @@ class ItemTableViewCell: UITableViewCell {
         iv.backgroundColor = .white
         return iv
     }()
-    
     let nameLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 2
@@ -42,7 +41,6 @@ class ItemTableViewCell: UITableViewCell {
         lbl.font = UIFont.systemFont(ofSize: 17)
         return lbl
     }()
-    
     //        let locationLabel: UILabel = {
     //            let lb = UILabel()
     //            lb.numberOfLines = 1
@@ -56,7 +54,6 @@ class ItemTableViewCell: UITableViewCell {
     //            lb.font = UIFont(name: "Helvetica", size: 13)
     //            return lb
     //        }()
-    
     let priceLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
@@ -64,7 +61,6 @@ class ItemTableViewCell: UITableViewCell {
         lbl.font = UIFont.systemFont(ofSize: 17)
         return lbl
     }()
-    
     private let wishIcon: UIButton = {
         let btn = UIButton()
         btn.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
@@ -73,7 +69,6 @@ class ItemTableViewCell: UITableViewCell {
         btn.setImage(UIImage(named: "wish-gray"), for: .normal)
         return btn
     }()
-    
     let wishLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
@@ -82,7 +77,6 @@ class ItemTableViewCell: UITableViewCell {
         lbl.font = UIFont.systemFont(ofSize: 15)
         return lbl
     }()
-    
     private let chatIcon: UIButton = {
         let btn = UIButton()
         btn.frame = CGRect(x: 0, y: 0, width: 38, height: 38)
@@ -91,7 +85,6 @@ class ItemTableViewCell: UITableViewCell {
         btn.setImage(UIImage(named: "chat-gray"), for: .normal)
         return btn
     }()
-    
     private let chatLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
@@ -100,8 +93,6 @@ class ItemTableViewCell: UITableViewCell {
         lbl.font = UIFont.systemFont(ofSize: 15)
         return lbl
     }()
-    
-    
     //        let replyIcon: UIButton = {
     //            let bt = UIButton()
     //            bt.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
@@ -117,26 +108,22 @@ class ItemTableViewCell: UITableViewCell {
     //            lb.font = UIFont(name: "Helvetica", size: 15)
     //            return lb
     //        }()
-    
     private lazy var wishView: UIView = {
         let view = UIView()
         view.addSubview(wishLabel)
         view.addSubview(wishIcon)
         return view
     }()
-    
     private lazy var chatView: UIView = {
         let view = UIView()
         view.addSubview(chatLabel)
         view.addSubview(chatIcon)
         return view
     }()
-    
     //        lazy var replyView: UIView = {
     //            let view = UIView()
     //            return view
     //        }()
-    
     private lazy var iconStackView: UIStackView = {
         let sv = UIStackView(arrangedSubviews: [wishView, chatView])
         sv.axis = .horizontal
@@ -207,14 +194,11 @@ class ItemTableViewCell: UITableViewCell {
         if let url = item?.images?.first?.url {
             Network.shared.fetchImage(url: url) { result in
                 switch result {
-                        
                     case .success(let image):
-                        
                         completion(image)
-                        
                     case .failure(let error):
-                        
-                        print("🥶",error.localizedDescription, self.item?.images)
+                        /// 에러별 다른처리?
+                        print(error)
                 }
             }
         } else {

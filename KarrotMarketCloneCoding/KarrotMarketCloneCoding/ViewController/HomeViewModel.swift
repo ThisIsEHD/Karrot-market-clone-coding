@@ -50,10 +50,10 @@ class HomeViewModel {
                             }
                         }
                     }
-                case .failure:
-                    print("서버에러")   //홈뷰컨에 얼럿 띄워야
+                case .failure(let error):
+                    /// 에러별 다른처리?
+                    print(error)   //홈뷰컨에 얼럿 띄워야
             }
-            
         }
     }
 }

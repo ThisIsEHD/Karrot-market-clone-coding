@@ -8,15 +8,19 @@
 import UIKit
 import Alamofire
 
-class ItemDetailViewController: UIViewController, UITableViewDelegate {
+class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButtonDelegate {
     // MARK: - Properties
     
     var item: Item? {
         didSet {
             itemDetailViewBottomStickyView.configure(price: item?.price)
             itemDetailViewContentsTableView.reloadData()
+            
+            /// 사용자의 정보를 가져와 찜한 상품인지 확인
+            /// wishButton 상태 업데이트
         }
     }
+    
     /// 상세페이지의 이미지 컬렉션뷰
     private let itemImagesCollectionView: UICollectionView = {
         
@@ -54,7 +58,7 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate {
         
         tv.register(ItemDetailViewProfileCell.self, forCellReuseIdentifier: "ItemDetailViewProfileCell")
         tv.register(ItemDetailViewDescriptionCell.self, forCellReuseIdentifier: "ItemDetailViewDescriptionCell")
-        tv.register(ItemDetailViewOtherPostsCell.self, forCellReuseIdentifier: "ItemDetailViewOtherPostsCell")
+        tv.register(ItemDetailViewOtherItemsCell.self, forCellReuseIdentifier: "ItemDetailViewOtherPostsCell")
         
         tv.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         
@@ -86,17 +90,20 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate {
             switch result {
                 case .success(let item):
                     self.item = item
-                case .failure:
-                    print("서버에러")
+                case .failure(let error):
+                    /// 에러별 다른처리?
+                    print(error)
             }
         }
         
+        itemDetailViewBottomStickyView.delegate = self
         configureViews()
         setConstraints()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         tabBarController?.tabBar.isHidden = true
         
         setNavigation(itemDetailViewContentsTableView)
@@ -114,7 +121,38 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate {
         navigationController?.navigationBar.shadowImage = .none
     }
     
+    // MARK: - Actions
+   
+    func addWishList() {
+        guard let itemID = item?.id, let userID = item?.userId else { return }
+        
+        Network.shared.addWishItem(id: itemID, of: userID) { result in
+            switch result {
+                case .success:
+                    self.itemDetailViewBottomStickyView.getWishButton().isSelected = true
+                    return
+                case .failure(let error):
+                    print(error)
+            }
+        }
+    }
+    
+    func deleteWishList() {
+        guard let itemID = item?.id, let userID = item?.userId else { return }
+        
+        Network.shared.deleteWishItem(id: itemID, of: userID) { result in
+            switch result {
+                case .success:
+                    self.itemDetailViewBottomStickyView.getWishButton().isSelected = false
+                    return
+                case .failure(let error):
+                    print(error)
+            }
+        }
+    }
+    
     // MARK: - Configure Views
+    
     private func configureViews() {
         itemDetailViewContentsTableView.dataSource = self
         itemDetailViewContentsTableView.delegate = self
@@ -148,26 +186,33 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate {
     func setNavigation(_ sender: UIScrollView) {
         
         if sender.contentOffset.y >= 300 {
+            
             navigationController?.navigationBar.backgroundColor = .systemBackground
             navigationController?.navigationBar.tintColor = .black
             navigationController?.navigationBar.shadowImage = .none
-            self.statusBarView.alpha = 1
+            
+            statusBarView.alpha = 1
         } else {
+            
             if item?.images?.count == 0 {
+                
                 navigationController?.navigationBar.backgroundColor = .systemBackground
                 navigationController?.navigationBar.tintColor = .black
                 navigationController?.navigationBar.shadowImage = .none
-                self.statusBarView.alpha = 1
+                
+                statusBarView.alpha = 1
             } else {
+                
                 navigationController?.navigationBar.backgroundColor = .clear
                 navigationController?.navigationBar.tintColor = .white
                 navigationController?.navigationBar.shadowImage = UIImage()
-                self.navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-                self.statusBarView.alpha = 0
+                navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
                 
-                gradient.frame = CGRect(x: 0, y: 0, width: UIApplication.shared.statusBarFrame.width, height: UIApplication.shared.statusBarFrame.height + self.navigationController!.navigationBar.frame.height)
-                /// layer에 추가
-                self.view.layer.addSublayer(gradient)
+                statusBarView.alpha = 0
+                
+                gradient.frame = CGRect(x: 0, y: 0, width: UIApplication.shared.statusBarFrame.width, height: UIApplication.shared.statusBarFrame.height + navigationController!.navigationBar.frame.height)
+                
+                view.layer.addSublayer(gradient)
             }
         }
     }
@@ -199,18 +244,18 @@ extension ItemDetailViewController: UICollectionViewDataSource {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ItemDetailViewImagesCollectionViewCell", for: indexPath) as! ItemDetailViewImagesCollectionViewCell
         
-        AF.request(item?.images?[indexPath.row].url ?? "").validate().validate(contentType: ["application/octet-stream"]).responseData { response in
-            
-            switch response.result {
-                    
-                case .success(let data):
+        guard let url = item?.images?[indexPath.row].url else {
+            return ItemDetailViewImagesCollectionViewCell()
+        }
+        
+        Network.shared.fetchImage(url: url) { result in
+            switch result {
+                case .success(let image):
                     DispatchQueue.main.async {
-                        cell.imageView.image = UIImage(data: data)
+                        cell.imageView.image = image
                     }
-                    
                 case .failure(let error):
-                    
-                    print(error.localizedDescription)
+                    print(error)
             }
         }
         return cell
@@ -228,7 +273,6 @@ extension ItemDetailViewController: UICollectionViewDelegateFlowLayout {
         } else {
             return CGSize(width: 0, height: 0)
         }
-       
     }
 }
 
@@ -254,14 +298,14 @@ extension ItemDetailViewController: UITableViewDataSource {
                 cell.setDescription(itemName: item?.title ?? "", category: item?.categoryId ?? 0, content: item?.content ?? "", wishs: item?.wishes ?? 0, views: item?.views ?? 0)
                 return cell
             case 2:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewOtherPostsCell", for: indexPath) as! ItemDetailViewOtherPostsCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewOtherPostsCell", for: indexPath) as! ItemDetailViewOtherItemsCell
                 cell.selectionStyle = .none
                 if let nickname = item?.nickname {
                     cell.tableTitlelabel.text = "\(nickname)님의 판매 상품"
                 }
                 return cell
             case 3:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewOtherPostsCell", for: indexPath) as! ItemDetailViewOtherPostsCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewOtherPostsCell", for: indexPath) as! ItemDetailViewOtherItemsCell
                 cell.selectionStyle = .none
                 if let nickname = item?.nickname {
                     cell.tableTitlelabel.text = "\(nickname)님, 이건어때요?"
@@ -292,4 +336,9 @@ extension ItemDetailViewController: UIScrollViewDelegate {
             setNavigation(scrollView)
         }
     }
+}
+
+protocol WishButtonDelegate: AnyObject {
+    func addWishList()
+    func deleteWishList()
 }

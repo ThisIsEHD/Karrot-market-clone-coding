@@ -65,8 +65,8 @@ class ProfileSettingViewController: UIViewController {
     
     
     @objc private func touchUpImageView() {
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let selectImageAction = UIAlertAction(title: "앨범에서 선택", style: .default) { _ in
             self.openAlbum()
         }
@@ -75,6 +75,7 @@ class ProfileSettingViewController: UIViewController {
             self.profileView.cameraIconView.isHidden = false
         }
         let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+        
         alert.addAction(selectImageAction)
         
         if profileView.imagePickerView.image != nil {
@@ -87,16 +88,18 @@ class ProfileSettingViewController: UIViewController {
     
     
     @objc private func doneButtonTapped() {
-        let user = User(email: email, pw: pw, nickname: profileView.nicknameTextField.text)
         
+        let user = User(email: email, pw: pw, nickname: profileView.nicknameTextField.text)
         var alert: UIAlertController?
+        
         Network.shared.register(user: user, image: profileImage) { result in
-            
             switch result {
+                    
             case .success:
                 self.signIn()
             case .failure(let error):
                 switch error {
+                        
                 case .duplicatedEmail:
                     alert = self.prepareAlert(title: "이미 사용중인 이메일입니다.", isPop: true)
                 case .duplicatedNickname:
@@ -106,7 +109,6 @@ class ProfileSettingViewController: UIViewController {
                 default:
                     alert = self.prepareAlert(title: "서버에러. 나중에 다시 시도해주세요.", isPop: false)
                 }
-                
                 DispatchQueue.main.async { self.present(alert!, animated: true) }
             }
         }
@@ -115,7 +117,6 @@ class ProfileSettingViewController: UIViewController {
     @objc func onKeyboardAppear(_ notification: NSNotification) {
         
         guard let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
-        
         let keyboardHeight = keyboardFrame.cgRectValue.height
         
         bottomConstraints?.isActive = false
@@ -124,6 +125,7 @@ class ProfileSettingViewController: UIViewController {
     }
     
     @objc func onKeyboardDisappear(_ notification: NSNotification) {
+        
         bottomConstraints?.isActive = false
         bottomConstraints?.constant = 0
         bottomConstraints?.isActive = true
@@ -131,6 +133,7 @@ class ProfileSettingViewController: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
+        
         view.endEditing(true)
     }
     
@@ -234,11 +237,12 @@ class ProfileSettingViewController: UIViewController {
     
     private func signIn() {
         
-        Network.shared.auth(email: email, pw: pw) { result in
+        Network.shared.login(email: email, pw: pw) { result in
             switch result {
             case .success:
                 DispatchQueue.main.async { self.dismiss(animated: true) }
             case .failure:
+                    /// 에러별 다른처리?
                 let alert = self.prepareAlert(title: "서버에러. 나중에 다시 시도해주세요.", isPop: false)
 
                 DispatchQueue.main.async { self.present(alert, animated: true) }
@@ -247,6 +251,7 @@ class ProfileSettingViewController: UIViewController {
     }
     
     private func setDoneButtonLayout() {
+        
         doneButton.anchor(leading: self.view.leadingAnchor, trailing: self.view.trailingAnchor, height: 75)
         bottomConstraints = doneButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
         bottomConstraints?.isActive = true

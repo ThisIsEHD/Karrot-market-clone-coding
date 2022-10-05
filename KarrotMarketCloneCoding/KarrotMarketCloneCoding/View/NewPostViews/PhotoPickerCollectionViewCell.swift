@@ -14,7 +14,6 @@ final class PhotoPickerCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var pickerButton: UIButton!
     
     static func nib() -> UINib {
-        
         return UINib(nibName: "PhotoPickerCollectionViewCell", bundle: nil)
     }
     
@@ -37,6 +36,7 @@ final class PhotoPickerCollectionViewCell: UICollectionViewCell {
     }
     
     private func setPhotosNumberLabelLayout() {
+        
         pickerButton.layer.borderWidth = 1
         pickerButton.layer.borderColor = CGColor(gray: 0.5, alpha: 0.5)
         pickerButton.layer.cornerRadius = 5

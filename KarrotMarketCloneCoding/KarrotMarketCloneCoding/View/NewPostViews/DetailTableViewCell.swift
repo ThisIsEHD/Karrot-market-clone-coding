@@ -53,10 +53,4 @@ extension DetailTableViewCell: UITextViewDelegate {
             textChanged(textView.text)
         }
     }
-//
-//    func textViewDidChange(_ textView: UITextView) {
-//
-//        tableView.beginUpdates()
-//        tableView.endUpdates()
-//    }
 }

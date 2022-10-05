@@ -8,12 +8,19 @@
 import UIKit
 import Alamofire
 
+typealias DataSource = UITableViewDiffableDataSource<Section, Item>
+typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
+
 final class HomeViewController: UIViewController {
     // MARK: - Properties
+    
     var viewModel = HomeViewModel()
     var isViewBusy = true
+    private var dataSource: DataSource!
+    private var snapshot = Snapshot()
     
     private let itemTableView : UITableView = {
+        
         let tv = UITableView(frame:CGRect.zero, style: .plain)
         
         tv.register(ItemTableViewCell.self, forCellReuseIdentifier: "ItemTableViewCell")
@@ -24,6 +31,7 @@ final class HomeViewController: UIViewController {
     }()
     
     private lazy var addPostButton: UIButton = {
+        
         let btn = UIButton(frame: CGRect(x: 0, y: 0, width: 70, height: 70))
         let image = UIImage(systemName: "plus.circle.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 60, weight: .medium))
         
@@ -37,9 +45,6 @@ final class HomeViewController: UIViewController {
         return btn
     }()
     
-    private var dataSource: DataSource!
-    private var snapshot = Snapshot()
-    
     // MARK: - Actions
     
     @objc func searchButtonDidTapped() {
@@ -50,14 +55,19 @@ final class HomeViewController: UIViewController {
     }
     
     @objc func notiButtonDidTapped() {
+        
         let notificationVC = NotificationViewController()
+        
         navigationController?.pushViewController(notificationVC, animated: true)
     }
     
     @objc func addButtonDidTapped() {
+        
         let newPostVC = NewPostTableViewController()
         let nav = UINavigationController(rootViewController: newPostVC)
+        
         nav.navigationBar.barTintColor = .label
+        nav.modalPresentationStyle  = .fullScreen
         
         newPostVC.doneButtonTapped = { [weak self] in
             
@@ -70,16 +80,15 @@ final class HomeViewController: UIViewController {
             
             weakSelf.viewModel.loadData(lastID: weakSelf.viewModel.lastItemID, completion: job)
         }
-        nav.modalPresentationStyle  = .fullScreen
         
         present(nav, animated: true, completion: nil)
     }
     
     // MARK: - Life Cycle
+    
     private func configureAddButton() {
         view.addSubview(addPostButton)
     }
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -111,18 +120,20 @@ final class HomeViewController: UIViewController {
     }
     
     func reloadTableViewData() {
+        
         viewModel.isViewBusy = false
         viewModel.loadData(lastID: viewModel.lastItemID)
     }
     
-    // MARK: - Configure ItemTableView
+    // MARK: - Configure UI
+    
     private func configureItemTableView() {
+        
         itemTableView.delegate = self
         itemTableView.dataSource = viewModel.dataSource
         view.addSubview(itemTableView)
     }
     
-    // MARK: - configure NavigationController
     private func configureNavigationBar() {
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
@@ -152,6 +163,7 @@ final class HomeViewController: UIViewController {
     
     // MARK: - Setting Constraints
     private func setConstraints() {
+        
         itemTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
         addPostButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, bottomConstant: 10, trailing: view.trailingAnchor, trailingConstant: 20)
     }
@@ -162,7 +174,7 @@ final class HomeViewController: UIViewController {
 extension HomeViewController: UITableViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-
+        
         if !scrollView.frame.isEmpty && scrollView.contentOffset.y >= scrollView.frame.size.height {
             
             let contentHeight = scrollView.contentSize.height
@@ -198,6 +210,3 @@ extension HomeViewController: UITableViewDelegate {
         return 150
     }
 }
-
-typealias DataSource = UITableViewDiffableDataSource<Section, Item>
-typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>

@@ -11,20 +11,25 @@ class ItemDetailViewProfileCell: UITableViewCell {
     // MARK: - Properties
     
     private lazy var profileView: ReusableProfileView = {
+        
         let v = ReusableProfileView(imageSize: 50)
+        
         return v
     }()
     
     // MARK: - Actions
     
     func setProfile(nickname: String?, image: UIImage?) {
+        
         profileView.configure(nickname: nickname)
         profileView.configure(image: image)
     }
     
     // MARK: - Life Cycle
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
         self.addSubview(profileView)
         setConstraints()
     }
@@ -39,6 +44,7 @@ class ItemDetailViewProfileCell: UITableViewCell {
     
     //  MARK: - Setting Constraints
     private func setConstraints() {
+        
         profileView.anchor(top: topAnchor, topConstant: 40, bottom: bottomAnchor, bottomConstant: 40, leading: leadingAnchor, trailing: trailingAnchor)
     }
 }

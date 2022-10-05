@@ -16,8 +16,10 @@ final class TitleTableViewCell: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
         title.delegate = self
         title.borderStyle = .none
+        
         setTitleTextField()
     }
 
@@ -26,7 +28,6 @@ final class TitleTableViewCell: UITableViewCell {
     }
     
     static func nib() -> UINib {
-        
         return UINib(nibName: "TitleTableViewCell", bundle: nil)
     }
     

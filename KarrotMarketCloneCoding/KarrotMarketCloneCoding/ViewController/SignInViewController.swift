@@ -15,7 +15,7 @@ final class SignInViewController: SignUpViewController {
         
         var alert: UIAlertController?
         
-        Network.shared.auth(email: email, pw: password) { result in
+        Network.shared.login(email: email, pw: password) { result in
             switch result {
             case .success:
                 DispatchQueue.main.async { self.dismiss(animated: true) }
@@ -23,7 +23,7 @@ final class SignInViewController: SignUpViewController {
                 switch error {
                 case .wrongPassword:
                     alert = self.prepareAlert(title: "비밀번호를 확인해주세요.", isPop: false)
-                case .unknownUser:
+                case .unknownUserOrItem:
                     alert = self.prepareAlert(title: "일치하는 회원정보가 없습니다.\n회원가입을 먼저 해주세요.", isPop: true)
                 case .serverError:
                     alert = self.prepareAlert(title: "서버에러. 나중에 다시 시도해주세요.", isPop: false)
@@ -51,6 +51,7 @@ final class SignInViewController: SignUpViewController {
                 DispatchQueue.main.async { self.navigationController?.popViewController(animated: true) }
             }
         }
+        
         alert.addAction(alertAction)
         
         return alert

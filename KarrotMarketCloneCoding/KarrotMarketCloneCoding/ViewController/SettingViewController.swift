@@ -12,11 +12,13 @@ final class SettingViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         title = "설정"
         tableView.register(BasicTableViewCell.self, forCellReuseIdentifier: BasicTableViewCell.identifier)
     }
     
     private func showUserCheckVC() {
+        
         let nav = UINavigationController(rootViewController: UserCheckViewController())
         nav.modalPresentationStyle = .fullScreen
         
@@ -24,6 +26,7 @@ final class SettingViewController: UITableViewController {
     }
     
     private func withdraw() {
+        
         Network.shared.deleteUser { error in
             switch error {
             case nil:
@@ -46,6 +49,7 @@ final class SettingViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: BasicTableViewCell.identifier, for: indexPath)
         cell.textLabel?.text = titles[indexPath.row]
         
@@ -53,7 +57,9 @@ final class SettingViewController: UITableViewController {
      }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         if indexPath.row == 0 {
+            
             tableView.deselectRow(at: indexPath, animated: true)
             
             if let id = UserDefaults.standard.object(forKey: Const.userId) as? String {
@@ -65,6 +71,7 @@ final class SettingViewController: UITableViewController {
             NotificationCenter.default.post(name: NotificationType.logout.name, object: nil)
             
         } else {
+            
             tableView.deselectRow(at: indexPath, animated: true)
             
             let job: (UIAlertAction) -> () = { _ in self.withdraw() }

@@ -12,6 +12,7 @@ import Alamofire
 final class NewPostTableViewController: UIViewController {
     
     private var selectedImages: [UIImage] = [UIImage]() {
+        
         didSet {
             maxChoosableImages = 10 - selectedImages.count
             newPostTableView.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)

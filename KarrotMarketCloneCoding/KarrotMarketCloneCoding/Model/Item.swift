@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 struct FetchedItemsList: Codable, Hashable {
+    
     let keyword: String?
     let category: Int?
     let size: Int
@@ -21,7 +22,9 @@ struct FetchedItemsList: Codable, Hashable {
 }
 
 // MARK: - Item
+
 struct Item: Codable {
+    
     var id: Int?
     var title: String?
     var content: String?
@@ -35,18 +38,10 @@ struct Item: Codable {
     var images: [Image]?
 }
 
-extension Item: Hashable {
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-    
-    static func == (lhs: Item, rhs: Item) -> Bool {
-        return lhs.id == rhs.id
-    }
-}
-
 // MARK: - Image
+
 struct Image: Codable, Hashable {
+    
     let id, itemID, sequence: Int
     let url: String
     

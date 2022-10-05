@@ -51,6 +51,7 @@ extension PriceTableViewCell: UITextFieldDelegate {
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {
+        
         if textField.text == "" {
             wonLabel.textColor = .systemGray
         } else {

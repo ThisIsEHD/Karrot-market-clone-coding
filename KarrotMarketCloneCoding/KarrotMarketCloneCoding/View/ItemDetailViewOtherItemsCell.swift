@@ -1,5 +1,5 @@
 //
-//  ItemDetailViewPostsCell.swift
+//  ItemDetailViewOtherItemsCell.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/07/18.
@@ -7,30 +7,34 @@
 
 import UIKit
 
-class ItemDetailViewOtherPostsCell: UITableViewCell {
-    
+class ItemDetailViewOtherItemsCell: UITableViewCell {
     // MARK: - Properties
+    
     let tableTitlelabel: UILabel = {
+        
         let lbl = UILabel()
+        
         lbl.font = UIFont.boldSystemFont(ofSize: 19)
+        
         return lbl
     }()
-    
     private let postsCollectionView: UICollectionView = {
+        
         let cv = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
-        cv.register(OtherPostsCollectionViewCell.self, forCellWithReuseIdentifier: "PostCell")
+        
+        cv.register(ItemDetailViewOtherItemsCollectionViewCell.self, forCellWithReuseIdentifier: "PostCell")
+        
         return cv
     }()
-    
-    // MARK: - Actions
-    
     
     // MARK: - Life Cycle
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
         addSubview(tableTitlelabel)
         addSubview(postsCollectionView)
+        
         postsCollectionView.dataSource = self
         postsCollectionView.delegate = self
         
@@ -46,7 +50,9 @@ class ItemDetailViewOtherPostsCell: UITableViewCell {
     }
     
     // MARK: - Setting Constraints
+    
     private func setupConstraints() {
+        
         tableTitlelabel.anchor(top: topAnchor, topConstant: 20, leading: leadingAnchor, leadingConstant: 15)
         postsCollectionView.anchor(top: tableTitlelabel.bottomAnchor, topConstant: 15, bottom: self.bottomAnchor, bottomConstant: 20, leading: tableTitlelabel.leadingAnchor, trailing: self.trailingAnchor, trailingConstant: 20, height: 230)
     }
@@ -54,28 +60,29 @@ class ItemDetailViewOtherPostsCell: UITableViewCell {
 
 // MARK: - UICollectionViewDataSource
 
-extension ItemDetailViewOtherPostsCell: UICollectionViewDataSource {
+extension ItemDetailViewOtherItemsCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 2
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PostCell", for: indexPath) as! OtherPostsCollectionViewCell
+        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PostCell", for: indexPath) as! ItemDetailViewOtherItemsCollectionViewCell
         return cell
     }
 }
 
 // MARK: - UICollectionViewDelegateFlowLayout
 
-extension ItemDetailViewOtherPostsCell: UICollectionViewDelegateFlowLayout {
+extension ItemDetailViewOtherItemsCell: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
         guard let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout else { return CGSize.zero }
         
         let frame = collectionView.frame
         let width = (frame.width - (layout.sectionInset.right + layout.sectionInset.left) - layout.minimumInteritemSpacing * 2) / 2
-        
         let size = CGSize(width: width, height: 210)
+        
         return size
     }
 }
