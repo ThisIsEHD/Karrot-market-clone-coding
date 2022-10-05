@@ -38,6 +38,16 @@ struct Item: Codable {
     var images: [Image]?
 }
 
+extension Item: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: Item, rhs: Item) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
+
 // MARK: - Image
 
 struct Image: Codable, Hashable {

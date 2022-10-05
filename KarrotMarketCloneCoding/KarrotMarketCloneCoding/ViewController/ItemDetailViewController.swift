@@ -124,12 +124,13 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
     // MARK: - Actions
    
     func addWishList() {
+        
         guard let itemID = item?.id, let userID = item?.userId else { return }
         
-        Network.shared.addWishItem(id: itemID, of: userID) { result in
+        Network.shared.addWishItem(id: itemID, of: userID) { [unowned self] result in
             switch result {
                 case .success:
-                    self.itemDetailViewBottomStickyView.getWishButton().isSelected = true
+                    itemDetailViewBottomStickyView.getWishButton().isSelected = true
                     return
                 case .failure(let error):
                     print(error)
@@ -138,12 +139,13 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
     }
     
     func deleteWishList() {
+        
         guard let itemID = item?.id, let userID = item?.userId else { return }
         
-        Network.shared.deleteWishItem(id: itemID, of: userID) { result in
+        Network.shared.deleteWishItem(id: itemID, of: userID) { [unowned self] result in
             switch result {
                 case .success:
-                    self.itemDetailViewBottomStickyView.getWishButton().isSelected = false
+                    itemDetailViewBottomStickyView.getWishButton().isSelected = false
                     return
                 case .failure(let error):
                     print(error)
