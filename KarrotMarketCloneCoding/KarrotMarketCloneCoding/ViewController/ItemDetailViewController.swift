@@ -11,8 +11,12 @@ import Alamofire
 class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButtonDelegate {
     // MARK: - Properties
     
+    private var productId: Int?
     var item: Item? {
         didSet {
+            
+            flag = true
+            itemImagesCollectionView.reloadData()
             itemDetailViewBottomStickyView.configure(price: item?.price)
             itemDetailViewContentsTableView.reloadData()
             
@@ -20,6 +24,7 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
             /// wishButton 상태 업데이트
         }
     }
+    var flag: Bool?
     
     /// 상세페이지의 이미지 컬렉션뷰
     private let itemImagesCollectionView: UICollectionView = {
@@ -164,13 +169,18 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
         
         itemDetailViewContentsTableView.tableHeaderView = itemDetailTableHeaderView
         
-     
-        if item?.images?.count != 0 {
-            itemDetailViewContentsTableView.contentInsetAdjustmentBehavior = .never
-            itemDetailTableHeaderView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.width)
-        } else {
-            itemDetailViewContentsTableView.contentInsetAdjustmentBehavior = .automatic
-            itemDetailTableHeaderView.frame = .zero
+        /// 이미지 백그라운드 다운로드 후 구성하기 위한 코드 작성하기
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) { [self] in
+            if item?.images?.count != nil {
+                itemDetailViewContentsTableView.contentInsetAdjustmentBehavior = .never
+                itemDetailTableHeaderView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.width)
+                gradient.frame = CGRect(x: 0, y: 0, width: UIApplication.shared.statusBarFrame.width, height: UIApplication.shared.statusBarFrame.height + navigationController!.navigationBar.frame.height)
+                
+                view.layer.addSublayer(gradient)
+            } else {
+                itemDetailViewContentsTableView.contentInsetAdjustmentBehavior = .automatic
+                itemDetailTableHeaderView.frame = .zero
+            }
         }
         
         itemImagesCollectionView.dataSource = self
@@ -213,10 +223,7 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
                 navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
                 
                 statusBarView.alpha = 0
-                
-                gradient.frame = CGRect(x: 0, y: 0, width: UIApplication.shared.statusBarFrame.width, height: UIApplication.shared.statusBarFrame.height + navigationController!.navigationBar.frame.height)
-                
-                view.layer.addSublayer(gradient)
+                gradient.isHidden = false
             }
         }
     }
@@ -344,7 +351,9 @@ extension ItemDetailViewController: UIScrollViewDelegate {
                 itemImagesCollectionViewPageControl.currentPage = newPage
             }
         } else {
-            setNavigation(scrollView)
+            if flag != nil {
+                setNavigation(itemDetailViewContentsTableView)
+            }
         }
     }
 }
