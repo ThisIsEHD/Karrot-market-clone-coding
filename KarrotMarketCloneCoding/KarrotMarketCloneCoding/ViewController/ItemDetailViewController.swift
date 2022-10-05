@@ -83,18 +83,23 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
     
     // MARK: - Life Cycle
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        Network.shared.fetchItem(id: item!.id!) { [self] result in
+    convenience init(productId: Int?) {
+        self.init()
+    
+        Network.shared.fetchItem(id: productId!) { [self] result in
             switch result {
                 case .success(let item):
+                    
                     self.item = item
                 case .failure(let error):
                     /// 에러별 다른처리?
                     print(error)
             }
         }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
         itemDetailViewBottomStickyView.delegate = self
         configureViews()
@@ -105,8 +110,6 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
         super.viewWillAppear(animated)
         
         tabBarController?.tabBar.isHidden = true
-        
-        setNavigation(itemDetailViewContentsTableView)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -176,17 +179,15 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
         itemDetailViewContentsTableView.addSubview(itemImagesCollectionView)
         itemDetailViewContentsTableView.addSubview(itemImagesCollectionViewPageControl)
         
-        view.addSubview(itemDetailViewContentsTableView)
-        view.addSubview(itemDetailViewBottomStickyView)
-        
         statusBarView.backgroundColor = .systemBackground
         statusBarView.alpha = 0
         
+        view.addSubview(itemDetailViewContentsTableView)
+        view.addSubview(itemDetailViewBottomStickyView)
         view.addSubview(statusBarView)
     }
     
-    func setNavigation(_ sender: UIScrollView) {
-        
+    func setNavigation(_ sender: UITableView) {
         if sender.contentOffset.y >= 300 {
             
             navigationController?.navigationBar.backgroundColor = .systemBackground
@@ -194,15 +195,16 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
             navigationController?.navigationBar.shadowImage = .none
             
             statusBarView.alpha = 1
+            gradient.isHidden = true
         } else {
-            
-            if item?.images?.count == 0 {
+            if item?.images?.count == nil {
                 
                 navigationController?.navigationBar.backgroundColor = .systemBackground
                 navigationController?.navigationBar.tintColor = .black
                 navigationController?.navigationBar.shadowImage = .none
                 
                 statusBarView.alpha = 1
+                gradient.isHidden = false
             } else {
                 
                 navigationController?.navigationBar.backgroundColor = .clear
@@ -269,12 +271,7 @@ extension ItemDetailViewController: UICollectionViewDataSource {
 extension ItemDetailViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        if item?.images?[indexPath.row] != nil {
-            return collectionView.bounds.size
-        } else {
-            return CGSize(width: 0, height: 0)
-        }
+        return collectionView.bounds.size
     }
 }
 
@@ -291,7 +288,19 @@ extension ItemDetailViewController: UITableViewDataSource {
             case 0:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewProfileCell", for: indexPath) as! ItemDetailViewProfileCell
                 cell.selectionStyle = .none
-                cell.setProfile(nickname: item?.nickname, image: UIImage(named: "defaultProfileImage"))
+                
+                guard let url = item?.profileImage else {
+                    cell.setProfile(nickname: item?.nickname, image: nil)
+                    return cell }
+                
+                Network.shared.fetchImage(url: url) {[unowned self] result in
+                    switch result {
+                        case .success(let image):
+                            cell.setProfile(nickname: item?.nickname, image: image)
+                        case .failure(let error):
+                            print(error)
+                    }
+                }
                 return cell
                 
             case 1:
@@ -326,7 +335,7 @@ extension ItemDetailViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         if scrollView == itemImagesCollectionView {
-            
+
             let width = scrollView.bounds.size.width
             let x = scrollView.contentOffset.x + (width/2.0)
             let newPage = Int(x / width)

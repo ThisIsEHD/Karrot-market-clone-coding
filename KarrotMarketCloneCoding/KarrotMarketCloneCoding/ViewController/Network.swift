@@ -347,7 +347,7 @@ struct Network {
     
     // MARK: - Product API
     
-    func fetchItems(keyword: String?, category: Int?, sort: String?, lastId: Int?, size: Int? = nil, completion: @escaping (Result<FetchedItemsList?, KarrotError>) -> ()) {
+    func fetchItems(keyword: String?, category: Int?, sort: String?, lastId: Int? = nil, size: Int? = nil, completion: @escaping (Result<FetchedItemsList?, KarrotError>) -> ()) {
         
         var queryItems = [String : Any]()
         

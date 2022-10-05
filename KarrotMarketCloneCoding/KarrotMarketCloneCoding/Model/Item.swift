@@ -35,7 +35,10 @@ struct Item: Codable {
     let wishes: Int?
     let userId: String?
     let nickname: String?
+    let profileImage: String?
+    let thumbnail: String?
     var images: [Image]?
+
 }
 
 extension Item: Hashable {

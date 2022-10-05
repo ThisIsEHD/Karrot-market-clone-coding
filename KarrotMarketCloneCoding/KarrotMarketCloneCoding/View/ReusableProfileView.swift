@@ -33,7 +33,9 @@ class ReusableProfileView: UIView {
     // MARK: - Actions
     
     func configure(image: UIImage?) {
-        profileImageView.image = image
+        if let image = image {
+            profileImageView.image = image
+        }
     }
     
     func configure(nickname: String?) {

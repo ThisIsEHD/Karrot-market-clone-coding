@@ -135,11 +135,11 @@ final class HomeViewController: UIViewController {
     }
     
     private func configureNavigationBar() {
-        let appearance = UINavigationBarAppearance()
-        appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = .white
-        self.navigationItem.standardAppearance = appearance
-        self.navigationItem.scrollEdgeAppearance = appearance
+//        let appearance = UINavigationBarAppearance()
+//        appearance.configureWithOpaqueBackground()
+//        appearance.backgroundColor = .white
+//        self.navigationItem.standardAppearance = appearance
+//        self.navigationItem.scrollEdgeAppearance = appearance
     }
     
     private func configureNavigationItems() {
@@ -197,10 +197,8 @@ extension HomeViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        let vc = ItemDetailViewController()
-        
-        vc.item = viewModel.dataSource?.itemIdentifier(for: indexPath)
+        let id = viewModel.dataSource?.itemIdentifier(for: indexPath)?.id
+        let vc = ItemDetailViewController(productId: id)
         navigationController?.pushViewController(vc, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }

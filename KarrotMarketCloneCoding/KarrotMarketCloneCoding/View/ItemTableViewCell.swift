@@ -191,7 +191,7 @@ class ItemTableViewCell: UITableViewCell {
     
     private func getThumbnailImage(completion: @escaping (UIImage?) -> ()) {
         
-        if let url = item?.images?.first?.url {
+        if let url = item?.thumbnail {
             Network.shared.fetchImage(url: url) { result in
                 switch result {
                     case .success(let image):
