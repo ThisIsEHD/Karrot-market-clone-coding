@@ -129,11 +129,11 @@ final class MyKarrotHeaderView: UIView {
     @objc func stackViewDidTapped(_ sender: UITapGestureRecognizer) {
         switch sender.view?.tag {
             case 0:
-                print("판매내역")
+                delegate?.selectedItemTableVC(.selling)
             case 1:
-                print("구매내역")
+                delegate?.selectedItemTableVC(.buy)
             case 2:
-                print("관심목록")
+                delegate?.selectedItemTableVC(.wish)
             default:
                 break
         }
@@ -242,6 +242,6 @@ final class MyKarrotHeaderView: UIView {
 protocol ProfileViewDelegate: AnyObject {
     
     func goToMyProfileVC()
-    func selectedItemTableVC()
+    func selectedItemTableVC(_ title: ListTitle)
     func configureUserInfo(of: User?)
 }

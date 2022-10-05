@@ -218,6 +218,19 @@ extension MyKarrotViewController: ProfileViewDelegate {
         navigationController?.pushViewController(profileEditingVC, animated: true)
     }
     
-    func selectedItemTableVC() {
+    func selectedItemTableVC(_ title: ListTitle) {
+        switch title {
+            case .selling:
+                let itemTableVC = UserItemTableViewController(userId: user?.id, navigationTitle: title)
+                navigationController?.pushViewController(itemTableVC, animated: true)
+            case .buy:
+                let itemTableVC = UserItemTableViewController(userId: user?.id, navigationTitle: title)
+                navigationController?.pushViewController(itemTableVC, animated: true)
+            case .wish:
+                let itemTableVC = UserItemTableViewController(userId: user?.id, navigationTitle: title)
+                navigationController?.pushViewController(itemTableVC, animated: true)
+            default:
+                return
+        }
     }
 }

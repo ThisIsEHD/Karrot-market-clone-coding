@@ -205,7 +205,7 @@ struct Network {
         }
     }
     
-    func fetchUserItems(of userId: ID, lastId: Int?, size: Int? = nil, completion: @escaping (Result<FetchedItemsList?, KarrotError>) -> Void) {
+    func fetchUserSellingItems(of userId: ID, lastId: Int? = nil, size: Int? = nil, completion: @escaping (Result<FetchedItemsList?, KarrotError>) -> Void) {
         
         var queryItems = [String: Any]()
         
@@ -217,7 +217,7 @@ struct Network {
             queryItems["last"] = lastId
         }
         
-        AF.request(Purpose.fetchUserItem(userId, queryItems)).response { response in
+        AF.request(Purpose.fetchUserSellingItems(userId, queryItems)).response { response in
             guard let httpResponse = response.response else { return }
             
             switch httpResponse.statusCode {
@@ -286,6 +286,53 @@ struct Network {
                         return
                     }
                     completion(.failure(.wrongForm(message)))
+                default:
+                    completion(.failure(.unknownError))
+            }
+        }
+    }
+    
+    func fetchUserWishItems(of userId: ID, lastId: Int? = nil, size: Int? = nil, completion: @escaping (Result<FetchedItemsList?, KarrotError>) -> Void) {
+        
+        var queryItems = [String: Any]()
+        
+        if let size = size {
+            queryItems["size"] = size
+        }
+        
+        if let lastId = lastId {
+            queryItems["last"] = lastId
+        }
+        
+        AF.request(Purpose.fetchUserWishItems(userId, queryItems)).response { response in
+            guard let httpResponse = response.response else { return }
+            
+            switch httpResponse.statusCode {
+                case 200:
+                    guard let data = response.data, let list = jsonDecode(type: FetchedItemsList.self, data: data) else {
+                        let message = "Error: response Data is nil or jsonDecoding failure, Error Point: \(#function)"
+                        completion(.failure(.notServerError(message)))
+                        return
+                    }
+                    completion(.success(list))
+                case 400:
+                    guard let message = response.data?.toDictionary() as? [String: String] else {
+                        let message = "Error: Can't convert response Data to Dictionary, Error Point: \(#function)"
+                        completion(.failure(.notServerError(message)))
+                        return
+                    }
+                    completion(.failure(.wrongForm(message)))
+                case 401:
+                    guard let message = response.data?.toDictionary() as? [String: String] else {
+                        let message = "Error: Can't convert response Data to Dictionary, Error Point: \(#function)"
+                        completion(.failure(.notServerError(message)))
+                        return
+                    }
+                    completion(.failure(.wrongForm(message)))
+                case 403:
+                    completion(.failure(.unknownUserOrItem))
+                case 404:
+                    completion(.failure(.unknownUserOrItem))
                 default:
                     completion(.failure(.unknownError))
             }

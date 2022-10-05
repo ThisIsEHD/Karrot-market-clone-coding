@@ -22,7 +22,8 @@ enum Purpose: Requestable {
     case update(User)
     case fetchItems([String : Any])
     case fetchItem(ProductID)
-    case fetchUserItem(ID, [String : Any])
+    case fetchUserSellingItems(ID, [String : Any])
+    case fetchUserWishItems(ID, [String : Any])
     case registerItem(ID, Item)
     case deleteUser(ID)
     case addWishItem(ProductID, ID)
@@ -48,8 +49,10 @@ extension Purpose {
                 return .none
             case .fetchItem:
                 return .none
-            case .fetchUserItem:
+            case .fetchUserSellingItems:
                 return .none
+            case .fetchUserWishItems:
+                return .jsonWithToken
             case .registerItem:
                 return .multipartWithToken
             case .deleteUser:
@@ -75,14 +78,16 @@ extension Purpose {
                 return "/api/v1/products"
             case .fetchItem(let productID):
                 return "/api/v1/products/\(productID)"
-            case .fetchUserItem(let id, _):
-                return "/api/v1/users/\(id)/products"
+            case .fetchUserSellingItems(let userId, _):
+                return "/api/v1/users/\(userId)/products"
+            case .fetchUserWishItems(let useId, _):
+                return "/api/v1/users/\(useId)/products_wish"
             case .registerItem(let userID, _):
                 return "/api/v1/users/\(userID)/products"
             case .deleteUser(let id):
                 return "/api/v1/users/\(id)"
-            case .addWishItem(let id, let productID):
-                return "api/v1/users/\(id)/products/\(productID)/wish"
+            case .addWishItem(let userId, let productID):
+                return "api/v1/users/\(userId)/products/\(productID)/wish"
             case .deleteWishItem(let id, let productID):
                 return "api/v1/users/\(id)/products/\(productID)/wish"
         }
@@ -91,7 +96,7 @@ extension Purpose {
     var method: HTTPMethod {
         switch self {
             case .login, .registerUser, .registerItem, .addWishItem: return .post
-            case .fetchUser, .fetchItem, .fetchItems, .fetchUserItem: return .get
+            case .fetchUser, .fetchItem, .fetchItems, .fetchUserSellingItems, .fetchUserWishItems: return .get
             case .update: return .put
             case .deleteUser, .deleteWishItem: return .delete
         }
@@ -101,7 +106,7 @@ extension Purpose {
         switch self {
             case .login(let user): return .body(user)
             case .update(let user): return .body(user)
-            case .fetchItems(let queryItem), .fetchUserItem(_, let queryItem): return .query(queryItem)
+            case .fetchItems(let queryItem), .fetchUserSellingItems(_, let queryItem), .fetchUserWishItems(_, let queryItem): return .query(queryItem)
             case .fetchUser, .registerUser, .fetchItem, .registerItem, .deleteUser, .addWishItem, .deleteWishItem: return .none
         }
     }
