@@ -183,7 +183,6 @@ struct Network {
                 
                 do {
                     let item = try JSONDecoder().decode(Item.self, from: data)
-                    print(item.price)
                     completion(.success(item))
                 } catch {
                     print(error)

@@ -12,16 +12,17 @@ import PhotosUI
 class ProfileSettingViewController: UIViewController {
     
     private var isAuthForAlbum: Bool?
-//    internal var buttonTapped: ([Any]) -> () = { info in }
+    internal var isImageChanged = false
+    
     internal var email: String?
     internal var pw: String?
-    private var profileImage: UIImage? {
+    internal var profileImage: UIImage? {
         willSet {
             profileView.imagePickerView.image = newValue == nil ? UIImage(systemName: "person.crop.circle.fill") : newValue
         }
     }
     
-    private let profileView = ReusableSettingProfileView(frame: .zero)
+    internal let profileView = ReusableSettingProfileView(frame: .zero)
     
     override func loadView() {
         view = profileView
@@ -43,8 +44,9 @@ class ProfileSettingViewController: UIViewController {
             self.openAlbum()
         }
         lazy var defaultImageAction = UIAlertAction(title: "기본 이미지로 변경", style: .default) { _ in
+            
             self.profileImage = nil
-            self.profileView.cameraIconView.isHidden = false
+            self.isImageChanged = true
         }
         let cancelAction = UIAlertAction(title: "취소", style: .cancel)
         alert.addAction(selectImageAction)
@@ -58,7 +60,7 @@ class ProfileSettingViewController: UIViewController {
     }
     
     
-    @objc private func doneButtonTapped() {
+    @objc func doneButtonTapped() {
         let user = User(email: email, pw: pw, nickname: profileView.nicknameTextField.text)
         var alert: UIAlertController?
         Network.shared.register(user: user, image: profileImage) { result in
@@ -181,6 +183,12 @@ class ProfileSettingViewController: UIViewController {
         return alert
     }
     
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        view.endEditing(true)
+    }
+    
     private func signIn() {
         
         Network.shared.auth(email: email ?? "", pw: pw ?? "") { result in
@@ -209,6 +217,11 @@ extension ProfileSettingViewController: UITextFieldDelegate {
         
         return finalText.count <= 10
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        view.endEditing(true)
+        return true
+    }
 }
 
 extension ProfileSettingViewController: PHPickerViewControllerDelegate {
@@ -225,7 +238,7 @@ extension ProfileSettingViewController: PHPickerViewControllerDelegate {
                 
                 DispatchQueue.main.async {
                     self.profileImage = image as? UIImage
-                    self.profileView.cameraIconView.isHidden = true
+                    self.isImageChanged = true
                 }
             }
         } else {

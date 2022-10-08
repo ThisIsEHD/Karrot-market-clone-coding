@@ -11,6 +11,7 @@ import Alamofire
 // Alamofire의 URLRequest을 커스텀 해서  사용 AF.request(URLRequestConvertible)
 protocol Requestable: URLRequestConvertible {
     var baseUrl: String { get }
+    var header: RequestHeaders { get }
     var path: String { get }
     var parameters: RequestParameters { get }
 }
@@ -38,20 +39,12 @@ extension Purpose {
             return .json
         case .registerUser:
             return .multipart
-        case .fetchUser:
+        case .fetchUser, .update, .deleteUser:
             return .jsonWithToken
-        case .update:
-            return .jsonWithToken
-        case .fetchItems:
-            return .none
-        case .fetchItem:
-            return .none
-        case .fetchUserItem:
-            return .none
         case .registerItem:
             return .multipartWithToken
-        case .deleteUser:
-            return .jsonWithToken
+        case .fetchItems, .fetchItem, .fetchUserItem:
+            return .none
         }
     }
     
@@ -103,6 +96,7 @@ extension Purpose {
         let accessToken = KeyChain.read(key: userId) ?? ""
         var headers = HTTPHeaders()
         
+//        header 구성
         switch header {
         case .json:
             headers = [ Header.contentType.type : Header.json.type ]
@@ -117,6 +111,7 @@ extension Purpose {
         
         urlRequest.headers = headers
         
+//        parameter 구성
         switch parameters {
         case .body(let parameter):
             let jsonParameter = parameter?.toJSONData()
