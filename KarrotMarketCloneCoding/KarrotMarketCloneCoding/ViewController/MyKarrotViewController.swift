@@ -180,17 +180,16 @@ extension MyKarrotViewController: ProfileViewDelegate {
         guard let user = user else { return }
         
         profileView.configureUser(nickname: user.nickname)
-<<<<<<< HEAD
-            
+        
         guard let url = user.profileImageUrl else { return }
         
         Network.shared.fetchImage(url: url) { result in
             switch result {
-                case .success(let image):
-                    self.profileView.configureUser(image: image)
-                case .failure(let error):
-                    /// 에러별 다른처리?
-                    print(error)
+            case .success(let image):
+                self.profileView.configureUser(image: image)
+            case .failure(let error):
+                /// 에러별 다른처리?
+                print(error)
             }
         }
     }
@@ -199,8 +198,8 @@ extension MyKarrotViewController: ProfileViewDelegate {
         
         let profileEditingVC = ProfileEditingViewController()
         
-        profileEditingVC.profileEditingView.nicknameTextField.text = user?.nickname
-        profileEditingVC.originNickname = user?.nickname
+        profileEditingVC.nickName = user?.nickname
+        profileEditingVC.profileImage = userImage
         
         guard let url = user?.profileImageUrl else {
             navigationController?.pushViewController(profileEditingVC, animated: true)
@@ -209,11 +208,11 @@ extension MyKarrotViewController: ProfileViewDelegate {
         
         Network.shared.fetchImage(url: url) { result in
             switch result {
-                case .success(let image):
-                    profileEditingVC.profileEditingView.imagePickerView.image = image
-                case .failure(let error):
-                    /// 에러별 다른처리?
-                    print(error)
+            case .success(let image):
+                profileEditingVC.profileView.imagePickerView.image = image
+            case .failure(let error):
+                /// 에러별 다른처리?
+                print(error)
             }
         }
         navigationController?.pushViewController(profileEditingVC, animated: true)
@@ -221,17 +220,15 @@ extension MyKarrotViewController: ProfileViewDelegate {
     
     func selectedItemTableVC(_ title: ListTitle) {
         switch title {
-            case .selling:
-                let itemTableVC = UserItemTableViewController(userId: user?.id, navigationTitle: title)
-                navigationController?.pushViewController(itemTableVC, animated: true)
-            case .buy:
-                let itemTableVC = UserItemTableViewController(userId: user?.id, navigationTitle: title)
-                navigationController?.pushViewController(itemTableVC, animated: true)
-            case .wish:
-                let itemTableVC = UserItemTableViewController(userId: user?.id, navigationTitle: title)
-                navigationController?.pushViewController(itemTableVC, animated: true)
-            default:
-                return
+        case .selling:
+            let itemTableVC = UserItemTableViewController(userId: user?.id, navigationTitle: title)
+            navigationController?.pushViewController(itemTableVC, animated: true)
+        case .buy:
+            let itemTableVC = UserItemTableViewController(userId: user?.id, navigationTitle: title)
+            navigationController?.pushViewController(itemTableVC, animated: true)
+        case .wish:
+            let itemTableVC = UserItemTableViewController(userId: user?.id, navigationTitle: title)
+            navigationController?.pushViewController(itemTableVC, animated: true)
         }
     }
 }
