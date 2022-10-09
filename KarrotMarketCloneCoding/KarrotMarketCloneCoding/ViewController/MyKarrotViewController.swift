@@ -12,6 +12,7 @@ final class MyKarrotViewController: UIViewController {
     // MARK: - Properties
     
     private var user: User?
+    private var userImage: UIImage?
     
     private let tableView = UITableView(frame: .zero, style: .grouped)
     private let myProfileTableList = [["내 동네 설정", "동네인증하기", "키워드 알림", "모아보기", "당근가계부", "관심 카테고리 설정"],
@@ -25,7 +26,7 @@ final class MyKarrotViewController: UIViewController {
     private let statusBarView = UIView(frame: CGRect(x:0, y:0, width: UIScreen.main.bounds.width, height: UIApplication.shared.statusBarFrame.height))
     private lazy var profileView = MyKarrotHeaderView(width: self.view.bounds.width, height: 230)
     private let titleLabel: UILabel = {
-       let lbl = UILabel()
+        let lbl = UILabel()
         lbl.text = "나의 당근"
         lbl.font = UIFont.boldSystemFont(ofSize: 20)
         lbl.textColor = .black
@@ -37,9 +38,9 @@ final class MyKarrotViewController: UIViewController {
     @objc func settingButtonDidTapped() {
         navigationController?.pushViewController(SettingViewController(), animated: true)
     }
-
+    
     // MARK: - LifeCycle
-   
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -96,31 +97,31 @@ extension MyKarrotViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section {
-            case 1:
-                return "나의 활동"
-            case 2:
-                return "우리 동네"
-            case 3:
-                return "사장님 메뉴"
-            case 4:
-                return "기타"
-            default:
-                return nil
+        case 1:
+            return "나의 활동"
+        case 2:
+            return "우리 동네"
+        case 3:
+            return "사장님 메뉴"
+        case 4:
+            return "기타"
+        default:
+            return nil
         }
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
-            case 1:
-                return 6
-            case 2:
-                return 6
-            case 3:
-                return 2
-            case 4:
-                return 4
-            default:
-                return 0
+        case 1:
+            return 6
+        case 2:
+            return 6
+        case 3:
+            return 2
+        case 4:
+            return 4
+        default:
+            return 0
         }
     }
     
@@ -129,7 +130,7 @@ extension MyKarrotViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         let targetImage = myProfileTableImageList[indexPath.section - 1][indexPath.row]
         let targetText = myProfileTableList[indexPath.section - 1][indexPath.row]
-       
+        
         cell.imageView?.image = UIImage(named: targetImage)
         cell.textLabel?.text = targetText
         
@@ -179,6 +180,7 @@ extension MyKarrotViewController: ProfileViewDelegate {
         guard let user = user else { return }
         
         profileView.configureUser(nickname: user.nickname)
+<<<<<<< HEAD
             
         guard let url = user.profileImageUrl else { return }
         
@@ -214,7 +216,6 @@ extension MyKarrotViewController: ProfileViewDelegate {
                     print(error)
             }
         }
-        
         navigationController?.pushViewController(profileEditingVC, animated: true)
     }
     
