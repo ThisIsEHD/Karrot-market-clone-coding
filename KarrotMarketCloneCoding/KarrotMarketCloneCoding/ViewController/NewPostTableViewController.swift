@@ -9,7 +9,7 @@ import UIKit
 import PhotosUI
 import Alamofire
 
-final class NewPostTableViewController: UIViewController {
+class NewPostTableViewController: UIViewController {
     
     private var selectedImages: [UIImage] = [UIImage]() {
         
@@ -45,6 +45,11 @@ final class NewPostTableViewController: UIViewController {
         view.backgroundColor = .systemBackground
         setupNaviBar()
         setupNewPostTableView()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
     }
     
     private func setupNaviBar() {

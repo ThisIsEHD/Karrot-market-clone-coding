@@ -90,15 +90,15 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
     
     convenience init(productId: Int?) {
         self.init()
-    
+        
         Network.shared.fetchItem(id: productId!) { [self] result in
             switch result {
-                case .success(let item):
-                    
-                    self.item = item
-                case .failure(let error):
-                    /// 에러별 다른처리?
-                    print(error)
+            case .success(let item):
+                
+                self.item = item
+            case .failure(let error):
+                /// 에러별 다른처리?
+                print(error)
             }
         }
     }
@@ -107,6 +107,7 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
         super.viewDidLoad()
         
         itemDetailViewBottomStickyView.delegate = self
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "verticalDots"), style: .plain, target: self, action: #selector(showExtraWorks))
         configureViews()
         setConstraints()
     }
@@ -114,6 +115,29 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
+//        ehd: 🛑 현재는 iamges.count가 항상 0 이 아니라 nil 이 나옴. 네트워킹 속도가 뷰를 구성하는 속도보다 느려서 그런듯. 차후 skeleton view 등을 적용하며 네트워킹 이후에 뷰를 구성하도록 해서 iamges의 유무에 따라 navigationbar.backgroundcolor 와 tintcolor를 달리해야 함. 실제 당근에서 (라이트모드일때. 우리는 라이트만 하고있으니) 이미지가 없을 때는 navigationbar.backgroundcolor의 경우에는 white, 있을 때는 clear 이며 navigationbar.tintcolor의 경우에는 이미지 없을 때는 검(홈뷰컨에서의 색) -> 흰(네트워킹 이전) -> 검(네트워킹 이후) 이고, 이미지 있을 때는 검(홈뷰컨) -> 흰(네트워킹 이전, 이후) 이다. 참고로 당근에서는 백버튼만 디테일 뷰에 들어갈 때 상기의 틴트컬러에 변화에 따라 동적으로 아주빠르게 변경하며 표시하고 나머지 버튼들은 네트워킹이 끝난 후 최종 틴트컬러를 확정한 후 한꺼번에 띄운다.
+//        if item?.images?.count != 0 {
+//            print("📣📣")
+//            print(item?.images?.count)
+//            print(item?.images)
+            navigationController?.navigationBar.backgroundColor = .clear
+            navigationController?.navigationBar.tintColor = .white
+            navigationController?.navigationBar.shadowImage = UIImage()
+            navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+//
+            statusBarView.alpha = 0
+//        } else {
+//            print("📣")
+//            print(item?.images?.count)
+//            print(item?.images)
+//
+//            navigationController?.navigationBar.backgroundColor = .systemBackground
+//            navigationController?.navigationBar.tintColor = .label
+//            navigationController?.navigationBar.shadowImage = UIImage()
+//            navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+//        }
+//
+        gradient.isHidden = false
         tabBarController?.tabBar.isHidden = true
     }
     
@@ -121,27 +145,59 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
         super.viewWillDisappear(animated)
         
         tabBarController?.tabBar.isHidden = false
-        statusBarView.backgroundColor = .systemBackground
+        statusBarView.backgroundColor = .white
         statusBarView.alpha = 1
+//
+//        navigationController?.navigationBar.backgroundColor = .systemBackground
+//        navigationController?.navigationBar.tintColor = .black
+//        navigationController?.navigationBar.shadowImage = .none
+        
         
         navigationController?.navigationBar.backgroundColor = .systemBackground
         navigationController?.navigationBar.tintColor = .black
         navigationController?.navigationBar.shadowImage = .none
+        gradient.isHidden = true
     }
     
     // MARK: - Actions
-   
+    
+    @objc private func showExtraWorks() {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let modifyAction = UIAlertAction(title: "게시글 수정", style: .default) { _ in
+            
+            let nextVC = NewPostTableViewController()
+            let nav = UINavigationController(rootViewController: nextVC)
+            
+            nav.navigationBar.barTintColor = .label
+            nav.modalPresentationStyle  = .fullScreen
+            
+            nextVC.doneButtonTapped = { [weak self] in
+                
+//                Put api 호출 및 해당 수정사항이 반영된 ItemDetailVC로 정보 변경
+            }
+            
+            self.present(nav, animated: true)
+        }
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+        
+        alert.addAction(modifyAction)
+        alert.addAction(cancelAction)
+        
+        present(alert, animated: true)
+    }
+    
     func addWishList() {
         
         guard let itemID = item?.id, let userID = item?.userId else { return }
         
         Network.shared.addWishItem(id: itemID, of: userID) { [unowned self] result in
             switch result {
-                case .success:
-                    itemDetailViewBottomStickyView.getWishButton().isSelected = true
-                    return
-                case .failure(let error):
-                    print(error)
+            case .success:
+                itemDetailViewBottomStickyView.getWishButton().isSelected = true
+                return
+            case .failure(let error):
+                print(error)
             }
         }
     }
@@ -152,11 +208,11 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
         
         Network.shared.deleteWishItem(id: itemID, of: userID) { [unowned self] result in
             switch result {
-                case .success:
-                    itemDetailViewBottomStickyView.getWishButton().isSelected = false
-                    return
-                case .failure(let error):
-                    print(error)
+            case .success:
+                itemDetailViewBottomStickyView.getWishButton().isSelected = false
+                return
+            case .failure(let error):
+                print(error)
             }
         }
     }
@@ -189,42 +245,43 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
         itemDetailViewContentsTableView.addSubview(itemImagesCollectionView)
         itemDetailViewContentsTableView.addSubview(itemImagesCollectionViewPageControl)
         
-        statusBarView.backgroundColor = .systemBackground
-        statusBarView.alpha = 0
-        
         view.addSubview(itemDetailViewContentsTableView)
         view.addSubview(itemDetailViewBottomStickyView)
         view.addSubview(statusBarView)
     }
     
     func setNavigation(_ sender: UITableView) {
-        if sender.contentOffset.y >= 300 {
-            
-            navigationController?.navigationBar.backgroundColor = .systemBackground
-            navigationController?.navigationBar.tintColor = .black
-            navigationController?.navigationBar.shadowImage = .none
-            
-            statusBarView.alpha = 1
-            gradient.isHidden = true
-        } else {
-            if item?.images?.count == nil {
-                
-                navigationController?.navigationBar.backgroundColor = .systemBackground
-                navigationController?.navigationBar.tintColor = .black
-                navigationController?.navigationBar.shadowImage = .none
-                
-                statusBarView.alpha = 1
-                gradient.isHidden = false
+        if item?.images?.count != nil {
+            if sender.contentOffset.y >= 300 {
+                let appearance = UINavigationBarAppearance()
+                appearance.configureWithDefaultBackground()
+                appearance.backgroundColor = .systemBackground
+                appearance.backgroundEffect = .none
+                navigationController?.navigationBar.tintColor = .label
+                self.navigationItem.standardAppearance = appearance
+                self.navigationItem.scrollEdgeAppearance = appearance
+                gradient.isHidden = true
             } else {
-                
-                navigationController?.navigationBar.backgroundColor = .clear
-                navigationController?.navigationBar.tintColor = .white
-                navigationController?.navigationBar.shadowImage = UIImage()
-                navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-                
-                statusBarView.alpha = 0
+                let appearance = UINavigationBarAppearance()
+                appearance.configureWithTransparentBackground()
+                appearance.backgroundEffect = .none
+                appearance.shadowColor = .clear
+                appearance.shadowImage = UIImage()
+                navigationController?.navigationBar.tintColor = .systemBackground
+                self.navigationItem.standardAppearance = appearance
+                self.navigationItem.scrollEdgeAppearance = appearance
                 gradient.isHidden = false
             }
+        } else {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithDefaultBackground()
+            appearance.backgroundColor = .systemBackground
+            appearance.backgroundEffect = .none
+    //                appearance.shadowColor = .clear
+    //                appearance.shadowImage = UIImage()
+            self.navigationItem.standardAppearance = appearance
+            self.navigationItem.scrollEdgeAppearance = appearance
+            gradient.isHidden = false
         }
     }
     
@@ -261,12 +318,12 @@ extension ItemDetailViewController: UICollectionViewDataSource {
         
         Network.shared.fetchImage(url: url) { result in
             switch result {
-                case .success(let image):
-                    DispatchQueue.main.async {
-                        cell.imageView.image = image
-                    }
-                case .failure(let error):
-                    print(error)
+            case .success(let image):
+                DispatchQueue.main.async {
+                    cell.imageView.image = image
+                }
+            case .failure(let error):
+                print(error)
             }
         }
         return cell
@@ -292,46 +349,46 @@ extension ItemDetailViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.row {
-            case 0:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewProfileCell", for: indexPath) as! ItemDetailViewProfileCell
-                cell.selectionStyle = .none
-                
-                guard let url = item?.profileImage else {
-                    cell.setProfile(nickname: item?.nickname, image: nil)
-                    return cell }
-                
-                Network.shared.fetchImage(url: url) {[unowned self] result in
-                    switch result {
-                        case .success(let image):
-                            cell.setProfile(nickname: item?.nickname, image: image)
-                        case .failure(let error):
-                            print(error)
-                    }
+        case 0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewProfileCell", for: indexPath) as! ItemDetailViewProfileCell
+            cell.selectionStyle = .none
+            
+            guard let url = item?.profileImage else {
+                cell.setProfile(nickname: item?.nickname, image: nil)
+                return cell }
+            
+            Network.shared.fetchImage(url: url) {[unowned self] result in
+                switch result {
+                case .success(let image):
+                    cell.setProfile(nickname: item?.nickname, image: image)
+                case .failure(let error):
+                    print(error)
                 }
-                return cell
-                
-            case 1:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewDescriptionCell", for: indexPath) as! ItemDetailViewDescriptionCell
-                cell.selectionStyle = .none
-                cell.setDescription(itemName: item?.title ?? "", category: item?.categoryId ?? 0, content: item?.content ?? "", wishs: item?.wishes ?? 0, views: item?.views ?? 0)
-                return cell
-            case 2:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewOtherPostsCell", for: indexPath) as! ItemDetailViewOtherItemsCell
-                cell.selectionStyle = .none
-                if let nickname = item?.nickname {
-                    cell.tableTitlelabel.text = "\(nickname)님의 판매 상품"
-                }
-                return cell
-            case 3:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewOtherPostsCell", for: indexPath) as! ItemDetailViewOtherItemsCell
-                cell.selectionStyle = .none
-                if let nickname = item?.nickname {
-                    cell.tableTitlelabel.text = "\(nickname)님, 이건어때요?"
-                }
-              
-                return cell
-            default:
-                return UITableViewCell()
+            }
+            return cell
+            
+        case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewDescriptionCell", for: indexPath) as! ItemDetailViewDescriptionCell
+            cell.selectionStyle = .none
+            cell.setDescription(itemName: item?.title ?? "", category: item?.categoryId ?? 0, content: item?.content ?? "", wishs: item?.wishes ?? 0, views: item?.views ?? 0)
+            return cell
+        case 2:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewOtherPostsCell", for: indexPath) as! ItemDetailViewOtherItemsCell
+            cell.selectionStyle = .none
+            if let nickname = item?.nickname {
+                cell.tableTitlelabel.text = "\(nickname)님의 판매 상품"
+            }
+            return cell
+        case 3:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewOtherPostsCell", for: indexPath) as! ItemDetailViewOtherItemsCell
+            cell.selectionStyle = .none
+            if let nickname = item?.nickname {
+                cell.tableTitlelabel.text = "\(nickname)님, 이건어때요?"
+            }
+            
+            return cell
+        default:
+            return UITableViewCell()
         }
     }
 }
@@ -342,7 +399,7 @@ extension ItemDetailViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         if scrollView == itemImagesCollectionView {
-
+            
             let width = scrollView.bounds.size.width
             let x = scrollView.contentOffset.x + (width/2.0)
             let newPage = Int(x / width)

@@ -45,6 +45,39 @@ final class HomeViewController: UIViewController {
         return btn
     }()
     
+    // MARK: - Life Cycle
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = .systemBackground
+        
+        
+        configureItemTableView()
+        configureTableViewDiffableDataSource()
+        reloadTableViewData()
+        configureAddButton()
+        
+        setConstraints()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        configureNavigationBar()
+        configureNavigationItems()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationItem.standardAppearance = nil
+        self.navigationItem.scrollEdgeAppearance = nil
+//        let appearance = UINavigationBarAppearance()
+//        appearance.configureWithDefaultBackground()
+//        appearance.backgroundColor = .clear
+//        self.navigationItem.standardAppearance = appearance
+//        self.navigationItem.scrollEdgeAppearance = appearance
+    }
+    
     // MARK: - Actions
     
     @objc func searchButtonDidTapped() {
@@ -84,25 +117,8 @@ final class HomeViewController: UIViewController {
         present(nav, animated: true, completion: nil)
     }
     
-    // MARK: - Life Cycle
-    
     private func configureAddButton() {
         view.addSubview(addPostButton)
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        view.backgroundColor = .systemBackground
-        
-        configureNavigationBar()
-        configureNavigationItems()
-        configureItemTableView()
-        configureTableViewDiffableDataSource()
-        reloadTableViewData()
-        configureAddButton()
-        
-        setConstraints()
     }
     
     // MARK: - DiffableDataSource
@@ -135,11 +151,11 @@ final class HomeViewController: UIViewController {
     }
     
     private func configureNavigationBar() {
-//        let appearance = UINavigationBarAppearance()
-//        appearance.configureWithOpaqueBackground()
-//        appearance.backgroundColor = .white
-//        self.navigationItem.standardAppearance = appearance
-//        self.navigationItem.scrollEdgeAppearance = appearance
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .white
+        self.navigationItem.standardAppearance = appearance
+        self.navigationItem.scrollEdgeAppearance = appearance
     }
     
     private func configureNavigationItems() {
