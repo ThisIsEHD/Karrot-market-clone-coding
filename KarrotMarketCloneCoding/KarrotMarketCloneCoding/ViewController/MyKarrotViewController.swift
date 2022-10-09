@@ -9,8 +9,8 @@ import UIKit
 import Alamofire
 
 final class MyKarrotViewController: UIViewController {
-    
     // MARK: - Properties
+    
     private var user: User?
     private var userImage: UIImage?
     
@@ -24,9 +24,7 @@ final class MyKarrotViewController: UIViewController {
                                            ["shop", "megaphone"],
                                            ["email", "microphone", "support", "setting"]]
     private let statusBarView = UIView(frame: CGRect(x:0, y:0, width: UIScreen.main.bounds.width, height: UIApplication.shared.statusBarFrame.height))
-    
     private lazy var profileView = MyKarrotHeaderView(width: self.view.bounds.width, height: 230)
-    
     private let titleLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = "나의 당근"
@@ -36,6 +34,7 @@ final class MyKarrotViewController: UIViewController {
     }()
     
     // MARK: - Actions
+    
     @objc func settingButtonDidTapped() {
         navigationController?.pushViewController(SettingViewController(), animated: true)
     }
@@ -49,9 +48,7 @@ final class MyKarrotViewController: UIViewController {
         
         configureUserInfo(of: user)
         setupNavigationItems()
-        configureTableView()
-        statusBarView.backgroundColor = .systemBackground
-        view.addSubview(statusBarView)
+        configureViews()
         setTableViewConstraints()
     }
     
@@ -61,14 +58,17 @@ final class MyKarrotViewController: UIViewController {
     }
     
     // MARK: - Setup NavigationItems
+    
     private func setupNavigationItems() {
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleLabel)
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "setting"), style: .plain, target: self, action: #selector(settingButtonDidTapped))
     }
     
-    // MARK: - Configure TableView
-    private func configureTableView() {
+    // MARK: - Configure Views
+    
+    private func configureViews() {
         view.addSubview(tableView)
+        view.addSubview(statusBarView)
         
         tableView.delegate = self
         tableView.dataSource = self
@@ -76,9 +76,12 @@ final class MyKarrotViewController: UIViewController {
         tableView.register(MyKarrotTableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "Header")
         tableView.separatorStyle = .none
         tableView.tableHeaderView = profileView
+        
+        statusBarView.backgroundColor = .systemBackground
     }
     
     // MARK: - Setting TableView Constraints
+    
     private func setTableViewConstraints() {
         tableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
     }
@@ -123,12 +126,14 @@ extension MyKarrotViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         let targetImage = myProfileTableImageList[indexPath.section - 1][indexPath.row]
         let targetText = myProfileTableList[indexPath.section - 1][indexPath.row]
         
         cell.imageView?.image = UIImage(named: targetImage)
         cell.textLabel?.text = targetText
+        
         return cell
     }
 }
@@ -145,17 +150,22 @@ extension MyKarrotViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "Header")!
         let backgroundView = UIView(frame: header.bounds)
+        
         backgroundView.backgroundColor = .systemBackground
         header.backgroundView = backgroundView
         header.textLabel?.font = UIFont.systemFont(ofSize: 15, weight: .bold)
         header.textLabel?.textColor = .black
+        
         return header
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         let vc = UIViewController()
+        
         vc.view.backgroundColor = .systemBackground
         navigationController?.pushViewController(vc, animated: true)
         tableView.deselectRow(at: indexPath, animated: false)
@@ -166,34 +176,62 @@ extension MyKarrotViewController: UITableViewDelegate {
 extension MyKarrotViewController: ProfileViewDelegate {
     
     func configureUserInfo(of user: User?) {
+        
         guard let user = user else { return }
+        
         profileView.configureUser(nickname: user.nickname)
-        DispatchQueue.global().async {
-            guard let url = user.profileImageUrl else {
-                print(#function, "url is nil")
-                return
-            }
-            Network.shared.fetchImage(url: url) { result in
-                switch result {
+<<<<<<< HEAD
+            
+        guard let url = user.profileImageUrl else { return }
+        
+        Network.shared.fetchImage(url: url) { result in
+            switch result {
                 case .success(let image):
                     self.profileView.configureUser(image: image)
-                    self.userImage = image
-                case .failure(_):
-                    print("error method:", #function)
-                }
+                case .failure(let error):
+                    /// 에러별 다른처리?
+                    print(error)
             }
         }
     }
     
     func goToMyProfileVC() {
+        
         let profileEditingVC = ProfileEditingViewController()
         
-        profileEditingVC.nickName = user?.nickname
-        profileEditingVC.profileImage = userImage
+        profileEditingVC.profileEditingView.nicknameTextField.text = user?.nickname
+        profileEditingVC.originNickname = user?.nickname
+        
+        guard let url = user?.profileImageUrl else {
+            navigationController?.pushViewController(profileEditingVC, animated: true)
+            return
+        }
+        
+        Network.shared.fetchImage(url: url) { result in
+            switch result {
+                case .success(let image):
+                    profileEditingVC.profileEditingView.imagePickerView.image = image
+                case .failure(let error):
+                    /// 에러별 다른처리?
+                    print(error)
+            }
+        }
         navigationController?.pushViewController(profileEditingVC, animated: true)
     }
     
-    func selectedItemTableVC() {
+    func selectedItemTableVC(_ title: ListTitle) {
+        switch title {
+            case .selling:
+                let itemTableVC = UserItemTableViewController(userId: user?.id, navigationTitle: title)
+                navigationController?.pushViewController(itemTableVC, animated: true)
+            case .buy:
+                let itemTableVC = UserItemTableViewController(userId: user?.id, navigationTitle: title)
+                navigationController?.pushViewController(itemTableVC, animated: true)
+            case .wish:
+                let itemTableVC = UserItemTableViewController(userId: user?.id, navigationTitle: title)
+                navigationController?.pushViewController(itemTableVC, animated: true)
+            default:
+                return
+        }
     }
-    
 }

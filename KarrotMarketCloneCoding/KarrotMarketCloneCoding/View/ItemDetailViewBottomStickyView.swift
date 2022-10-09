@@ -10,48 +10,63 @@ import UIKit
 class ItemDetailViewBottomStickyView: UIView {
     // MARK: - Properties
     
+    weak var delegate: WishButtonDelegate?
+    
     private let separaterLine: UIView = {
+        
         let v = UIView()
+        
         v.backgroundColor = .systemGray4
+        
         return v
     }()
-    
     private let wishButton: UIButton = {
+        
         let btn = UIButton()
+        
         btn.setImage(UIImage(named: "wish-gray"), for: .normal)
         btn.setImage(UIImage(named: "wish-karrot"), for: .selected)
+        
         return btn
     }()
-    
     private lazy var stackView: UIStackView = {
+        
         let sv = UIStackView(arrangedSubviews: [priceLabel, priceOfferButton])
+        
         sv.contentMode = .left
         sv.axis = .vertical
         sv.distribution = .fillEqually
         sv.spacing = 2
+        
         return sv
     }()
-    
     private let priceLabel: UILabel = {
+        
         let lbl = UILabel()
+        
         lbl.text = "0 원"
         lbl.font = UIFont.boldSystemFont(ofSize: 16)
+        
         return lbl
     }()
-    
     private let priceOfferButton: UIButton = {
+        
         let btn = UIButton()
+        
         btn.setTitle("가격제안불가", for: .normal)
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         btn.setTitleColor(.systemGray2, for: .normal)
+        
         return btn
     }()
-    
     private let chatButton: UIButton = {
+        
         let btn = UIButton()
+        
         btn.setTitle("채팅하기", for: .normal)
         btn.backgroundColor = .orange
         btn.layer.cornerRadius = 10
+        
         return btn
     }()
     
@@ -73,7 +88,16 @@ class ItemDetailViewBottomStickyView: UIView {
     // MARK: - Actions
     
     @objc func wishButtonDidTapped() {
-        wishButton.isSelected.toggle()
+        
+        if !wishButton.isSelected {
+            delegate?.addWishList()
+        } else {
+            delegate?.deleteWishList()
+        }
+    }
+    
+    func getWishButton() -> UIButton {
+        return wishButton
     }
     
     func configure(price: Int?) {
@@ -82,6 +106,7 @@ class ItemDetailViewBottomStickyView: UIView {
     
     //  MARK: - configure Views
     func configureViews() {
+        
         self.backgroundColor = .systemBackground
         self.addSubview(separaterLine)
         self.addSubview(wishButton)
@@ -91,6 +116,7 @@ class ItemDetailViewBottomStickyView: UIView {
     
     // MARK: - Setting Constraints
     func setConstraints() {
+        
         separaterLine.anchor(top: self.topAnchor, leading: self.leadingAnchor, trailing: self.trailingAnchor, height: 0.7)
         wishButton.anchor(leading: self.leadingAnchor, leadingConstant: 20, width: 20, height: 20)
         wishButton.centerY(inView: stackView)

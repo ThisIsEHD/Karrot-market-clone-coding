@@ -11,9 +11,7 @@ import UIKit
 final class photosCollectionView: UICollectionView {
     
     var images: [UIImage?] = [] {
-        didSet {
-            reloadData()
-        }
+        didSet { reloadData() }
     }
     var photoPickerCellTapped: (photosCollectionView) -> () = { sender in }
     
@@ -31,6 +29,7 @@ final class photosCollectionView: UICollectionView {
     }
     
     private func registerCells() {
+        
         let pickerCellNib = UINib(nibName: "PhotoPickerCollectionViewCell", bundle: nil)
         let photosCellNib = UINib(nibName: "PhotosCollectionViewCell", bundle: nil)
         
@@ -42,7 +41,6 @@ final class photosCollectionView: UICollectionView {
 extension photosCollectionView: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
         return images.count + 1
     }
     

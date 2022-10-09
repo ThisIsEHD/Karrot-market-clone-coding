@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 struct FetchedItemsList: Codable, Hashable {
+    
     let keyword: String?
     let category: Int?
     let size: Int
@@ -21,7 +22,9 @@ struct FetchedItemsList: Codable, Hashable {
 }
 
 // MARK: - Item
+
 struct Item: Codable {
+    
     var id: Int?
     var title: String?
     var content: String?
@@ -32,7 +35,10 @@ struct Item: Codable {
     let wishes: Int?
     let userId: String?
     let nickname: String?
+    let profileImage: String?
+    let thumbnail: String?
     var images: [Image]?
+
 }
 
 extension Item: Hashable {
@@ -46,7 +52,9 @@ extension Item: Hashable {
 }
 
 // MARK: - Image
+
 struct Image: Codable, Hashable {
+    
     let id, itemID, sequence: Int
     let url: String
     

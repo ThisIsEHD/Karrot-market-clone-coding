@@ -34,10 +34,12 @@ class SignUpViewController: UIViewController {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
+        
         view.endEditing(true)
     }
     
     @objc private func doneButtonTapped() {
+        
         validateCheck(RealView.emailTextField)
         validateCheck(RealView.passwordTextField)
         checkDoneButtonPossible()
@@ -48,6 +50,7 @@ class SignUpViewController: UIViewController {
     }
     
     internal func configureNextScene() {
+        
         guard let email = RealView.emailTextField.text else { return }
         guard let password = RealView.passwordTextField.text else { return }
         
@@ -78,6 +81,7 @@ class SignUpViewController: UIViewController {
     }
     
     private func checkDoneButtonPossible() {
+        
         RealView.signButton.backgroundColor = emailValidationOkay && passwordValidationOkay ? UIColor.appColor(.carrot) : .systemGray
         RealView.signButton.isEnabled = emailValidationOkay && passwordValidationOkay ? true : false
     }
@@ -94,6 +98,7 @@ class SignUpViewController: UIViewController {
 
 extension SignUpViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
         if textField == RealView.emailTextField {
             RealView.passwordTextField.becomeFirstResponder()
         } else {
@@ -115,6 +120,7 @@ extension SignUpViewController: UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
         validateCheck(textField)
         checkDoneButtonPossible()
         return true

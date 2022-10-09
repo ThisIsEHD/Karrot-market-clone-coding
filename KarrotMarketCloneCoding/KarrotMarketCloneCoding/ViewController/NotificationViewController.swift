@@ -67,6 +67,7 @@ extension NotificationViewController: UITableViewDataSource {
 
 extension NotificationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        
         if editingStyle == .delete {
             
             tableView.performBatchUpdates {
@@ -77,6 +78,7 @@ extension NotificationViewController: UITableViewDelegate {
             }
         }
     }
+    
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         .delete
     }

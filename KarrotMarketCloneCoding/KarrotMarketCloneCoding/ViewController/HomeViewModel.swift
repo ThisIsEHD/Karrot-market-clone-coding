@@ -50,10 +50,96 @@ class HomeViewModel {
                             }
                         }
                     }
-                case .failure:
-                    print("서버에러")   //홈뷰컨에 얼럿 띄워야
+                case .failure(let error):
+                    /// 에러별 다른처리?
+                    print(error)   //홈뷰컨에 얼럿 띄워야
             }
+        }
+    }
+    
+    func fetchUserSellingItems(userId: String, lastId: Int? = nil, completion: (() -> Void)? = nil) {
+        guard isViewBusy == false else { return }
+        
+        isViewBusy = true
+        Network.shared.fetchUserSellingItems(of: userId, lastId: lastId) { [weak self] result in
+            switch result {
+                case .success(let list):
+                    guard let weakSelf = self else { return }
+                    guard var snapshot = weakSelf.dataSource?.snapshot() else { return }
+                    
+                    if let _ = completion {
+                        snapshot.deleteAllItems()
+                    }
+                    
+                    DispatchQueue.global(qos: .background).async {
+                        self?.dataSource?.apply(snapshot, animatingDifferences: false)
+                        if let items = list?.items {
+                            
+                            if snapshot.numberOfSections == 0 {
+                                snapshot.appendSections([.main])
+                            }
             
+                            snapshot.appendItems(items)
+                            weakSelf.lastItemID = items.last?.id
+                            weakSelf.isViewBusy = false
+                            
+                            DispatchQueue.global(qos: .background).async {
+                                weakSelf.dataSource?.apply(snapshot, animatingDifferences: false)
+                                if let completion = completion {
+                                    DispatchQueue.main.async {
+                                        completion()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                case .failure(let error):
+                    /// 에러별 다른처리?
+                    print(error)   //홈뷰컨에 얼럿 띄워야
+            }
+        }
+    }
+    
+    func fetchUserWishItems(userId: String, lastId: Int? = nil, completion: (() -> Void)? = nil) {
+        guard isViewBusy == false else { return }
+        
+        isViewBusy = true
+        Network.shared.fetchUserWishItems(of: userId, lastId: lastId) { [weak self] result in
+            switch result {
+                case .success(let list):
+                    guard let weakSelf = self else { return }
+                    guard var snapshot = weakSelf.dataSource?.snapshot() else { return }
+                    
+                    if let _ = completion {
+                        snapshot.deleteAllItems()
+                    }
+                    
+                    DispatchQueue.global(qos: .background).async {
+                        self?.dataSource?.apply(snapshot, animatingDifferences: false)
+                        if let items = list?.items {
+                            
+                            if snapshot.numberOfSections == 0 {
+                                snapshot.appendSections([.main])
+                            }
+            
+                            snapshot.appendItems(items)
+                            weakSelf.lastItemID = items.last?.id
+                            weakSelf.isViewBusy = false
+                            
+                            DispatchQueue.global(qos: .background).async {
+                                weakSelf.dataSource?.apply(snapshot, animatingDifferences: false)
+                                if let completion = completion {
+                                    DispatchQueue.main.async {
+                                        completion()
+                                    }
+                                }
+                            }
+                        }
+                    }
+                case .failure(let error):
+                    /// 에러별 다른처리?
+                    print(error)   //홈뷰컨에 얼럿 띄워야
+            }
         }
     }
 }

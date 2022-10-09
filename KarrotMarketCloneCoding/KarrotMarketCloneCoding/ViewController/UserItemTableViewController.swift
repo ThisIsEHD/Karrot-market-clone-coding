@@ -1,21 +1,20 @@
 //
-// HomeViewController.swift
+//  UserItemTableViewController.swift
 //  KarrotMarketCloneCoding
 //
-//  Created by 서동운 on 2022/07/21.
+//  Created by 서동운 on 2022/10/05.
 //
 
 import UIKit
-import Alamofire
 
-typealias DataSource = UITableViewDiffableDataSource<Section, Item>
-typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
-
-final class HomeViewController: UIViewController {
+class UserItemTableViewController: UIViewController {
     // MARK: - Properties
+    
     
     var viewModel = HomeViewModel()
     var isViewBusy = true
+    private var userId: String?
+    private var navigationTitle: ListTitle?
     private var dataSource: DataSource!
     private var snapshot = Snapshot()
     
@@ -30,64 +29,12 @@ final class HomeViewController: UIViewController {
         return tv
     }()
     
-    private lazy var addPostButton: UIButton = {
-        
-        let btn = UIButton(frame: CGRect(x: 0, y: 0, width: 70, height: 70))
-        let image = UIImage(systemName: "plus.circle.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 60, weight: .medium))
-        
-        btn.backgroundColor = .white
-        btn.layer.cornerRadius = 60 / 2
-        btn.clipsToBounds = true
-        btn.setImage(image, for: .normal)
-        btn.tintColor = UIColor.appColor(.carrot)
-        btn.addTarget(self, action: #selector(addButtonDidTapped), for: .touchUpInside)
-
-        return btn
-    }()
-    
-    // MARK: - Actions
-    
-    @objc func searchButtonDidTapped() {
-        
-        let searchVC = SearchViewController()
-        
-        navigationController?.pushViewController(searchVC, animated: true)
-    }
-    
-    @objc func notiButtonDidTapped() {
-        
-        let notificationVC = NotificationViewController()
-        
-        navigationController?.pushViewController(notificationVC, animated: true)
-    }
-    
-    @objc func addButtonDidTapped() {
-        
-        let newPostVC = NewPostTableViewController()
-        let nav = UINavigationController(rootViewController: newPostVC)
-        
-        nav.navigationBar.barTintColor = .label
-        nav.modalPresentationStyle  = .fullScreen
-        
-        newPostVC.doneButtonTapped = { [weak self] in
-            
-            guard let weakSelf = self else { return }
-            
-            weakSelf.viewModel.isViewBusy = false
-            weakSelf.viewModel.lastItemID = nil
-            
-            let job = { weakSelf.reloadTableViewData() }
-            
-            weakSelf.viewModel.loadData(lastID: weakSelf.viewModel.lastItemID, completion: job)
-        }
-        
-        present(nav, animated: true, completion: nil)
-    }
-    
     // MARK: - Life Cycle
     
-    private func configureAddButton() {
-        view.addSubview(addPostButton)
+    convenience init(userId: String?, navigationTitle: ListTitle?) {
+        self.init()
+        self.userId = userId
+        self.navigationTitle = navigationTitle
     }
     
     override func viewDidLoad() {
@@ -96,11 +43,10 @@ final class HomeViewController: UIViewController {
         view.backgroundColor = .systemBackground
         
         configureNavigationBar()
-        configureNavigationItems()
+        setupNavigation()
         configureItemTableView()
         configureTableViewDiffableDataSource()
         reloadTableViewData()
-        configureAddButton()
         
         setConstraints()
     }
@@ -122,7 +68,16 @@ final class HomeViewController: UIViewController {
     func reloadTableViewData() {
         
         viewModel.isViewBusy = false
-        viewModel.loadData(lastID: viewModel.lastItemID)
+        switch navigationTitle {
+            case .selling:
+                viewModel.fetchUserSellingItems(userId: userId!, lastId: viewModel.lastItemID)
+            case .buy:
+                return
+            case .wish:
+                viewModel.fetchUserWishItems(userId: userId!, lastId: viewModel.lastItemID)
+            case .none:
+                return
+        }
     }
     
     // MARK: - Configure UI
@@ -141,37 +96,23 @@ final class HomeViewController: UIViewController {
 //        self.navigationItem.standardAppearance = appearance
 //        self.navigationItem.scrollEdgeAppearance = appearance
     }
-    
-    private func configureNavigationItems() {
-        navigationItem.rightBarButtonItems = [
-            UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonDidTapped)),
-            UIBarButtonItem(image: UIImage(named: "bell"), style: .plain, target: self, action: #selector(notiButtonDidTapped))]
-    }
         
     // MARK: - Setup NavigationItems
     
-    private func setupNavigationItems() {
-        
-        let searchBarButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonDidTapped))
-        let notiBarButton = UIBarButtonItem(image: UIImage(named: "bell"), style: .plain, target: self, action: #selector(notiButtonDidTapped))
-        
-        searchBarButton.tintColor = .label
-        notiBarButton.tintColor = .label
-        
-        navigationItem.rightBarButtonItems = [ searchBarButton, notiBarButton ]
+    private func setupNavigation() {
+        navigationItem.title = navigationTitle?.rawValue
     }
     
     // MARK: - Setting Constraints
     private func setConstraints() {
         
         itemTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
-        addPostButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, bottomConstant: 10, trailing: view.trailingAnchor, trailingConstant: 20)
     }
 }
 
 // MARK: - UITableViewDelegate
 
-extension HomeViewController: UITableViewDelegate {
+extension UserItemTableViewController: UITableViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
@@ -197,6 +138,7 @@ extension HomeViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         let id = viewModel.dataSource?.itemIdentifier(for: indexPath)?.id
         let vc = ItemDetailViewController(productId: id)
         navigationController?.pushViewController(vc, animated: true)

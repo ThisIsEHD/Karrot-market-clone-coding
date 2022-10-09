@@ -9,44 +9,54 @@ import UIKit
 
 class ItemDetailViewDescriptionCell: UITableViewCell {
     // MARK: - Properties
+    
     private let itemNameLabel: UILabel = {
+        
         let lbl = UILabel()
-        lbl.text = "애플 충전기"
+        
         lbl.font = UIFont.boldSystemFont(ofSize: 20)
+        
         return lbl
     }()
-    
     private let itemCategoryButton: UIButton = {
+        
         let btn = UIButton()
-        let attributedString = NSMutableAttributedString(string: "디지털기기", attributes: [.underlineStyle: NSUnderlineStyle.single.rawValue, .font: UIFont.systemFont(ofSize: 13)])
+        let attributedString = NSMutableAttributedString(string: "", attributes: [.underlineStyle: NSUnderlineStyle.single.rawValue, .font: UIFont.systemFont(ofSize: 13)])
+        
         btn.setAttributedTitle(attributedString, for: .normal)
         btn.setTitleColor(UIColor.systemGray2, for: .normal)
+        
         return btn
     }()
-    
     private let itemDescriptionTextView: UITextView = {
+        
         let tv = UITextView()
-        tv.text = "미개봉 새제품입니다\n거래가능하시면 연락주세요\n장소는 아무데나 가능합니다."
+        
         tv.font = UIFont.systemFont(ofSize: 16)
         tv.isEditable = false
         tv.isSelectable = false
         tv.isScrollEnabled = false
         tv.textContainer.lineFragmentPadding = 0
+        
         return tv
     }()
-    
     private let extraInfoLabel: UILabel = {
+        
         let lbl = UILabel()
-        lbl.text = "0 chats, 0 favorites, 0 views"
+        
         lbl.font = UIFont.systemFont(ofSize: 13)
         lbl.textColor = .systemGray2
+        
         return lbl
     }()
+    
     // MARK: - Actions
     
     func setDescription(itemName: String, category: Int, content: String, wishs: Int, views: Int) {
-        itemNameLabel.text =  itemName
+        
         let attributeString = NSMutableAttributedString(string: "\(category)", attributes: [.underlineStyle: NSUnderlineStyle.single.rawValue, .font: UIFont.systemFont(ofSize: 13)])
+        
+        itemNameLabel.text =  itemName
         itemCategoryButton.setAttributedTitle(attributeString, for: .normal)
         itemDescriptionTextView.text = content
         extraInfoLabel.text = "0 chats, \(wishs) favorites, \(views) views"
@@ -56,6 +66,7 @@ class ItemDetailViewDescriptionCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
         configureViews()
         setConstraints()
     }
@@ -66,10 +77,12 @@ class ItemDetailViewDescriptionCell: UITableViewCell {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        
     }
+    
     // MARK: - Configure Views
+    
     private func configureViews() {
+        
         addSubview(itemNameLabel)
         addSubview(itemCategoryButton)
         addSubview(itemDescriptionTextView)
@@ -79,6 +92,7 @@ class ItemDetailViewDescriptionCell: UITableViewCell {
     // MARK: - Setting Constraints
     
     private func setConstraints() {
+        
         itemNameLabel.anchor(top: self.topAnchor, topConstant: 20, leading: self.leadingAnchor, leadingConstant: 15)
         itemCategoryButton.anchor(top: itemNameLabel.bottomAnchor, topConstant: 15, leading: itemNameLabel.leadingAnchor)
         itemDescriptionTextView.anchor(top: itemCategoryButton.bottomAnchor, topConstant: 15, leading: itemCategoryButton.leadingAnchor, trailing: self.trailingAnchor, trailingConstant: 20)

@@ -10,6 +10,7 @@ import AVFoundation
 
 final class TabbarController: UITabBarController {
     // MARK: - Properties
+    
     var user: User? {
         didSet {
             configureTabbarController()
@@ -17,13 +18,13 @@ final class TabbarController: UITabBarController {
     }
     var isLoggedIn = false
     
-    // MARK: - Life Cycle    
+    // MARK: - Life Cycle
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        if !isLoggedIn {
-            checkIfUserIsLoggedIn()
-        }
+        if !isLoggedIn { checkIfUserIsLoggedIn() }
+        
         NotificationCenter.default.addObserver(self, selector: #selector(logout), name: NotificationType.logout.name, object: nil)
     }
     
@@ -37,6 +38,7 @@ final class TabbarController: UITabBarController {
     // MARK: - Actions
    
     func presentUserCheckVC() {
+        
         DispatchQueue.main.async { [weak self] in
             
             let nav = UINavigationController(rootViewController: UserCheckViewController())
@@ -48,6 +50,7 @@ final class TabbarController: UITabBarController {
     
     private func checkIfUserIsLoggedIn() {
         print(#function)
+        
         let userId = UserDefaults.standard.object(forKey: Const.userId) as? String ?? ""
         let token = KeyChain.read(key: userId)
         
@@ -91,7 +94,9 @@ final class TabbarController: UITabBarController {
     }
     
     private func templateNavigationController(selectedImage: UIImage, unselectedImage: UIImage, rootViewController: UIViewController, title: String) -> UINavigationController {
+        
         let nav = UINavigationController(rootViewController: rootViewController)
+        
         nav.tabBarItem.image = unselectedImage
         nav.tabBarItem.selectedImage = selectedImage
         nav.navigationBar.tintColor = .black
@@ -100,6 +105,7 @@ final class TabbarController: UITabBarController {
         nav.navigationBar.isTranslucent = true
         nav.title = title
         nav.navigationBar.topItem?.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        
         return nav
     }
 }

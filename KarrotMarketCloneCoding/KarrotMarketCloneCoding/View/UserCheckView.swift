@@ -37,7 +37,6 @@ final class UserCheckView: UIView {
         
         return label
     }()
-    
     internal lazy var signUpButton: UIButton = {
         
         let button = UIButton(type: .system)
@@ -134,7 +133,7 @@ final class UserCheckView: UIView {
     private func setSignUpButtonLayout() {
         
         signUpButton.anchor(top: appDetailLabel.bottomAnchor,
-                            topConstant: CGFloat.getSize(of: .deviceHeight) / 4,
+                            topConstant: CGFloat.getSize(of: .deviceHeight) / 5,
                             leading: leadingAnchor,
                             leadingConstant: 5,
                             trailing: trailingAnchor,
@@ -152,7 +151,6 @@ final class UserCheckView: UIView {
     internal func setupLoginGestureRecognizer(target: UIViewController, selector: Selector) {
         
         let tapGestureRecognizer = UITapGestureRecognizer(target: target, action: selector)
-        
         loginLabel.addGestureRecognizer(tapGestureRecognizer)
     }
 }

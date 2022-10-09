@@ -12,12 +12,13 @@ import Alamofire
 final class NewPostTableViewController: UIViewController {
     
     private var selectedImages: [UIImage] = [UIImage]() {
+        
         didSet {
             maxChoosableImages = 10 - selectedImages.count
             newPostTableView.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
         }
     }
-    private var item = Item(id: nil, title: nil, content: nil, categoryId: nil, price: nil, regdate: nil, views: nil, wishes: nil, userId: nil, nickname: nil, images: nil)
+    private var item = Item(id: nil, title: nil, content: nil, categoryId: nil, price: nil, regdate: nil, views: nil, wishes: nil, userId: nil, nickname: nil, profileImage: nil, thumbnail: nil, images: nil)
     internal var maxChoosableImages = 10
     internal var doneButtonTapped: () -> () = { }
     
@@ -101,7 +102,7 @@ extension NewPostTableViewController {
     @objc func post() {
         view.endEditing(true)
         
-        Network.shared.registerItem(item: Item(id: nil, title: item.title, content: item.content, categoryId: item.categoryId, price: item.price, regdate: nil, views: nil, wishes: nil, userId: (UserDefaults.standard.object(forKey: Const.userId) as? String), nickname: nil, images: nil), images: selectedImages) { result in
+        Network.shared.registerItem(item: Item(id: nil, title: item.title, content: item.content, categoryId: item.categoryId, price: item.price, regdate: nil, views: nil, wishes: nil, userId: (UserDefaults.standard.object(forKey: Const.userId) as? String), nickname: nil, profileImage: nil, thumbnail: nil, images: nil), images: selectedImages) { result in
             
             switch result {
             case .success:

@@ -118,6 +118,7 @@ import PhotosUI
 //
 
 final class ProfileEditingViewController: ProfileSettingViewController {
+>>>>>>> main
     
     internal var nickName: String?
     override var isImageChanged: Bool {
@@ -129,17 +130,67 @@ final class ProfileEditingViewController: ProfileSettingViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+<<<<<<< HEAD
+        
+        title = "프로필 수정"
+        
+        profileEditingView.nicknameTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+        profileEditingView.setupTapGestures(target: self, selector: #selector(touchUpImageView))
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(close))
+        navigationItem.rightBarButtonItem?.isEnabled = false
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        setupNaviBar()
+    }
+    
+    @objc func touchUpImageView() {
+        setupImagePicker()
+=======
         print(isImageChanged)
         profileView.nicknameTextField.delegate = self
         tabBarController?.tabBar.isHidden = true
         profileView.nicknameTextField.text = nickName
         profileView.imagePickerView.image = profileImage
+>>>>>>> main
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
     }
     
+<<<<<<< HEAD
+    @objc func textFieldDidChange(_ sender: UITextField) {
+        
+        if originNickname != sender.text {
+            navigationItem.rightBarButtonItem?.isEnabled = true
+        } else {
+            navigationItem.rightBarButtonItem?.isEnabled = false
+        }
+    }
+    
+    @objc func close() {
+        
+        Network.shared.updateUserProfile(nickname: profileEditingView.nicknameTextField.text, image: profileImage) { result in
+            switch result {
+                case .success:
+                    print("update success")
+                    self.dismiss(animated: true, completion: nil)
+                case .failure(let error):
+                    print(error)
+                    /// 에러별 다른처리?
+            }
+        }
+    }
+}
+
+extension ProfileEditingViewController: PHPickerViewControllerDelegate {
+    
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+=======
     override func doneButtonTapped() {
 //        api 업데이트 후 수정로직 구현
     }
@@ -157,6 +208,7 @@ final class ProfileEditingViewController: ProfileSettingViewController {
     override func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let currentText = NSString(string: textField.text ?? "")
         let finalText = currentText.replacingCharacters(in: range, with: string)
+>>>>>>> main
         
         if finalText.count > 0 && finalText != nickName {
             enableDoneButton()
@@ -165,6 +217,15 @@ final class ProfileEditingViewController: ProfileSettingViewController {
         }
         
         
+<<<<<<< HEAD
+        if let itemProvider = itemProvider, itemProvider.canLoadObject(ofClass: UIImage.self) {
+            
+            itemProvider.loadObject(ofClass: UIImage.self) { (image, error) in
+                DispatchQueue.main.async {
+                    self.profileImage = image as? UIImage
+                    self.profileEditingView.cameraIconView.isHidden = true
+                }
+=======
         return finalText.count <= 10
     }
         
@@ -175,6 +236,7 @@ final class ProfileEditingViewController: ProfileSettingViewController {
                 enableDoneButton()
             } else {
                 if isImageChanged { enableDoneButton() } else { disableDoneButton() }
+>>>>>>> main
             }
         } else {
             if isImageChanged { enableDoneButton() } else { disableDoneButton() }

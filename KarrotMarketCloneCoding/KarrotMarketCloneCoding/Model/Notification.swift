@@ -7,13 +7,12 @@
 
 import Foundation
 
-enum NotificationType: String
-{
+enum NotificationType: String {
+    
     case deleteButtonTapped = "deleteButtonTapped"
     case logout = "logout"
     
-    var name: Notification.Name
-    {
+    var name: Notification.Name {
         return Notification.Name(self.rawValue)
     }
 }

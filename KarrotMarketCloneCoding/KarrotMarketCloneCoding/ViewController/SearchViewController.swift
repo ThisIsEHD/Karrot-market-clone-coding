@@ -9,7 +9,7 @@ import UIKit
 
 class SearchViewController: UIViewController {
     
-// MARK: - Properties
+    // MARK: - Properties
     
     private var viewModel = HomeViewModel()
     private var dataSource: DataSource!
@@ -18,24 +18,32 @@ class SearchViewController: UIViewController {
     var isViewBusy = true
     
     private lazy var searchBar: UISearchBar = {
+        
         let searchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: 0))
+        
         searchBar.placeholder = "검색"
+        
         return searchBar
     }()
     
     private lazy var navigationBottomView = SearchBarBottomView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width , height: 60))
-        
+    
     private let itemTableView : UITableView = {
+        
         let tv = UITableView(frame:CGRect.zero, style: .plain)
+        
         tv.register(ItemTableViewCell.self, forCellReuseIdentifier: "ItemTableViewCell")
         tv.separatorColor = .systemGray5
         tv.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+        
         return tv
     }()
-
+    
     // MARK: - Life Cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         configureSearchController()
         configureItemTableView()
         configureTableViewDiffableDataSource()
@@ -49,8 +57,8 @@ class SearchViewController: UIViewController {
     
     // MARK: - Actions
     
-    
     // MARK: - Configure Search View Controller
+    
     private func configureSearchController() {
         navigationController?.navigationBar.addSubview(navigationBottomView)
         view.backgroundColor = .systemBackground
@@ -78,6 +86,7 @@ class SearchViewController: UIViewController {
     }
     
     func reloadTableViewData(keyword: String?) {
+        
         viewModel.isViewBusy = false
         viewModel.loadData(keyword: keyword) {
             self.itemTableView.reloadData()
@@ -87,6 +96,7 @@ class SearchViewController: UIViewController {
     // MARK: - Configure TableView
     
     private func configureItemTableView() {
+        
         itemTableView.delegate = self
         itemTableView.dataSource = viewModel.dataSource
         
@@ -96,6 +106,7 @@ class SearchViewController: UIViewController {
     // MARK: - Setting Constraints
     
     private func setConstraints() {
+        
         navigationBottomView.anchor(top: navigationController?.navigationBar.bottomAnchor, leading: navigationController?.navigationBar.leadingAnchor, trailing: navigationController?.navigationBar.trailingAnchor, height: 60)
         
         itemTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, topConstant: 60, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
