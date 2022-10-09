@@ -452,6 +452,38 @@ struct Network {
     func fetchItem(id: ProductID, completion: @escaping (Result<Item?, KarrotError>) -> Void) {
         
         AF.request(Purpose.fetchItem(id)).response { response in
+//<<<<<<< HEAD
+//=======
+//            if let err = response.error {
+//                print(err)
+//                completion(.failure(.serverError))
+//                return
+//            }
+//
+//            if let statusCode = response.response?.statusCode, (200...299).contains(statusCode) {
+//                guard let data = response.data else { return }
+//
+//                do {
+//                    let item = try JSONDecoder().decode(Item.self, from: data)
+//                    completion(.success(item))
+//                } catch {
+//                    print(error)
+//                    completion(.failure(.serverError))
+//                }
+//
+//            } else if let data = response.data {
+//                let json = data.toDictionary()
+//
+//                print("Register Failure Response: \(json)")
+//                completion(.failure(.serverError))
+//            }
+//        }
+//    }
+//
+//    func registerItem(item: Item, images: [UIImage], completion: @escaping (Result<Data?,KarrotError>) -> ()) {
+//
+//        AF.upload(multipartFormData: { data in
+//>>>>>>> main
             
             guard let httpResponse = response.response else { return }
             

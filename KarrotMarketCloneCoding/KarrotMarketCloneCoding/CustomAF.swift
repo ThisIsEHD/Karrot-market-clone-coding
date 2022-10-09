@@ -38,77 +38,63 @@ extension Purpose {
     
     var header: RequestHeaders {
         switch self {
-            case .login:
-                return .json
-            case .registerUser:
-                return .multipart
-            case .fetchUser:
-                return .jsonWithToken
-            case .update:
-                return .jsonWithToken
-            case .fetchItems:
-                return .none
-            case .fetchItem:
-                return .none
-            case .fetchUserSellingItems:
-                return .none
-            case .fetchUserWishItems:
-                return .jsonWithToken
-            case .registerItem:
-                return .multipartWithToken
-            case .deleteUser:
-                return .jsonWithToken
-            case .addWishItem:
-                return .jsonWithToken
-            case .deleteWishItem:
-                return .jsonWithToken
+        case .login:
+            return .json
+        case .registerUser:
+            return .multipart
+        case .fetchUser, .update, .fetchUserWishItems ,.deleteUser, .addWishItem, .deleteWishItem:
+            return .jsonWithToken
+        case .fetchItems, .fetchItem, .fetchUserSellingItems:
+            return .none
+        case .registerItem:
+            return .multipartWithToken
         }
     }
     
     var path: String {
         switch self {
-            case .login:
-                return "/api/v1/users/auth/login"
-            case .registerUser:
-                return "/api/v1/users"
-            case .fetchUser(let id):
-                return "/api/v1/users/\(id)"
-            case .update(let user):
-                return "/api/v1/users/\(user.id ?? "")"
-            case .fetchItems:
-                return "/api/v1/products"
-            case .fetchItem(let productID):
-                return "/api/v1/products/\(productID)"
-            case .fetchUserSellingItems(let userId, _):
-                return "/api/v1/users/\(userId)/products"
-            case .fetchUserWishItems(let useId, _):
-                return "/api/v1/users/\(useId)/products_wish"
-            case .registerItem(let userID, _):
-                return "/api/v1/users/\(userID)/products"
-            case .deleteUser(let id):
-                return "/api/v1/users/\(id)"
-            case .addWishItem(let userId, let productID):
-                return "api/v1/users/\(userId)/products/\(productID)/wish"
-            case .deleteWishItem(let id, let productID):
-                return "api/v1/users/\(id)/products/\(productID)/wish"
+        case .login:
+            return "/api/v1/users/auth/login"
+        case .registerUser:
+            return "/api/v1/users"
+        case .fetchUser(let id):
+            return "/api/v1/users/\(id)"
+        case .update(let user):
+            return "/api/v1/users/\(user.id ?? "")"
+        case .fetchItems:
+            return "/api/v1/products"
+        case .fetchItem(let productID):
+            return "/api/v1/products/\(productID)"
+        case .fetchUserSellingItems(let userId, _):
+            return "/api/v1/users/\(userId)/products"
+        case .fetchUserWishItems(let useId, _):
+            return "/api/v1/users/\(useId)/products_wish"
+        case .registerItem(let userID, _):
+            return "/api/v1/users/\(userID)/products"
+        case .deleteUser(let id):
+            return "/api/v1/users/\(id)"
+        case .addWishItem(let userId, let productID):
+            return "api/v1/users/\(userId)/products/\(productID)/wish"
+        case .deleteWishItem(let id, let productID):
+            return "api/v1/users/\(id)/products/\(productID)/wish"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-            case .login, .registerUser, .registerItem, .addWishItem: return .post
-            case .fetchUser, .fetchItem, .fetchItems, .fetchUserSellingItems, .fetchUserWishItems: return .get
-            case .update: return .put
-            case .deleteUser, .deleteWishItem: return .delete
+        case .login, .registerUser, .registerItem, .addWishItem: return .post
+        case .fetchUser, .fetchItem, .fetchItems, .fetchUserSellingItems, .fetchUserWishItems: return .get
+        case .update: return .put
+        case .deleteUser, .deleteWishItem: return .delete
         }
     }
     
     var parameters: RequestParameters {
         switch self {
-            case .login(let user): return .body(user)
-            case .update(let user): return .body(user)
-            case .fetchItems(let queryItem), .fetchUserSellingItems(_, let queryItem), .fetchUserWishItems(_, let queryItem): return .query(queryItem)
-            case .fetchUser, .registerUser, .fetchItem, .registerItem, .deleteUser, .addWishItem, .deleteWishItem: return .none
+        case .login(let user): return .body(user)
+        case .update(let user): return .body(user)
+        case .fetchItems(let queryItem), .fetchUserSellingItems(_, let queryItem), .fetchUserWishItems(_, let queryItem): return .query(queryItem)
+        case .fetchUser, .registerUser, .fetchItem, .registerItem, .deleteUser, .addWishItem, .deleteWishItem: return .none
         }
     }
     
@@ -119,30 +105,30 @@ extension Purpose {
         let accessToken = KeyChain.read(key: userId) ?? ""
         var headers = HTTPHeaders()
         
-//        header 구성
+        //        header 구성
         switch header {
-            case .json:
-                headers = [ Header.contentType.type : Header.json.type ]
-            case .jsonWithToken:
-                headers = [ Header.contentType.type: Header.json.type, Header.authorization.type : accessToken ]
-            case .multipart:
-                headers = [ Header.contentType.type: Header.multipart.type ]
-            case .multipartWithToken:
-                headers = [ Header.contentType.type: Header.multipart.type, Header.authorization.type : accessToken ]
-            case .none: break
+        case .json:
+            headers = [ Header.contentType.type : Header.json.type ]
+        case .jsonWithToken:
+            headers = [ Header.contentType.type: Header.json.type, Header.authorization.type : accessToken ]
+        case .multipart:
+            headers = [ Header.contentType.type: Header.multipart.type ]
+        case .multipartWithToken:
+            headers = [ Header.contentType.type: Header.multipart.type, Header.authorization.type : accessToken ]
+        case .none: break
         }
         
         urlRequest.headers = headers
         
-//        parameter 구성
+        //        parameter 구성
         switch parameters {
-            case .body(let parameter):
-                let jsonParameter = parameter?.toJSONData()
-                urlRequest.httpBody = jsonParameter
-            case .none:
-                return urlRequest
-            case .query(let query):
-                return try URLEncoding.default.encode(urlRequest, with: query)
+        case .body(let parameter):
+            let jsonParameter = parameter?.toJSONData()
+            urlRequest.httpBody = jsonParameter
+        case .none:
+            return urlRequest
+        case .query(let query):
+            return try URLEncoding.default.encode(urlRequest, with: query)
         }
         return urlRequest
     }

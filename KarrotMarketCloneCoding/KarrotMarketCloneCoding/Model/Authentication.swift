@@ -15,7 +15,7 @@ struct Authentication {
             UserDefaults.standard.removeObject(forKey: Const.userId)
         }
         
-        NotificationCenter.default.post(name: NotificationType.logout.name, object: nil)
         go()
+        NotificationCenter.default.post(name: NotificationType.logout.name, object: nil)
     }
 }
