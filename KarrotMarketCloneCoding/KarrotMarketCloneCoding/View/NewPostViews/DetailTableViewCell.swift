@@ -11,6 +11,12 @@ final class DetailTableViewCell: UITableViewCell {
 
     static let identifier = "DetailTableViewCell"
     internal var textChanged: ((String)?) -> Void = { _ in }
+    internal var content: String? {
+        didSet {
+            descriptionTextView.text = content
+            descriptionTextView.textColor = .label
+        }
+    }
     
     private let textViewPlaceHolder = "게시글 내용을 작성해주세요. (가품 및 판매금지품목은 게시가 제한될 수 있어요.)"
     @IBOutlet weak var descriptionTextView: UITextView!
@@ -47,9 +53,11 @@ extension DetailTableViewCell: UITextViewDelegate {
     func textViewDidEndEditing(_ textView: UITextView) {
         
         if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            print("😅")
             textView.text = textViewPlaceHolder
             textView.textColor = .lightGray
         } else {
+            content = textView.text
             textChanged(textView.text)
         }
     }

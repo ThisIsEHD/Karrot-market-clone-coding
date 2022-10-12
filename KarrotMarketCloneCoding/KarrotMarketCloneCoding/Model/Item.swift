@@ -38,7 +38,6 @@ struct Item: Codable {
     let profileImage: String?
     let thumbnail: String?
     var images: [Image]?
-
 }
 
 extension Item: Hashable {

@@ -11,7 +11,7 @@ import Alamofire
 class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButtonDelegate {
     // MARK: - Properties
     
-    private var productId: Int?
+    private var productId: Int = 0
     var item: Item? {
         didSet {
             
@@ -88,10 +88,11 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
     
     // MARK: - Life Cycle
     
-    convenience init(productId: Int?) {
+    convenience init(productId: Int) {  //ehd: Int? 였는데 무조건 있을 거라고 생각해서 Int로 바꿈
         self.init()
+        self.productId = productId
         
-        Network.shared.fetchItem(id: productId!) { [self] result in
+        Network.shared.fetchItem(id: productId) { [self] result in
             switch result {
             case .success(let item):
                 
@@ -166,7 +167,7 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
         
         let modifyAction = UIAlertAction(title: "게시글 수정", style: .default) { _ in
             
-            let nextVC = NewPostTableViewController()
+            let nextVC = ItemEditingViewController(productID: self.productId)
             let nav = UINavigationController(rootViewController: nextVC)
             
             nav.navigationBar.barTintColor = .label
@@ -357,7 +358,7 @@ extension ItemDetailViewController: UITableViewDataSource {
                 cell.setProfile(nickname: item?.nickname, image: nil)
                 return cell }
             
-            Network.shared.fetchImage(url: url) {[unowned self] result in
+            Network.shared.fetchImage(url: url) {[unowned self] result in   //ehd: 🤔unowned 쓴 이유가 무엇인지?! 궁금궁금
                 switch result {
                 case .success(let image):
                     cell.setProfile(nickname: item?.nickname, image: image)

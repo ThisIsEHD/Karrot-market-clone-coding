@@ -10,22 +10,30 @@ import UIKit
 
 final class photosCollectionView: UICollectionView {
     
-    var images: [UIImage?] = [] {
-        didSet { reloadData() }
-    }
+    var viewModel: ItemEditingViewModel!
+    
     var photoPickerCellTapped: (photosCollectionView) -> () = { sender in }
     
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
-        
+        print("😁")
         dataSource = self
         delegate = self
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(removeImage), name: NotificationType.deleteButtonTapped.name, object: nil)
         
         registerCells()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc func removeImage(_ notification: NSNotification) {
+        
+        if let indexPath = notification.userInfo?[UserInfo.indexPath] as? IndexPath {
+            viewModel.removeImage(in: self, at: indexPath)
+        }
     }
     
     private func registerCells() {
@@ -41,7 +49,7 @@ final class photosCollectionView: UICollectionView {
 extension photosCollectionView: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return images.count + 1
+        return viewModel.numberOfItems() + 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -49,16 +57,14 @@ extension photosCollectionView: UICollectionViewDataSource {
         if indexPath.item == 0 {
             if let cell = dequeueReusableCell(withReuseIdentifier: "PhotoPickerCollectionViewCell", for: indexPath) as? PhotoPickerCollectionViewCell {
                 
-                cell.selectedPhotosNumber = images.count
+                cell.selectedPhotosNumber = viewModel.numberOfItems()
                 
                 return cell
             }
         } else {
             if let cell = dequeueReusableCell(withReuseIdentifier: "PhotosCollectionViewCell", for: indexPath) as? PhotosCollectionViewCell {
                 
-                cell.photo.image = images[indexPath.item - 1]
-                cell.indexPath = indexPath
-                cell.clipsToBounds = false
+                viewModel.configureCollectionView(as: cell, at: indexPath)
                 
                 return cell
             }

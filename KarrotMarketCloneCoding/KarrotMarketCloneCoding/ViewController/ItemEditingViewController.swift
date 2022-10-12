@@ -1,5 +1,5 @@
 //
-//  NewPostTableViewController.swift
+//  ItemEditingViewController.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by EHDOMB on 2022/07/17.
@@ -9,36 +9,59 @@ import UIKit
 import PhotosUI
 import Alamofire
 
-class NewPostTableViewController: UIViewController {
+final class ItemEditingViewController: UIViewController {
     
-    private var selectedImages: [UIImage] = [UIImage]() {
-        
-        didSet {
-            maxChoosableImages = 10 - selectedImages.count
-            newPostTableView.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
-        }
-    }
-    private var item = Item(id: nil, title: nil, content: nil, categoryId: nil, price: nil, regdate: nil, views: nil, wishes: nil, userId: nil, nickname: nil, profileImage: nil, thumbnail: nil, images: nil)
-    internal var maxChoosableImages = 10
+    private var viewModel = ItemEditingViewModel()
+    
     internal var doneButtonTapped: () -> () = { }
+    
     
     private let newPostTableView = NewPostTableView(frame: .zero)
     
+    convenience init(productID: Int) {
+        self.init()
+        
+        Network.shared.fetchItem(id: productID) { [unowned self] result in
+            switch result {
+            case .success(let item):
+                viewModel.item = item
+                item.images?.forEach({ image in
+                    Network.shared.fetchImage(url: image.url) { [unowned self] result in
+                        switch result {
+                        case .success(let image):
+                            self.viewModel.addImage(image: image!)
+                            print(viewModel.selectedImages, "⭐️")
+                        case .failure(let error):
+                            print(error)
+                        }
+                    }
+                })
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         view.addSubview(newPostTableView)
         
         newPostTableView.tableView.delegate = self
         newPostTableView.tableView.dataSource = self
         
-        NotificationCenter.default.addObserver(self, selector: #selector(removeImage), name: NotificationType.deleteButtonTapped.name, object: nil)
+//        NotificationCenter.default.addObserver(self, selector: #selector(removeImage), name: NotificationType.deleteButtonTapped.name, object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(handle(keyboardShowNotification:)),
                                                name: UIResponder.keyboardDidShowNotification,
                                                object: nil)
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -47,9 +70,8 @@ class NewPostTableViewController: UIViewController {
         setupNewPostTableView()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     private func setupNaviBar() {
@@ -69,7 +91,13 @@ class NewPostTableViewController: UIViewController {
         
         var configuration = PHPickerConfiguration()
         
-        configuration.selectionLimit = maxChoosableImages
+        guard viewModel.maxChoosableImages != 0 else {
+            let alert = SimpleAlert(message: "이미지는 최대 10개까지 첨부할 수 있습니다.")
+            self.present(alert, animated: true)
+            return
+        }
+        
+        configuration.selectionLimit = viewModel.maxChoosableImages
         configuration.filter = .any(of: [.images])
         
         let picker = PHPickerViewController(configuration: configuration)
@@ -91,14 +119,7 @@ class NewPostTableViewController: UIViewController {
     }
 }
 
-extension NewPostTableViewController {
-    
-    @objc func removeImage(_ notification: NSNotification) {
-        
-        if let indexPath = notification.userInfo?[UserInfo.indexPath] as? IndexPath {
-            selectedImages.remove(at: indexPath.item - 1)
-        }
-    }
+extension ItemEditingViewController {
     
     @objc func close() {
         dismiss(animated: true, completion: nil)
@@ -107,8 +128,7 @@ extension NewPostTableViewController {
     @objc func post() {
         view.endEditing(true)
         
-        Network.shared.registerItem(item: Item(id: nil, title: item.title, content: item.content, categoryId: item.categoryId, price: item.price, regdate: nil, views: nil, wishes: nil, userId: (UserDefaults.standard.object(forKey: Const.userId) as? String), nickname: nil, profileImage: nil, thumbnail: nil, images: nil), images: selectedImages) { result in
-            
+        Network.shared.registerItem(item: viewModel.item, images: viewModel.selectedImages) { result in
             switch result {
             case .success:
                 self.doneButtonTapped()
@@ -160,7 +180,7 @@ extension NewPostTableViewController {
     }
 }
 
-extension NewPostTableViewController: UITableViewDataSource {
+extension ItemEditingViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         return 5
@@ -185,55 +205,57 @@ extension NewPostTableViewController: UITableViewDataSource {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: PhotosSelectingTableViewCell.identifier, for: indexPath) as! PhotosSelectingTableViewCell
             
-            cell.collectionView.photoPickerCellTapped = { [weak self] sender in
-                self?.setupImagePicker()
+            cell.collectionView.photoPickerCellTapped = { sender in
+                self.setupImagePicker()
             }
-            cell.collectionView.images = selectedImages
-            cell.selectionStyle = .none
-            cell.clipsToBounds = false
+            viewModel.configureFirst(cell: cell)
             
             return cell
             
         } else if indexPath.row == 1  {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: TitleTableViewCell.identifier, for: indexPath) as! TitleTableViewCell
-            
-            cell.selectionStyle = .none
-            cell.textChanged = { self.item.title = $0 }
+            viewModel.configureSecond(cell: cell)
+            cell.textChanged = { title in
+                self.viewModel.secondCellDidEndEditing(text: title)
+            }
             return cell
             
         } else if indexPath.row == 2 {
             
-            let cell = tableView.dequeueReusableCell(withIdentifier: BasicTableViewCell.identifier, for: indexPath)
-            
-            cell.textLabel?.text = "카테고리 선택"
-            cell.textLabel?.font = UIFont.systemFont(ofSize: 20)
-            cell.accessoryType = .disclosureIndicator
-            cell.selectionStyle = .none
+            let cell = tableView.dequeueReusableCell(withIdentifier: BasicTableViewCell.identifier, for: indexPath) as! BasicTableViewCell
+            viewModel.configureThird(cell: cell)
             
             return cell
         } else if indexPath.row == 3 {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: PriceTableViewCell.identifier, for: indexPath) as! PriceTableViewCell
             
-            cell.selectionStyle = .none
-            cell.textChanged = { self.item.price = Int($0 ?? "0") }
+            viewModel.configureFourth(cell: cell)
+            cell.textChanged = { strPrice in
+                if let price = strPrice, let intPrice = Int(price) {
+                    self.viewModel.fourthCellDidEndEditing(price: intPrice)
+                } else {
+                    self.viewModel.fourthCellDidEndEditing(price: nil)
+                }
+            }
             
             return cell
         } else {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: DetailTableViewCell.identifier, for: indexPath) as! DetailTableViewCell
             
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 999)
-            cell.selectionStyle = .none
-            cell.textChanged = { self.item.content = $0 }
+            viewModel.configureFifth(cell: cell)
+            cell.textChanged = { description in
+                self.viewModel.fifthCellDidEndEditing(description: description)
+            }
             
             return cell
         }
     }
 }
 
-extension NewPostTableViewController: UITableViewDelegate {
+extension ItemEditingViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
@@ -244,10 +266,8 @@ extension NewPostTableViewController: UITableViewDelegate {
                 let vc = CategoryTableViewController()
                 
                 vc.cellTapped = { indexPathRow in
-
-                    cell.textLabel?.text = "\(vc.categories[indexPathRow])"
-                    self.item.categoryId = indexPathRow + 1
-                    vc.tableView.reloadRows(at: [indexPath], with: .fade)
+                    
+                    self.viewModel.categoryDidTapped(cell: cell, indexPathRow: indexPathRow, in: vc.tableView, at: [indexPath])
                 }
                 navigationController?.pushViewController(vc, animated: true)
             }
@@ -255,7 +275,7 @@ extension NewPostTableViewController: UITableViewDelegate {
     }
 }
 
-extension NewPostTableViewController: PHPickerViewControllerDelegate {
+extension ItemEditingViewController: PHPickerViewControllerDelegate {
 //    deinit시 제거해줘야하나?
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         
@@ -266,10 +286,14 @@ extension NewPostTableViewController: PHPickerViewControllerDelegate {
             let itemProvider = result.itemProvider
             
             if itemProvider.canLoadObject(ofClass: UIImage.self) {
-
+                
                 itemProvider.loadObject(ofClass: UIImage.self) { image, error in
-                    
-                    DispatchQueue.main.async { self.selectedImages.append((image as? UIImage)!) }
+
+                    DispatchQueue.main.async {
+                        self.viewModel.addSelectedImages(image: image as! UIImage)
+                        let cell = self.newPostTableView.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? PhotosSelectingTableViewCell
+                        cell?.collectionView.reloadData()
+                    }
                 }
             } else {
                 print("이미지 못 불러왔음!!!!")

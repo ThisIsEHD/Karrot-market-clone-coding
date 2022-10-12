@@ -8,10 +8,10 @@
 import UIKit
 
 final class NewPostTableView: UIView {
-     
+    
     internal let tableView: UITableView = {
         
-       let tableView = UITableView()
+        let tableView = UITableView()
         
         tableView.register(PhotosSelectingTableViewCell.nib() , forCellReuseIdentifier: PhotosSelectingTableViewCell.identifier)
         tableView.register(TitleTableViewCell.nib(), forCellReuseIdentifier: TitleTableViewCell.identifier)
@@ -21,7 +21,7 @@ final class NewPostTableView: UIView {
         
         return tableView
     }()
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         

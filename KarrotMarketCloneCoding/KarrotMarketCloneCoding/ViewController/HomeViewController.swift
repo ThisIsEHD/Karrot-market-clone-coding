@@ -96,7 +96,7 @@ final class HomeViewController: UIViewController {
     
     @objc func addButtonDidTapped() {
         
-        let newPostVC = NewPostTableViewController()
+        let newPostVC = ItemEditingViewController()
         let nav = UINavigationController(rootViewController: newPostVC)
         
         nav.navigationBar.barTintColor = .label
@@ -213,7 +213,7 @@ extension HomeViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let id = viewModel.dataSource?.itemIdentifier(for: indexPath)?.id
+        guard let id = viewModel.dataSource?.itemIdentifier(for: indexPath)?.id else { return }
         let vc = ItemDetailViewController(productId: id)
         navigationController?.pushViewController(vc, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)

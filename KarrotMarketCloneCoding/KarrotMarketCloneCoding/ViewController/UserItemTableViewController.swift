@@ -138,9 +138,10 @@ extension UserItemTableViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let id = viewModel.dataSource?.itemIdentifier(for: indexPath)?.id else { return }
         
-        let id = viewModel.dataSource?.itemIdentifier(for: indexPath)?.id
         let vc = ItemDetailViewController(productId: id)
+        
         navigationController?.pushViewController(vc, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }

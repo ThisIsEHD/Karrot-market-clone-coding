@@ -449,7 +449,7 @@ struct Network {
         }
     }
     
-    func fetchItem(id: ProductID, completion: @escaping (Result<Item?, KarrotError>) -> Void) {
+    func fetchItem(id: ProductID, completion: @escaping (Result<Item, KarrotError>) -> Void) {
         
         AF.request(Purpose.fetchItem(id)).response { response in
 //<<<<<<< HEAD
@@ -489,12 +489,12 @@ struct Network {
             
             switch httpResponse.statusCode {
                 case 200:
-                    guard let data = response.data, let list = jsonDecode(type: Item.self, data: data) else {
+                    guard let data = response.data, let item = jsonDecode(type: Item.self, data: data) else {
                         let message = "Error: response Data is nil or jsonDecoding failure, Error Point: \(#function)"
                         completion(.failure(.notServerError(message)))
                         return
                     }
-                    completion(.success(list))
+                    completion(.success(item))
                 default:
                     completion(.failure(.unknownError))
             }

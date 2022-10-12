@@ -46,10 +46,11 @@
 		D3A2158F288D90E800D06AD3 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A2158E288D90E800D06AD3 /* ChatViewController.swift */; };
 		D3C23A5828EB28B5009B53B4 /* JWTDecode in Frameworks */ = {isa = PBXBuildFile; productRef = D3C23A5728EB28B5009B53B4 /* JWTDecode */; };
 		D3C23A5A28EB5888009B53B4 /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C23A5928EB5888009B53B4 /* Authentication.swift */; };
+		D3C23A6A28F4C805009B53B4 /* ItemEditingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C23A6928F4C805009B53B4 /* ItemEditingViewModel.swift */; };
 		D3D93CDF28EB21DD00B3CE7B /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D93CDE28EB21DD00B3CE7B /* SettingViewController.swift */; };
 		D3DF36292881AF5100F20065 /* ProfileEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF36282881AF5100F20065 /* ProfileEditingViewController.swift */; };
 		D3DF362B2881B35200F20065 /* ReusableSettingProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF362A2881B35200F20065 /* ReusableSettingProfileView.swift */; };
-		D3DF365E2884282C00F20065 /* NewPostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF365D2884282C00F20065 /* NewPostTableViewController.swift */; };
+		D3DF365E2884282C00F20065 /* ItemEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF365D2884282C00F20065 /* ItemEditingViewController.swift */; };
 		D3DF36602884299500F20065 /* PhotosSelectingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF365F2884299500F20065 /* PhotosSelectingTableViewCell.swift */; };
 		D3DF366328842A7300F20065 /* TitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF366128842A7300F20065 /* TitleTableViewCell.swift */; };
 		D3DF366428842A7300F20065 /* TitleTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = D3DF366228842A7300F20065 /* TitleTableViewCell.xib */; };
@@ -121,10 +122,11 @@
 		D3A21588288D905400D06AD3 /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		D3A2158E288D90E800D06AD3 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		D3C23A5928EB5888009B53B4 /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
+		D3C23A6928F4C805009B53B4 /* ItemEditingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditingViewModel.swift; sourceTree = "<group>"; };
 		D3D93CDE28EB21DD00B3CE7B /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		D3DF36282881AF5100F20065 /* ProfileEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditingViewController.swift; sourceTree = "<group>"; };
 		D3DF362A2881B35200F20065 /* ReusableSettingProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableSettingProfileView.swift; sourceTree = "<group>"; };
-		D3DF365D2884282C00F20065 /* NewPostTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPostTableViewController.swift; sourceTree = "<group>"; };
+		D3DF365D2884282C00F20065 /* ItemEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditingViewController.swift; sourceTree = "<group>"; };
 		D3DF365F2884299500F20065 /* PhotosSelectingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosSelectingTableViewCell.swift; sourceTree = "<group>"; };
 		D3DF366128842A7300F20065 /* TitleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleTableViewCell.swift; sourceTree = "<group>"; };
 		D3DF366228842A7300F20065 /* TitleTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TitleTableViewCell.xib; sourceTree = "<group>"; };
@@ -213,6 +215,15 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		D3C23A6B28F6B594009B53B4 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				D3C23A6928F4C805009B53B4 /* ItemEditingViewModel.swift */,
+				7248CA46288F5CED00DDF939 /* HomeViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		D3DF36692884491F00F20065 /* NewPostViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -245,6 +256,7 @@
 		D3E122EC287BF66000A1EDC8 = {
 			isa = PBXGroup;
 			children = (
+				D3C23A6B28F6B594009B53B4 /* ViewModel */,
 				D3E122F7287BF66000A1EDC8 /* KarrotMarketCloneCoding */,
 				D3E122F6287BF66000A1EDC8 /* Products */,
 				5BC1B9170393AB12FCFA3097 /* Pods */,
@@ -283,7 +295,7 @@
 		D3E1230F287D719100A1EDC8 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
-				D3DF365D2884282C00F20065 /* NewPostTableViewController.swift */,
+				D3DF365D2884282C00F20065 /* ItemEditingViewController.swift */,
 				D3F0E7C128E03507006AEB3D /* ProfileSettingViewController.swift */,
 				D3DF3689288ACC0900F20065 /* CategoryTableViewController.swift */,
 				D3E12312287D9AF800A1EDC8 /* UserCheckViewController.swift */,
@@ -294,7 +306,6 @@
 				D3A2158E288D90E800D06AD3 /* ChatViewController.swift */,
 				723FE6972889091D00A987E7 /* TabbarController.swift */,
 				723FE6992889341000A987E7 /* HomeViewController.swift */,
-				7248CA46288F5CED00DDF939 /* HomeViewModel.swift */,
 				723FE62A2880F64C00A987E7 /* MyKarrotViewController.swift */,
 				722CE3AE28EDD0D800D22AB4 /* UserItemTableViewController.swift */,
 				D3D93CDE28EB21DD00B3CE7B /* SettingViewController.swift */,
@@ -473,6 +484,7 @@
 				72ED25C92898D87800031AD1 /* CustomAF.swift in Sources */,
 				723FE610287D649400A987E7 /* Constraints.swift in Sources */,
 				D3DF3670288457FD00F20065 /* PriceTableViewCell.swift in Sources */,
+				D3C23A6A28F4C805009B53B4 /* ItemEditingViewModel.swift in Sources */,
 				D3F0E7C428E0ABF4006AEB3D /* KeyChain.swift in Sources */,
 				D3E122F9287BF66000A1EDC8 /* AppDelegate.swift in Sources */,
 				D3DF36292881AF5100F20065 /* ProfileEditingViewController.swift in Sources */,
@@ -490,7 +502,7 @@
 				D3E122FB287BF66000A1EDC8 /* SceneDelegate.swift in Sources */,
 				D3DF36782885B53C00F20065 /* PhotosCollectionViewCell.swift in Sources */,
 				D3DF36802889785000F20065 /* PhotosCollectionView.swift in Sources */,
-				D3DF365E2884282C00F20065 /* NewPostTableViewController.swift in Sources */,
+				D3DF365E2884282C00F20065 /* ItemEditingViewController.swift in Sources */,
 				723FE683288539F200A987E7 /* ItemDetailViewDescriptionCell.swift in Sources */,
 				723FE6982889091D00A987E7 /* TabbarController.swift in Sources */,
 				723FE68828853E0800A987E7 /* ItemDetailViewController.swift in Sources */,
