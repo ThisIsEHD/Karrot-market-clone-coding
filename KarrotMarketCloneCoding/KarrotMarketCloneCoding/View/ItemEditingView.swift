@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class NewPostTableView: UIView {
+final class ItemEditingView: UIView {
     
     internal let tableView: UITableView = {
         

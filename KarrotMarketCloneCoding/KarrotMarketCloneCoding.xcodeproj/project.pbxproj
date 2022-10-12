@@ -35,7 +35,7 @@
 		72ED25C92898D87800031AD1 /* CustomAF.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72ED25C82898D87800031AD1 /* CustomAF.swift */; };
 		72ED25CB2898D95F00031AD1 /* ExtensionMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72ED25CA2898D95F00031AD1 /* ExtensionMethod.swift */; };
 		D347FE84288BE8A100EF06B5 /* UserCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE83288BE8A100EF06B5 /* UserCheckView.swift */; };
-		D347FE86288BF1CA00EF06B5 /* NewPostTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE85288BF1CA00EF06B5 /* NewPostTableView.swift */; };
+		D347FE86288BF1CA00EF06B5 /* ItemEditingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE85288BF1CA00EF06B5 /* ItemEditingView.swift */; };
 		D347FE88288C2FC700EF06B5 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE87288C2FC700EF06B5 /* NotificationViewController.swift */; };
 		D347FE8A288C31FA00EF06B5 /* NotificationTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE89288C31FA00EF06B5 /* NotificationTableView.swift */; };
 		D347FE8C288C323800EF06B5 /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE8B288C323800EF06B5 /* NotificationTableViewCell.swift */; };
@@ -112,7 +112,7 @@
 		72ED25CA2898D95F00031AD1 /* ExtensionMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionMethod.swift; sourceTree = "<group>"; };
 		84FFF65EC2D21DA804E8D34F /* Pods_KarrotMarketCloneCoding.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KarrotMarketCloneCoding.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D347FE83288BE8A100EF06B5 /* UserCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCheckView.swift; sourceTree = "<group>"; };
-		D347FE85288BF1CA00EF06B5 /* NewPostTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPostTableView.swift; sourceTree = "<group>"; };
+		D347FE85288BF1CA00EF06B5 /* ItemEditingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemEditingView.swift; sourceTree = "<group>"; };
 		D347FE87288C2FC700EF06B5 /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		D347FE89288C31FA00EF06B5 /* NotificationTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableView.swift; sourceTree = "<group>"; };
 		D347FE8B288C323800EF06B5 /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
@@ -322,7 +322,7 @@
 				D3DF36692884491F00F20065 /* NewPostViews */,
 				D3E1231C28800E5700A1EDC8 /* ReusableSignView.swift */,
 				D347FE83288BE8A100EF06B5 /* UserCheckView.swift */,
-				D347FE85288BF1CA00EF06B5 /* NewPostTableView.swift */,
+				D347FE85288BF1CA00EF06B5 /* ItemEditingView.swift */,
 				D3DF362A2881B35200F20065 /* ReusableSettingProfileView.swift */,
 				D347FE89288C31FA00EF06B5 /* NotificationTableView.swift */,
 				D347FE8B288C323800EF06B5 /* NotificationTableViewCell.swift */,
@@ -469,7 +469,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D347FE86288BF1CA00EF06B5 /* NewPostTableView.swift in Sources */,
+				D347FE86288BF1CA00EF06B5 /* ItemEditingView.swift in Sources */,
 				D347FE84288BE8A100EF06B5 /* UserCheckView.swift in Sources */,
 				D3DF36742884601600F20065 /* DetailTableViewCell.swift in Sources */,
 				D3DF367C2887AF3C00F20065 /* PhotoPickerCollectionViewCell.swift in Sources */,

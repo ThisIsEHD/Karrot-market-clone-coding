@@ -16,7 +16,7 @@ final class ItemEditingViewController: UIViewController {
     internal var doneButtonTapped: () -> () = { }
     
     
-    private let newPostTableView = NewPostTableView(frame: .zero)
+    private let itemEditingView = ItemEditingView(frame: .zero)
     
     convenience init(productID: Int) {
         self.init()
@@ -25,17 +25,24 @@ final class ItemEditingViewController: UIViewController {
             switch result {
             case .success(let item):
                 viewModel.item = item
-                item.images?.forEach({ image in
-                    Network.shared.fetchImage(url: image.url) { [unowned self] result in
+                itemEditingView.tableView.reloadData()
+                item.images?.forEach({ imageInfo in
+                    Network.shared.fetchImage(url: imageInfo.url) { [unowned self] result in
                         switch result {
                         case .success(let image):
                             self.viewModel.addImage(image: image!)
-                            print(viewModel.selectedImages, "⭐️")
+                            
+                            if imageInfo == item.images?.last {
+                                
+                                let cell = self.itemEditingView.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? PhotosSelectingTableViewCell
+                                cell?.collectionView.reloadData()
+                            }
                         case .failure(let error):
                             print(error)
                         }
                     }
                 })
+                
             case .failure(let error):
                 print(error)
             }
@@ -45,12 +52,11 @@ final class ItemEditingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(newPostTableView)
+        view.addSubview(itemEditingView)
         
-        newPostTableView.tableView.delegate = self
-        newPostTableView.tableView.dataSource = self
+        itemEditingView.tableView.delegate = self
+        itemEditingView.tableView.dataSource = self
         
-//        NotificationCenter.default.addObserver(self, selector: #selector(removeImage), name: NotificationType.deleteButtonTapped.name, object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(handle(keyboardShowNotification:)),
                                                name: UIResponder.keyboardDidShowNotification,
@@ -84,7 +90,7 @@ final class ItemEditingViewController: UIViewController {
     
     private func setupNewPostTableView() {
         
-        newPostTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
+        itemEditingView.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
     }
     
     private func setupImagePicker() {
@@ -291,7 +297,7 @@ extension ItemEditingViewController: PHPickerViewControllerDelegate {
 
                     DispatchQueue.main.async {
                         self.viewModel.addSelectedImages(image: image as! UIImage)
-                        let cell = self.newPostTableView.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? PhotosSelectingTableViewCell
+                        let cell = self.itemEditingView.tableView.cellForRow(at: IndexPath(row: 0, section: 0)) as? PhotosSelectingTableViewCell
                         cell?.collectionView.reloadData()
                     }
                 }
