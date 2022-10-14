@@ -180,7 +180,6 @@ extension MyKarrotViewController: ProfileViewDelegate {
         guard let user = user else { return }
         
         profileView.configureUser(nickname: user.nickname)
-<<<<<<< HEAD
             
         guard let url = user.profileImageUrl else { return }
         
@@ -200,8 +199,7 @@ extension MyKarrotViewController: ProfileViewDelegate {
         let profileEditingVC = ProfileEditingViewController()
         
         profileEditingVC.profileEditingView.nicknameTextField.text = user?.nickname
-        profileEditingVC.originNickname = user?.nickname
-        
+    
         guard let url = user?.profileImageUrl else {
             navigationController?.pushViewController(profileEditingVC, animated: true)
             return

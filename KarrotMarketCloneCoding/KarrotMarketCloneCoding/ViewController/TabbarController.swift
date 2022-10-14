@@ -109,16 +109,3 @@ final class TabbarController: UITabBarController {
         return nav
     }
 }
-
-//extension TabbarController: AuthenticationDelegate {
-//    func logout() {
-//        isLoggedIn = false
-//        user = nil
-//
-//        checkIfUserIsLoggedIn()
-//    }
-//}
-
-//protocol AuthenticationDelegate {
-//    func logout()
-//}
