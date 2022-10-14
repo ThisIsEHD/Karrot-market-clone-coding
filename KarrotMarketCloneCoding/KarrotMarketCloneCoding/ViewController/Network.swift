@@ -484,7 +484,7 @@ struct Network {
             queryItems["size"] = size
         }
         
-        AF.request(Purpose.fetchUserChats(id, queryItems)).response { response in
+        AF.request(Purpose.fetchAllChats(id, queryItems)).response { response in
             
             guard let httpResponse = response.response else { return }
             
