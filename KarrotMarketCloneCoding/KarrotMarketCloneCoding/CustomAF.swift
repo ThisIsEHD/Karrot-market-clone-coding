@@ -29,6 +29,8 @@ enum Purpose: Requestable {
     case deleteUser(ID)
     case addWishItem(ProductID, ID)
     case deleteWishItem(ProductID, ID)
+    case fetchUserChats(ID, [String : Any])
+//    case fetchChatroom(ID,ChatroomId)
 }
 
 extension Purpose {
@@ -62,6 +64,8 @@ extension Purpose {
                 return .jsonWithToken
             case .deleteWishItem:
                 return .jsonWithToken
+            case .fetchUserChats:
+                return .jsonWithToken
         }
     }
     
@@ -91,13 +95,15 @@ extension Purpose {
                 return "api/v1/users/\(userId)/products/\(productID)/wish"
             case .deleteWishItem(let id, let productID):
                 return "api/v1/users/\(id)/products/\(productID)/wish"
+            case .fetchUserChats(let id, _):
+                return "api/v1/users/\(id)/chatrooms"
         }
     }
     
     var method: HTTPMethod {
         switch self {
             case .login, .registerUser, .registerItem, .addWishItem: return .post
-            case .fetchUser, .fetchItem, .fetchItems, .fetchUserSellingItems, .fetchUserWishItems: return .get
+            case .fetchUser, .fetchItem, .fetchItems, .fetchUserSellingItems, .fetchUserWishItems, .fetchUserChats: return .get
             case .update: return .put
             case .deleteUser, .deleteWishItem: return .delete
         }
@@ -107,7 +113,7 @@ extension Purpose {
         switch self {
             case .login(let user): return .body(user)
             case .update(let user): return .body(user)
-            case .fetchItems(let queryItem), .fetchUserSellingItems(_, let queryItem), .fetchUserWishItems(_, let queryItem): return .query(queryItem)
+            case .fetchItems(let queryItem), .fetchUserSellingItems(_, let queryItem), .fetchUserWishItems(_, let queryItem), .fetchUserChats(_, let queryItem): return .query(queryItem)
             case .fetchUser, .registerUser, .fetchItem, .registerItem, .deleteUser, .addWishItem, .deleteWishItem: return .none
         }
     }
@@ -197,3 +203,4 @@ struct MyInterceptor: RequestInterceptor {
 
 typealias ID = String
 typealias ProductID = Int
+typealias ChatroomId = Int

@@ -20,6 +20,7 @@ enum KarrotError: Error {
     case unknownUserOrItem
     case wrongForm([String : String])
     case alreadyWished
+    case userIdMismatchWithToken
     
     case notServerError(String)
     case unknownError
@@ -463,6 +464,51 @@ struct Network {
                         return
                     }
                     completion(.success(list))
+                default:
+                    completion(.failure(.unknownError))
+            }
+        }
+    }
+    
+    // MARK: - Chats
+    
+    func fetchChatrooms(id: UserId, lastId: Int? = nil, size: Int? = nil, completion: @escaping (Result<[Chatroom]?, KarrotError>) -> Void) {
+        
+        var queryItems = [String : Any]()
+        
+        if let lastId = lastId {
+            queryItems["last"] = lastId
+        }
+        
+        if let size = size {
+            queryItems["size"] = size
+        }
+        
+        AF.request(Purpose.fetchUserChats(id, queryItems)).response { response in
+            
+            guard let httpResponse = response.response else { return }
+            
+            switch httpResponse.statusCode {
+                case 200:
+                    guard let data = response.data, let chat = jsonDecode(type: Chat.self, data: data) else {
+                        let message = "Error: response Data is nil or jsonDecoding failure, Error Point: \(#function)"
+                        completion(.failure(.notServerError(message)))
+                        return
+                    }
+                    completion(.success(chat.chatrooms))
+                case 400:
+                    guard let message = response.data?.toDictionary() as? [String: String] else {
+                        let message = "Error: Can't convert response Data to Dictionary, Error Point: \(#function)"
+                        completion(.failure(.notServerError(message)))
+                        return
+                    }
+                    completion(.failure(.wrongForm(message)))
+                case 401:
+                    completion(.failure(.invalidToken))
+                case 403:
+                    completion(.failure(.userIdMismatchWithToken))
+                case 404:
+                    completion(.failure(.unknownUserOrItem))
                 default:
                     completion(.failure(.unknownError))
             }

@@ -6,6 +6,9 @@
 //
 
 import Foundation
+import UIKit
+
+//private let imgCache = NSCache<NSString, UIImage>()
 
 extension String {
     func getUserId() -> UserId? {
@@ -33,5 +36,28 @@ extension Data {
         guard let dictionaryData = try? JSONSerialization.jsonObject(with: self) as? [String: String] else { return [:] }
         
         return dictionaryData
+    }
+}
+
+extension UIImageView {
+    func loadImage(url: String){
+        //  self.image = nil
+        
+        //   if let img = imgCache.object(forKey: url as NSString) {
+        //   self.image = img
+        //      return
+        //    }
+        
+        Network.shared.fetchImage(url: url) { result in
+            switch result {
+                case .success(let image):
+                    DispatchQueue.main.async {
+                        //  imgCache.setObject(image, forKey: url as NSString)
+                        self.image = image
+                    }
+                case .failure(let error):
+                    print(error)
+            }
+        }
     }
 }
