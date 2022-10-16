@@ -10,8 +10,17 @@ import UIKit
 class ChatTableViewCell: UITableViewCell {
     
     
-    ///프로파일이미지
-    let profileImageView = UIImageView()
+    ///프로필이미지
+    let profileImageView: UIImageView = {
+        
+        let iv = UIImageView(image: UIImage(named: "defaultProfileImage"))
+        
+        iv.clipsToBounds = true
+        iv.layer.borderWidth = 0.1
+        
+        return iv
+    }()
+    
     ///닉네임, 주소, 시간
     var nicknameLabel = UILabel()
     ///가장 최근 채팅문자
@@ -33,8 +42,10 @@ class ChatTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .clear
+        
         setupProfileImageView()
         setupNicknameLabel()
+        setupLatestMessageLabel()
         setupItemThumbnailImageView()
     }
     
@@ -46,10 +57,9 @@ class ChatTableViewCell: UITableViewCell {
         addSubview(profileImageView)
         
         profileImageView.contentMode = .scaleAspectFill
-        profileImageView.layer.cornerRadius = 30
-        profileImageView.layer.masksToBounds = true
+        profileImageView.layer.cornerRadius = 25
         
-        profileImageView.anchor(leading: leadingAnchor, leadingConstant: 15, width: 60,  height: 60)
+        profileImageView.anchor(leading: self.leadingAnchor, leadingConstant: 20, width: 50,  height: 50)
         profileImageView.centerY(inView: self)
     }
     
@@ -58,19 +68,19 @@ class ChatTableViewCell: UITableViewCell {
         
         nicknameLabel.textColor = .black
         nicknameLabel.numberOfLines = 1
-        nicknameLabel.font = UIFont(name: "Helvetica Neue", size: 18)
+        nicknameLabel.font = UIFont.boldSystemFont(ofSize: 16)
         
-        nicknameLabel.anchor(top: topAnchor, topConstant: 15, leading: profileImageView.trailingAnchor, leadingConstant: 15)
+        nicknameLabel.anchor(top: profileImageView.topAnchor, topConstant: 2, leading: profileImageView.trailingAnchor, leadingConstant: 16)
     }
     
     private func setupLatestMessageLabel() {
         addSubview(latestMessageLabel)
         
-        latestMessageLabel.textColor = UIColor(white: 0.5, alpha: 0.7)
+        latestMessageLabel.textColor = .black
         latestMessageLabel.numberOfLines = 1
-        nicknameLabel.font = UIFont(name: "Helvetica Neue", size: 18)
+        latestMessageLabel.font = UIFont.systemFont(ofSize: 16)
         
-        latestMessageLabel.anchor(bottom: bottomAnchor, bottomConstant: 15, leading: profileImageView.trailingAnchor, leadingConstant: 15)
+        latestMessageLabel.anchor(bottom: profileImageView.bottomAnchor, bottomConstant: 2, leading: profileImageView.trailingAnchor, leadingConstant: 16)
     }
     
     private func setupItemThumbnailImageView() {
@@ -78,9 +88,9 @@ class ChatTableViewCell: UITableViewCell {
         
         itemThumbnailImageView.contentMode = .scaleAspectFill
         itemThumbnailImageView.layer.cornerRadius = 5
-        itemThumbnailImageView..layer.masksToBounds = true
+        itemThumbnailImageView.layer.masksToBounds = true
         
-        itemThumbnailImageView.anchor(top: topAnchor, topConstant: 15, bottom: bottomAnchor, bottomConstant: 15, leading: latestMessageLabel.trailingAnchor, leadingConstant: 20, trailing: trailingAnchor, trailingConstant: 15, width: 50)
+        itemThumbnailImageView.anchor(top: topAnchor, topConstant: 15, bottom: bottomAnchor, bottomConstant: 15, leading: latestMessageLabel.trailingAnchor, leadingConstant: 15, trailing: trailingAnchor, trailingConstant: 15, width: 50)
     }
 }
 

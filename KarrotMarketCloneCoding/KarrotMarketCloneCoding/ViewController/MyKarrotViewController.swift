@@ -228,8 +228,6 @@ extension MyKarrotViewController: ProfileViewDelegate {
             case .wish:
                 let itemTableVC = UserItemTableViewController(userId: user?.id, navigationTitle: title)
                 navigationController?.pushViewController(itemTableVC, animated: true)
-            default:
-                return
         }
     }
 }

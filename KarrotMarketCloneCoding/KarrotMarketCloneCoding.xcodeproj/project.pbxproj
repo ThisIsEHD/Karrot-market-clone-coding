@@ -38,6 +38,9 @@
 		72F7CFB328F9222C00E0D0C0 /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F7CFB228F9222C00E0D0C0 /* ConversationViewController.swift */; };
 		72F7CFB528F922AD00E0D0C0 /* ConversationViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F7CFB428F922AD00E0D0C0 /* ConversationViewCell.swift */; };
 		72F7CFB728F92CB400E0D0C0 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F7CFB628F92CB400E0D0C0 /* Chat.swift */; };
+		72F7D02928F9BB9B00E0D0C0 /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F7D02828F9BB9B00E0D0C0 /* ConversationView.swift */; };
+		72F7D02B28FA88C900E0D0C0 /* IncomingMessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 72F7D02A28FA88C900E0D0C0 /* IncomingMessageCell.xib */; };
+		72F7D02D28FA88DC00E0D0C0 /* OutgoingMessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 72F7D02C28FA88DC00E0D0C0 /* OutgoingMessageCell.xib */; };
 		D347FE84288BE8A100EF06B5 /* UserCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE83288BE8A100EF06B5 /* UserCheckView.swift */; };
 		D347FE86288BF1CA00EF06B5 /* NewPostTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE85288BF1CA00EF06B5 /* NewPostTableView.swift */; };
 		D347FE88288C2FC700EF06B5 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE87288C2FC700EF06B5 /* NotificationViewController.swift */; };
@@ -117,6 +120,9 @@
 		72F7CFB228F9222C00E0D0C0 /* ConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewController.swift; sourceTree = "<group>"; };
 		72F7CFB428F922AD00E0D0C0 /* ConversationViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewCell.swift; sourceTree = "<group>"; };
 		72F7CFB628F92CB400E0D0C0 /* Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
+		72F7D02828F9BB9B00E0D0C0 /* ConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationView.swift; sourceTree = "<group>"; };
+		72F7D02A28FA88C900E0D0C0 /* IncomingMessageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IncomingMessageCell.xib; sourceTree = "<group>"; };
+		72F7D02C28FA88DC00E0D0C0 /* OutgoingMessageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OutgoingMessageCell.xib; sourceTree = "<group>"; };
 		84FFF65EC2D21DA804E8D34F /* Pods_KarrotMarketCloneCoding.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KarrotMarketCloneCoding.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D347FE83288BE8A100EF06B5 /* UserCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCheckView.swift; sourceTree = "<group>"; };
 		D347FE85288BF1CA00EF06B5 /* NewPostTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPostTableView.swift; sourceTree = "<group>"; };
@@ -247,6 +253,8 @@
 				D3DF366228842A7300F20065 /* TitleTableViewCell.xib */,
 				D3DF366F288457FD00F20065 /* PriceTableViewCell.xib */,
 				D3DF36732884601600F20065 /* DetailTableViewCell.xib */,
+				72F7D02A28FA88C900E0D0C0 /* IncomingMessageCell.xib */,
+				72F7D02C28FA88DC00E0D0C0 /* OutgoingMessageCell.xib */,
 			);
 			path = Xibs;
 			sourceTree = "<group>";
@@ -338,6 +346,7 @@
 				723FE68F2887E4AE00A987E7 /* ItemDetailViewImagesCollectionViewCell.swift */,
 				723FE6A1288AC87C00A987E7 /* ItemTableViewCell.swift */,
 				72F7CFB028F91DB200E0D0C0 /* ChatTableViewCell.swift */,
+				72F7D02828F9BB9B00E0D0C0 /* ConversationView.swift */,
 				72F7CFB428F922AD00E0D0C0 /* ConversationViewCell.swift */,
 			);
 			path = View;
@@ -412,10 +421,12 @@
 				D3DF366428842A7300F20065 /* TitleTableViewCell.xib in Resources */,
 				D3DF36792885B53C00F20065 /* PhotosCollectionViewCell.xib in Resources */,
 				D3DF367D2887AF3C00F20065 /* PhotoPickerCollectionViewCell.xib in Resources */,
+				72F7D02D28FA88DC00E0D0C0 /* OutgoingMessageCell.xib in Resources */,
 				D3E12305287BF66100A1EDC8 /* LaunchScreen.storyboard in Resources */,
 				D3E12302287BF66100A1EDC8 /* Assets.xcassets in Resources */,
 				D3DF3671288457FD00F20065 /* PriceTableViewCell.xib in Resources */,
 				D3E12300287BF66000A1EDC8 /* (null) in Resources */,
+				72F7D02B28FA88C900E0D0C0 /* IncomingMessageCell.xib in Resources */,
 				D3DF36752884601600F20065 /* DetailTableViewCell.xib in Resources */,
 				D3DF366828842F6B00F20065 /* PhotosSelectingTableViewCell.xib in Resources */,
 			);
@@ -536,6 +547,7 @@
 				723FE6A02889523800A987E7 /* SearchBarBottomView.swift in Sources */,
 				D3A2158F288D90E800D06AD3 /* ChatTableViewController.swift in Sources */,
 				723FE6A2288AC87C00A987E7 /* ItemTableViewCell.swift in Sources */,
+				72F7D02928F9BB9B00E0D0C0 /* ConversationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

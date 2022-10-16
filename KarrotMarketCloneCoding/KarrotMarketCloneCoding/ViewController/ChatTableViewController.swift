@@ -12,7 +12,7 @@ class ChatTableViewController: UIViewController {
     
     let userId = UserDefaults.standard.object(forKey: Const.userId) as? String ?? ""
     
-    var rooms: [Chatroom]? {
+    var rooms: [Chat]? {
         didSet {
             chatListView.reloadData()
         }
@@ -24,17 +24,18 @@ class ChatTableViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+       
+        rooms = [Chat(chatroomId: 1, productId: 1, product: nil, seller: ChatUserInfo(chatroomId: 1, userId: "76fcfc43-5002-4d16-848f-525534c16e2", nickname: "domb", profileImageUrl: ""), buyer: ChatUserInfo(chatroomId: 1, userId: "76fcfc43-5002-4d16-848f-525534ec16e2", nickname: "dodo", profileImageUrl: ""), lastChat: LastChat(text: "sdfsefsefsef", sendDate: Date()))]
         
         view.backgroundColor = .systemBackground
-        
         configureViews()
-        configureChatList()
+//        configureChatList()
     }
     
     // MARK: - Actions
     
     private func configureChatList() {
-        Network.shared.fetchChatrooms(id: userId) { result in
+        Network.shared.fetchAllChatrooms(id: userId) { result in
             switch result {
                 case .success(let rooms):
                     self.rooms = rooms
@@ -52,6 +53,7 @@ class ChatTableViewController: UIViewController {
         navigationItem.title = "채팅"
         
         setupTableView()
+        setConstraints()
     }
     
     private func setupTableView() {
@@ -68,6 +70,9 @@ class ChatTableViewController: UIViewController {
     
     // MARK: - Setting Constraints
     
+    func setConstraints() {
+        chatListView.edge(inView: view)
+    }
     
 }
 
@@ -86,14 +91,14 @@ extension ChatTableViewController: UITableViewDelegate, UITableViewDataSource {
         let seller = rooms.seller
         
         [buyer, seller].forEach { user in
-            if user.userId == userId {
-                cell.nicknameLabel.text = user.nickname
-                cell.profileImageView.loadImage(url: user.profileImageUrl ?? "")
+            if user?.userId != userId {
+                cell.nicknameLabel.text = user?.nickname
+                cell.profileImageView.loadImage(url: user?.profileImageUrl ?? "")
             }
         }
         
         cell.latestMessageLabel.text = rooms.lastChat.text
-        cell.itemThumbnailImageView.loadImage(url: rooms.product.thumbnail ?? "")
+        cell.itemThumbnailImageView.loadImage(url: rooms.product?.thumbnail ?? "")
         
         cell.selectionStyle = .none
         
@@ -103,6 +108,7 @@ extension ChatTableViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let chatroomId = rooms?[indexPath.row].chatroomId
         let conversationVC = ConversationViewController()
+        tabBarController?.tabBar.isHidden = true
         navigationController?.pushViewController(conversationVC, animated: true)
     }
 }
