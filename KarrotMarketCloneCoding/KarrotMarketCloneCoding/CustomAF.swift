@@ -101,14 +101,14 @@ extension Purpose {
                 return "/api/v1/users/\(id)"
             case .addWishItem(let userId, let productID):
                 return "api/v1/users/\(userId)/products/\(productID)/wish"
-            case .deleteWishItem(let id, let productID):
-                return "api/v1/users/\(id)/products/\(productID)/wish"
-            case .fetchAllChats(let id, _):
-                return "api/v1/users/\(id)/chatrooms"
-            case .fetchItemChatroom(let id, let chatroomId):
-                return "api/v1/users/\(id)/chatrooms/\(chatroomId)"
-            case .fetchMyItemChats(let id, let chatroomId):
-                return "api/v1/users/\(id)/chatrooms/\(chatroomId)/chats"
+            case .deleteWishItem(let userId, let productID):
+                return "api/v1/users/\(userId)/products/\(productID)/wish"
+            case .fetchAllChats(let userId, _):
+                return "api/v1/users/\(userId)/chatrooms"
+            case .fetchItemChatroom(let userId, let chatroomId):
+                return "api/v1/users/\(userId)/chatrooms/\(chatroomId)"
+            case .fetchMyItemChats(let userId, let chatroomId):
+                return "api/v1/users/\(userId)/chatrooms/\(chatroomId)/chats"
             case .connectWebSoket(let id, let chatroomId):
                 return "api/v1/users/\(id)/chatrooms/\(chatroomId)/ws"
         }

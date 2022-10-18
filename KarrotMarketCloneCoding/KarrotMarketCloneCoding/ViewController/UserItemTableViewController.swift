@@ -13,7 +13,7 @@ class UserItemTableViewController: UIViewController {
     
     var viewModel = HomeViewModel()
     var isViewBusy = true
-    private var userId: String?
+    private var userId: ID?
     private var navigationTitle: ListTitle?
     private var dataSource: DataSource!
     private var snapshot = Snapshot()

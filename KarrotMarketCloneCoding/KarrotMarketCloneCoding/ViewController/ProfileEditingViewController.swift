@@ -10,7 +10,32 @@ import PhotosUI
 
 class ProfileEditingViewController: UIViewController {
 
-    // profile update기능
+    var userId: String? {
+        didSet {
+            
+            guard let userId = userId else { return }
+            
+            Network.shared.fetchUser(id: userId) { result in
+                switch result {
+                    case .success(let user):
+                        self.profileEditingView.nicknameTextField.text = user.nickname
+                        
+                        guard let profileImageUrl = user.profileImageUrl else { return }
+                        Network.shared.fetchImage(url: profileImageUrl) { result in
+                            switch result {
+                                case .success(let image):
+                                    self.profileEditingView.imagePickerView.image = image
+                                case .failure(let error):
+                                    /// 에러별 다른처리?
+                                    print(error)
+                            }
+                        }
+                    case .failure(let error):
+                        print(error)
+                }
+            }
+        }
+    }
 
     let profileEditingView = ReusableSettingProfileView(frame: .zero)
 
@@ -27,6 +52,12 @@ class ProfileEditingViewController: UIViewController {
         profileEditingView.nicknameTextField.delegate = self
         profileEditingView.nicknameTextField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
         profileEditingView.setupTapGestures(target: self, selector: #selector(touchUpImageView))
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        tabBarController?.tabBar.isHidden = false
     }
 
     override func viewDidLayoutSubviews() {

@@ -11,7 +11,7 @@ import Alamofire
 final class MyKarrotViewController: UIViewController {
     // MARK: - Properties
     
-    private var user: User?
+    private var userId: ID = UserDefaults.standard.object(forKey: Const.userId) as? String ?? ""
     private var userImage: UIImage?
     
     private let tableView = UITableView(frame: .zero, style: .grouped)
@@ -46,15 +46,10 @@ final class MyKarrotViewController: UIViewController {
         
         profileView.delegate = self
         
-        configureUserInfo(of: user)
+        configureUserInfo()
         setupNavigationItems()
         configureViews()
         setTableViewConstraints()
-    }
-    
-    convenience init(user: User?) {
-        self.init()
-        self.user = user
     }
     
     // MARK: - Setup NavigationItems
@@ -175,21 +170,26 @@ extension MyKarrotViewController: UITableViewDelegate {
 
 extension MyKarrotViewController: ProfileViewDelegate {
     
-    func configureUserInfo(of user: User?) {
+    func configureUserInfo() {
         
-        guard let user = user else { return }
-        
-        profileView.configureUser(nickname: user.nickname)
-            
-        guard let url = user.profileImageUrl else { return }
-        
-        Network.shared.fetchImage(url: url) { result in
+        Network.shared.fetchUser(id: userId) { result in
             switch result {
-                case .success(let image):
-                    self.profileView.configureUser(image: image)
-                case .failure(let error):
-                    /// 에러별 다른처리?
-                    print(error)
+            case .success(let user):
+                self.profileView.configureUser(nickname: user.nickname)
+                
+                guard let url = user.profileImageUrl else { return }
+                
+                Network.shared.fetchImage(url: url) { result in
+                    switch result {
+                        case .success(let image):
+                            self.profileView.configureUser(image: image)
+                        case .failure(let error):
+                            /// 에러별 다른처리?
+                            print(error)
+                    }
+                }
+            case .failure(let error):
+                print(error)
             }
         }
     }
@@ -198,35 +198,21 @@ extension MyKarrotViewController: ProfileViewDelegate {
         
         let profileEditingVC = ProfileEditingViewController()
         
-        profileEditingVC.profileEditingView.nicknameTextField.text = user?.nickname
+        profileEditingVC.userId = userId
     
-        guard let url = user?.profileImageUrl else {
-            navigationController?.pushViewController(profileEditingVC, animated: true)
-            return
-        }
-        
-        Network.shared.fetchImage(url: url) { result in
-            switch result {
-                case .success(let image):
-                    profileEditingVC.profileEditingView.imagePickerView.image = image
-                case .failure(let error):
-                    /// 에러별 다른처리?
-                    print(error)
-            }
-        }
         navigationController?.pushViewController(profileEditingVC, animated: true)
     }
     
     func selectedItemTableVC(_ title: ListTitle) {
         switch title {
             case .selling:
-                let itemTableVC = UserItemTableViewController(userId: user?.id, navigationTitle: title)
+                let itemTableVC = UserItemTableViewController(userId: userId, navigationTitle: title)
                 navigationController?.pushViewController(itemTableVC, animated: true)
             case .buy:
-                let itemTableVC = UserItemTableViewController(userId: user?.id, navigationTitle: title)
+                let itemTableVC = UserItemTableViewController(userId: userId, navigationTitle: title)
                 navigationController?.pushViewController(itemTableVC, animated: true)
             case .wish:
-                let itemTableVC = UserItemTableViewController(userId: user?.id, navigationTitle: title)
+                let itemTableVC = UserItemTableViewController(userId: userId, navigationTitle: title)
                 navigationController?.pushViewController(itemTableVC, animated: true)
         }
     }

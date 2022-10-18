@@ -22,8 +22,6 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
             itemDetailViewContentsTableView.reloadData()
             itemDetailViewBottomStickyView.getWishButton().isSelected = item?.wished ?? false
             
-            /// 사용자의 정보를 가져와 찜한 상품인지 확인
-            /// wishButton 상태 업데이트
         }
     }
     var flag: Bool?

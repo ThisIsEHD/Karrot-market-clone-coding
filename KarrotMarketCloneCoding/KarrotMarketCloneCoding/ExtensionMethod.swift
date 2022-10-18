@@ -56,7 +56,7 @@ extension Date {
 
 
 extension UIImageView {
-    func loadImage(url: String){
+    func loadImage(url: String) {
         //  self.image = nil
         
         //   if let img = imgCache.object(forKey: url as NSString) {
