@@ -45,11 +45,16 @@ final class MyKarrotViewController: UIViewController {
         super.viewDidLoad()
         
         profileView.delegate = self
-        
-        configureUserInfo()
+    
         setupNavigationItems()
         configureViews()
         setTableViewConstraints()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        configureUserInfo()
     }
     
     // MARK: - Setup NavigationItems
@@ -189,6 +194,7 @@ extension MyKarrotViewController: ProfileViewDelegate {
                     }
                 }
             case .failure(let error):
+
                 print(error)
             }
         }
@@ -198,22 +204,42 @@ extension MyKarrotViewController: ProfileViewDelegate {
         
         let profileEditingVC = ProfileEditingViewController()
         
+//<<<<<<< HEAD
         profileEditingVC.userId = userId
-    
+
+//=======
+//        profileEditingVC.nickName = user?.nickname
+//        profileEditingVC.profileImage = userImage
+        
+//        guard let url = user?.profileImageUrl else {
+//            navigationController?.pushViewController(profileEditingVC, animated: true)
+//            return
+//        }
+//
+//        Network.shared.fetchImage(url: url) { result in
+//            switch result {
+//            case .success(let image):
+//                profileEditingVC.profileView.imagePickerView.image = image
+//            case .failure(let error):
+//                /// 에러별 다른처리?
+//                print(error)
+//            }
+//        }
+////>>>>>>> main
         navigationController?.pushViewController(profileEditingVC, animated: true)
     }
     
     func selectedItemTableVC(_ title: ListTitle) {
         switch title {
-            case .selling:
-                let itemTableVC = UserItemTableViewController(userId: userId, navigationTitle: title)
-                navigationController?.pushViewController(itemTableVC, animated: true)
-            case .buy:
-                let itemTableVC = UserItemTableViewController(userId: userId, navigationTitle: title)
-                navigationController?.pushViewController(itemTableVC, animated: true)
-            case .wish:
-                let itemTableVC = UserItemTableViewController(userId: userId, navigationTitle: title)
-                navigationController?.pushViewController(itemTableVC, animated: true)
+        case .selling:
+            let itemTableVC = UserItemTableViewController(userId: userId, navigationTitle: title)
+            navigationController?.pushViewController(itemTableVC, animated: true)
+        case .buy:
+            let itemTableVC = UserItemTableViewController(userId: userId, navigationTitle: title)
+            navigationController?.pushViewController(itemTableVC, animated: true)
+        case .wish:
+            let itemTableVC = UserItemTableViewController(userId: userId, navigationTitle: title)
+            navigationController?.pushViewController(itemTableVC, animated: true)
         }
     }
 }

@@ -18,26 +18,11 @@ class ProfileSettingViewController: UIViewController {
     internal var pw: String?
     internal var profileImage: UIImage? {
         willSet {
-            profileView.imagePickerView.image = newValue
+            profileView.imagePickerView.image = newValue == nil ? UIImage(systemName: "person.crop.circle.fill") : newValue
         }
     }
     
     internal let profileView = ReusableSettingProfileView(frame: .zero)
-    
-    internal let doneButton: UIButton = {
-        
-        let button = UIButton(type: .system)
-        
-        button.setTitle("완료", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
-        button.backgroundColor = UIColor.systemGray
-        button.isEnabled = false
-        
-        return button
-    }()
-    
-    var bottomConstraints: NSLayoutConstraint?
     
     override func loadView() {
         view = profileView
@@ -49,24 +34,12 @@ class ProfileSettingViewController: UIViewController {
         profileView.nicknameTextField.delegate = self
         profileView.nicknameTextField.placeholder = "닉네임"
         profileView.setupTapGestures(target: self, selector: #selector(touchUpImageView))
-        
-        view.addSubview(doneButton)
-        doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(onKeyboardAppear(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(onKeyboardDisappear(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
-        
-        setDoneButtonLayout()
+        profileView.doneButton.addTarget(self, action: #selector(doneButtonTapped), for: .touchUpInside)
     }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
     
     @objc private func touchUpImageView() {
-        
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
         let selectImageAction = UIAlertAction(title: "앨범에서 선택", style: .default) { _ in
             self.openAlbum()
         }
@@ -76,7 +49,6 @@ class ProfileSettingViewController: UIViewController {
             self.isImageChanged = true
         }
         let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-        
         alert.addAction(selectImageAction)
         
         if profileView.imagePickerView.image != nil {
@@ -87,19 +59,17 @@ class ProfileSettingViewController: UIViewController {
         present(alert, animated: true)
     }
     
+    
     @objc func doneButtonTapped() {
-        
         let user = User(email: email, pw: pw, nickname: profileView.nicknameTextField.text)
         var alert: UIAlertController?
-        
         Network.shared.register(user: user, image: profileImage) { result in
+            
             switch result {
-                    
             case .success:
                 self.signIn()
             case .failure(let error):
                 switch error {
-                        
                 case .duplicatedEmail:
                     alert = self.prepareAlert(title: "이미 사용중인 이메일입니다.", isPop: true)
                 case .duplicatedNickname:
@@ -109,32 +79,10 @@ class ProfileSettingViewController: UIViewController {
                 default:
                     alert = self.prepareAlert(title: "서버에러. 나중에 다시 시도해주세요.", isPop: false)
                 }
+                
                 DispatchQueue.main.async { self.present(alert!, animated: true) }
             }
         }
-    }
-    
-    @objc func onKeyboardAppear(_ notification: NSNotification) {
-        
-        guard let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
-        let keyboardHeight = keyboardFrame.cgRectValue.height
-        
-        bottomConstraints?.isActive = false
-        bottomConstraints?.constant = -keyboardHeight
-        bottomConstraints?.isActive = true
-    }
-    
-    @objc func onKeyboardDisappear(_ notification: NSNotification) {
-        
-        bottomConstraints?.isActive = false
-        bottomConstraints?.constant = 0
-        bottomConstraints?.isActive = true
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        
-        view.endEditing(true)
     }
     
     private func openAlbum() {
@@ -237,12 +185,11 @@ class ProfileSettingViewController: UIViewController {
     
     private func signIn() {
         
-        Network.shared.login(email: email, pw: pw) { result in
+        Network.shared.login(email: email ?? "", pw: pw ?? "") { result in
             switch result {
             case .success:
                 DispatchQueue.main.async { self.dismiss(animated: true) }
             case .failure:
-                    /// 에러별 다른처리?
                 let alert = self.prepareAlert(title: "서버에러. 나중에 다시 시도해주세요.", isPop: false)
 
                 DispatchQueue.main.async { self.present(alert, animated: true) }
@@ -250,12 +197,6 @@ class ProfileSettingViewController: UIViewController {
         }
     }
     
-    private func setDoneButtonLayout() {
-        
-        doneButton.anchor(leading: self.view.leadingAnchor, trailing: self.view.trailingAnchor, height: 75)
-        bottomConstraints = doneButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 0)
-        bottomConstraints?.isActive = true
-    }
 }
 
 extension ProfileSettingViewController: UITextFieldDelegate {
@@ -265,8 +206,8 @@ extension ProfileSettingViewController: UITextFieldDelegate {
         let currentText = NSString(string: textField.text ?? "")
         let finalText = currentText.replacingCharacters(in: range, with: string)
         
-        doneButton.isEnabled = finalText.count > 0 ? true : false
-        doneButton.backgroundColor = finalText.count > 0 ? UIColor.appColor(.carrot) : .systemGray
+        profileView.doneButton.isEnabled = finalText.count > 0 ? true : false
+        profileView.doneButton.backgroundColor = finalText.count > 0 ? UIColor.appColor(.carrot) : .systemGray
         
         return finalText.count <= 10
     }

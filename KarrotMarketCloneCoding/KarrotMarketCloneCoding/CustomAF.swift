@@ -42,93 +42,72 @@ extension Purpose {
     
     var header: RequestHeaders {
         switch self {
-            case .login:
-                return .json
-            case .registerUser:
-                return .multipart
-            case .fetchUser:
-                return .jsonWithToken
-            case .update:
-                return .jsonWithToken
-            case .fetchItems:
-                return .none
-            case .fetchItem:
-                return .none
-            case .fetchUserSellingItems:
-                return .none
-            case .fetchUserWishItems:
-                return .jsonWithToken
-            case .registerItem:
-                return .multipartWithToken
-            case .deleteUser:
-                return .jsonWithToken
-            case .addWishItem:
-                return .jsonWithToken
-            case .deleteWishItem:
-                return .jsonWithToken
-            case .fetchAllChats:
-                return .jsonWithToken
-            case .fetchItemChatroom:
-                return .none
-            case .fetchMyItemChats:
-                return .none
-            case .connectWebSoket:
-                return .none
+
+        case .login:
+            return .json
+        case .registerUser:
+            return .multipart
+        case .fetchUser, .update, .fetchUserWishItems ,.deleteUser, .addWishItem, .deleteWishItem, .fetchAllChats:
+            return .jsonWithToken
+            case .fetchItems, .fetchItem, .fetchUserSellingItems, .fetchItemChatroom, .fetchMyItemChats, .connectWebSoket:
+            return .none
+        case .registerItem:
+            return .multipartWithToken
         }
     }
     
     var path: String {
         switch self {
-            case .login:
-                return "/api/v1/users/auth/login"
-            case .registerUser:
-                return "/api/v1/users"
-            case .fetchUser(let id):
-                return "/api/v1/users/\(id)"
-            case .update(let user):
-                return "/api/v1/users/\(user.id ?? "")"
-            case .fetchItems:
-                return "/api/v1/products"
-            case .fetchItem(let productID):
-                return "/api/v1/products/\(productID)"
-            case .fetchUserSellingItems(let userId, _):
-                return "/api/v1/users/\(userId)/products"
-            case .fetchUserWishItems(let useId, _):
-                return "/api/v1/users/\(useId)/products_wish"
-            case .registerItem(let userID, _):
-                return "/api/v1/users/\(userID)/products"
-            case .deleteUser(let id):
-                return "/api/v1/users/\(id)"
-            case .addWishItem(let userId, let productID):
-                return "api/v1/users/\(userId)/products/\(productID)/wish"
-            case .deleteWishItem(let userId, let productID):
-                return "api/v1/users/\(userId)/products/\(productID)/wish"
-            case .fetchAllChats(let userId, _):
-                return "api/v1/users/\(userId)/chatrooms"
-            case .fetchItemChatroom(let userId, let chatroomId):
-                return "api/v1/users/\(userId)/chatrooms/\(chatroomId)"
-            case .fetchMyItemChats(let userId, let chatroomId):
-                return "api/v1/users/\(userId)/chatrooms/\(chatroomId)/chats"
-            case .connectWebSoket(let id, let chatroomId):
-                return "api/v1/users/\(id)/chatrooms/\(chatroomId)/ws"
+        case .login:
+            return "/api/v1/users/auth/login"
+        case .registerUser:
+            return "/api/v1/users"
+        case .fetchUser(let id):
+            return "/api/v1/users/\(id)"
+        case .update(let user):
+            return "/api/v1/users/\(user.id ?? "")"
+        case .fetchItems:
+            return "/api/v1/products"
+        case .fetchItem(let productID):
+            return "/api/v1/products/\(productID)"
+        case .fetchUserSellingItems(let userId, _):
+            return "/api/v1/users/\(userId)/products"
+        case .fetchUserWishItems(let useId, _):
+            return "/api/v1/users/\(useId)/products_wish"
+        case .registerItem(let userID, _):
+            return "/api/v1/users/\(userID)/products"
+        case .deleteUser(let id):
+            return "/api/v1/users/\(id)"
+        case .addWishItem(let userId, let productID):
+            return "api/v1/users/\(userId)/products/\(productID)/wish"
+        case .deleteWishItem(let id, let productID):
+            return "api/v1/users/\(id)/products/\(productID)/wish"
+        case .fetchAllChats(let userId, _):
+            return "api/v1/users/\(userId)/chatrooms"
+        case .fetchItemChatroom(let userId, let chatroomId):
+            return "api/v1/users/\(userId)/chatrooms/\(chatroomId)"
+        case .fetchMyItemChats(let userId, let chatroomId):
+            return "api/v1/users/\(userId)/chatrooms/\(chatroomId)/chats"
+        case .connectWebSoket(let id, let chatroomId):
+            return "api/v1/users/\(id)/chatrooms/\(chatroomId)/ws"
         }
     }
     
     var method: HTTPMethod {
         switch self {
-            case .login, .registerUser, .registerItem, .addWishItem: return .post
-            case .fetchUser, .fetchItem, .fetchItems, .fetchUserSellingItems, .fetchUserWishItems, .fetchAllChats, .fetchItemChatroom, .fetchMyItemChats, .connectWebSoket: return .get
-            case .update: return .put
-            case .deleteUser, .deleteWishItem: return .delete
+        case .login, .registerUser, .registerItem, .addWishItem: return .post
+        case .fetchUser, .fetchItem, .fetchItems, .fetchUserSellingItems, .fetchUserWishItems, .fetchAllChats, .fetchItemChatroom, .fetchMyItemChats, .connectWebSoket: return .get
+        case .update: return .put
+        case .deleteUser, .deleteWishItem: return .delete
         }
     }
     
     var parameters: RequestParameters {
         switch self {
-            case .login(let user): return .body(user)
-            case .update(let user): return .body(user)
-            case .fetchItems(let queryItem), .fetchUserSellingItems(_, let queryItem), .fetchUserWishItems(_, let queryItem), .fetchAllChats(_, let queryItem): return .query(queryItem)
-            case .fetchUser, .registerUser, .fetchItem, .registerItem, .deleteUser, .addWishItem, .deleteWishItem, .fetchItemChatroom, .fetchMyItemChats, .connectWebSoket: return .none
+        case .login(let user): return .body(user)
+        case .update(let user): return .body(user)
+        case .fetchItems(let queryItem), .fetchUserSellingItems(_, let queryItem), .fetchUserWishItems(_, let queryItem), .fetchAllChats(_, let queryItem): return .query(queryItem)
+        case .fetchUser, .registerUser, .fetchItem, .registerItem, .deleteUser, .addWishItem, .deleteWishItem, .fetchItemChatroom, .fetchMyItemChats, .connectWebSoket: return .none
         }
     }
     
@@ -137,34 +116,34 @@ extension Purpose {
         var urlRequest = try URLRequest(url: url.appendingPathComponent(path), method: method)
         let userId = UserDefaults.standard.object(forKey: Const.userId) as? String ?? ""
         let accessToken = KeyChain.read(key: userId) ?? ""
-        print("userId: \(userId)")
-        print("accessToken: \(accessToken)")
+//        print("userId: \(userId)")
+//        print("accessToken: \(accessToken)")
         var headers = HTTPHeaders()
         
-//        header 구성
+        //        header 구성
         switch header {
-            case .json:
-                headers = [ Header.contentType.type : Header.json.type ]
-            case .jsonWithToken:
-                headers = [ Header.contentType.type: Header.json.type, Header.authorization.type : accessToken ]
-            case .multipart:
-                headers = [ Header.contentType.type: Header.multipart.type ]
-            case .multipartWithToken:
-                headers = [ Header.contentType.type: Header.multipart.type, Header.authorization.type : accessToken ]
-            case .none: break
+        case .json:
+            headers = [ Header.contentType.type : Header.json.type ]
+        case .jsonWithToken:
+            headers = [ Header.contentType.type: Header.json.type, Header.authorization.type : accessToken ]
+        case .multipart:
+            headers = [ Header.contentType.type: Header.multipart.type ]
+        case .multipartWithToken:
+            headers = [ Header.contentType.type: Header.multipart.type, Header.authorization.type : accessToken ]
+        case .none: break
         }
         
         urlRequest.headers = headers
         
-//        parameter 구성
+        //        parameter 구성
         switch parameters {
-            case .body(let parameter):
-                let jsonParameter = parameter?.toJSONData()
-                urlRequest.httpBody = jsonParameter
-            case .none:
-                return urlRequest
-            case .query(let query):
-                return try URLEncoding.default.encode(urlRequest, with: query)
+        case .body(let parameter):
+            let jsonParameter = parameter?.toJSONData()
+            urlRequest.httpBody = jsonParameter
+        case .none:
+            return urlRequest
+        case .query(let query):
+            return try URLEncoding.default.encode(urlRequest, with: query)
         }
         return urlRequest
     }
