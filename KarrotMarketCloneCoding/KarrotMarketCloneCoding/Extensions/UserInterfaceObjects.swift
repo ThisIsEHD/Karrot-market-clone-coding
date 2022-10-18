@@ -309,6 +309,6 @@ class CustomPlaceholderTextView: UIView, UITextViewDelegate {
     
     private func setConstraints() {
         label.anchor(top: topAnchor, bottom: bottomAnchor, leading: leadingAnchor, leadingConstant: 12, trailing: trailingAnchor)
-        textView.anchor(top: topAnchor, bottom: bottomAnchor, leading: leadingAnchor, leadingConstant: 10, trailing: trailingAnchor)
+        textView.anchor(top: topAnchor, topConstant: 8, bottom: bottomAnchor, bottomConstant: 8, leading: leadingAnchor, leadingConstant: 10, trailing: trailingAnchor)
     }
 }

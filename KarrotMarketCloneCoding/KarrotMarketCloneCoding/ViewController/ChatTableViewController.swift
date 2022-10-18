@@ -10,7 +10,7 @@ import UIKit
 class ChatTableViewController: UIViewController {
     // MARK: - Properties
     
-    let userId = UserDefaults.standard.object(forKey: Const.userId) as? String ?? ""
+    private var userId: ID = UserDefaults.standard.object(forKey: Const.userId) as? String ?? ""
     
     var rooms: [Chat]? {
         didSet {
@@ -19,22 +19,29 @@ class ChatTableViewController: UIViewController {
     }
     
     let chatListView = UITableView()
+    
+    private let titleLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.text = "채팅"
+        lbl.font = UIFont.boldSystemFont(ofSize: 20)
+        lbl.textColor = .black
+        return lbl
+    }()
 
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
        
-        rooms = [Chat(chatroomId: 1, productId: 1, product: nil, seller: ChatUserInfo(chatroomId: 1, userId: "76fcfc43-5002-4d16-848f-525534c16e2", nickname: "domb", profileImageUrl: ""), buyer: ChatUserInfo(chatroomId: 1, userId: "76fcfc43-5002-4d16-848f-525534ec16e2", nickname: "dodo", profileImageUrl: ""), lastChat: LastChat(text: "sdfsefsefsef", sendDate: Date()))]
+        rooms = [Chat(chatroomId: 1, productId: 1, product: nil, seller: User(chatroomId: 1, userId: "76fcfc43-5002-4d16-848f-525534c16e2", nickname: "domb", profileImageUrl: ""), buyer: User(chatroomId: 1, userId: "76fcfc43-5002-4d16-848f-525534ec16e2", nickname: "dodo", profileImageUrl: ""), lastChat: LastChat(text: "sdfsefsefsef", sendDate: Date()))]
         
-        view.backgroundColor = .systemBackground
         configureViews()
-//        configureChatList()
+//        fetchChatList()
     }
     
     // MARK: - Actions
     
-    private func configureChatList() {
+    private func fetchChatList() {
         Network.shared.fetchAllChatrooms(id: userId) { result in
             switch result {
                 case .success(let rooms):
@@ -50,7 +57,8 @@ class ChatTableViewController: UIViewController {
     private func configureViews() {
         view.backgroundColor = .systemBackground
         
-        navigationItem.title = "채팅"
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleLabel)
+        chatListView.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         
         setupTableView()
         setConstraints()
@@ -94,11 +102,10 @@ extension ChatTableViewController: UITableViewDelegate, UITableViewDataSource {
             if user?.userId != userId {
                 cell.nicknameLabel.text = user?.nickname
                 cell.profileImageView.loadImage(url: user?.profileImageUrl ?? "")
+                cell.latestMessageLabel.text = rooms.lastChat.text
+                cell.itemThumbnailImageView.loadImage(url: rooms.product?.thumbnail ?? "")
             }
         }
-        
-        cell.latestMessageLabel.text = rooms.lastChat.text
-        cell.itemThumbnailImageView.loadImage(url: rooms.product?.thumbnail ?? "")
         
         cell.selectionStyle = .none
         
@@ -106,9 +113,29 @@ extension ChatTableViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let chatroomId = rooms?[indexPath.row].chatroomId
+        
         let conversationVC = ConversationViewController()
-        tabBarController?.tabBar.isHidden = true
-        navigationController?.pushViewController(conversationVC, animated: true)
+        
+        guard let rooms = rooms?[indexPath.row] else { return }
+        let buyer = rooms.buyer
+        let seller = rooms.seller
+        
+        [buyer, seller].forEach { user in
+            if user?.userId != userId {
+
+                Network.shared.fetchImage(url: user?.profileImageUrl ?? "") { result in
+                    switch result {
+                        case .success(let image):
+                            conversationVC.man = ChatUser(id: user?.id, nickname: user?.nickname, profileImage: image)
+                            self.navigationController?.pushViewController(conversationVC, animated: true)
+                        case .failure(let error):
+                            print(error)
+                    }
+                }
+                
+                conversationVC.man = ChatUser(id: user?.id, nickname: user?.nickname, profileImage: UIImage(named: "logo"))
+                self.navigationController?.pushViewController(conversationVC, animated: true)
+            }
+        }
     }
 }

@@ -8,22 +8,17 @@
 import UIKit
 
 
-class ConversationView: UICollectionView {
-    
-    var style: ChatStyle? {
-        didSet {
-            backgroundColor = style?.backgroundColor
-        }
-    }
+class ConversationView: UITableView {
     
     required init() {
-        let flowLayout = UICollectionViewFlowLayout()
-        flowLayout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-
-        super.init(frame: .zero, collectionViewLayout: flowLayout)
+        super.init(frame: .zero, style: .plain)
+        
+        backgroundColor = .systemBackground
         
         alwaysBounceVertical = true
         keyboardDismissMode = .interactive
+        separatorStyle = .none
+        
         registerCells()
     }
     
@@ -33,8 +28,8 @@ class ConversationView: UICollectionView {
     }
     
     func registerCells() {
-        register(UINib(nibName: "OutgoingMessageCell", bundle: nil), forCellWithReuseIdentifier: "outgoingMessage")
-        register(UINib(nibName: "IncomingMessageCell", bundle: nil), forCellWithReuseIdentifier: "incomingMessage")
+        register(UINib(nibName: "OutgoingMessageCell", bundle: nil), forCellReuseIdentifier: "outgoingMessage")
+        register(UINib(nibName: "IncomingMessageCell", bundle: nil), forCellReuseIdentifier: "incomingMessage")
     }
     
     public func scrollToBottom(animated: Bool) {

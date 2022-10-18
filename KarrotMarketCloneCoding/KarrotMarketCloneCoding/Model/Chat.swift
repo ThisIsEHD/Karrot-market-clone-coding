@@ -25,8 +25,8 @@ struct Chat: Codable {
     let chatroomId: Int ///내가 참여하고있는 채팅방 id
     let productId: Int
     let product: Item?
-    let seller: ChatUserInfo?
-    let buyer: ChatUserInfo?
+    let seller: User?
+    let buyer: User?
     let lastChat: LastChat
     
     enum CodingKeys: String, CodingKey {
@@ -35,42 +35,34 @@ struct Chat: Codable {
     }
 }
 
-/// 단일 채팅정보에 담겨져있는 나와 상대방 정보를 저장하는 객체
-///
-///> domb: chatroomId는 User가 갖고있는 고유한 id가 아니라고 생각해 User와 별개로 ChatUser 모델을 하나 만들어줌. 그리고 User와는 id key값도 달라서 같이 사용할수 없을 것 같음.
-struct ChatUserInfo: Codable {
-    let chatroomId: Int
-    let userId: String
-    let nickname: String
-    let profileImageUrl: String?
-    
-    enum CodingKeys: String, CodingKey {
-        case chatroomId, userId, nickname
-        case profileImageUrl = "profileImage"
-    }
-}
-
 ///Conversation View에 저장하여 따로 사용하는 User객체
 struct ChatUser {
-    let id: String
-    let nickname: String
+    let id: String?
+    let nickname: String?
     let profileImage: UIImage?
     var isMe: Bool {
+        guard let id = id else { return false }
         let userId = UserDefaults.standard.object(forKey: Const.userId) as? String
         return userId == id
     }
     
-    init(id: String, nickname: String, profileImage: UIImage?) {
+    init(id: String?, nickname: String?, profileImage: UIImage?) {
         self.id = id
         self.nickname = nickname
         self.profileImage = profileImage
+    }
+    
+    init() {
+        self.id = nil
+        self.nickname = nil
+        self.profileImage = nil
     }
 }
 
 /// Message 객체
 struct Message {
     let id: Int
-    let user: ChatUser
+    let user: ChatUser?
     let body: String
     let sendDate: Date
 }
@@ -89,7 +81,6 @@ struct LastChat: Codable {
 ///채팅방 스타일을 한번에 지정하여 사용할 수 있음
 struct ChatStyle {
     
-    var backgroundColor: UIColor = .white
     var inputViewBackgroundColor: UIColor = .white
     var inputTextViewBackgroundColor: UIColor = UIColor(white: 0.8, alpha: 0.2)
     
@@ -111,7 +102,7 @@ struct ChatStyle {
     
     var sendButtonTintColor: UIColor = UIColor(white: 0.6, alpha: 1)
     
-    func size(for message: Message, in collectionView: UICollectionView) -> CGSize {
+    func size(for message: Message, in collectionView: UITableView) -> CGSize {
 
         var size: CGSize!
 

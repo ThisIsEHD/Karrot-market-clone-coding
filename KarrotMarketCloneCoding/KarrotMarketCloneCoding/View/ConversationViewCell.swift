@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ConversationViewCell: UICollectionViewCell {
+class ConversationViewCell: UITableViewCell {
     // MARK: - Properties
     
     @IBOutlet weak var profileImageView: UIImageView!
@@ -20,7 +20,7 @@ class ConversationViewCell: UICollectionViewCell {
             
             bubbleMessage.text = message.body
             dateLabel.text = message.sendDate.formatToString()
-            if !message.user.isMe {
+            if !message.user!.isMe {
 //                profileImageView?.image = message.user.profileImage
             }
         }
@@ -30,12 +30,12 @@ class ConversationViewCell: UICollectionViewCell {
             guard let style = style, let message = message else { return }
             
             bubbleMessage.font = style.font
-            bubbleMessage.textColor = message.user.isMe ? style.outgoingTextColor : style.incomingTextColor
-            bubbleMessage.backgroundColor = message.user.isMe ? style.outgoingBubbleColor : style.incomingBubbleColor
+            bubbleMessage.textColor = message.user!.isMe ? style.outgoingTextColor : style.incomingTextColor
+            bubbleMessage.backgroundColor = message.user!.isMe ? style.outgoingBubbleColor : style.incomingBubbleColor
             bubbleMessage.textContainerInset = style.bubbleMessageContainerInset
         }
     }
-    weak var delegate: UICollectionViewDelegate?
+    weak var delegate: UITableViewDelegate?
     
     var tapGestureRecognizer: UITapGestureRecognizer!
     
