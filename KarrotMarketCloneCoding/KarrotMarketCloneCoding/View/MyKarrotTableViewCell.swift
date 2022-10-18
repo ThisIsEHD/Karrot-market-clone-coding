@@ -1,16 +1,14 @@
 //
-//  CategoryTableViewCell.swift
+//  MyKarrotTableViewCell.swift
 //  KarrotMarketCloneCoding
 //
-//  Created by EHDOMB on 2022/07/17.
+//  Created by 서동운 on 2022/07/12.
 //
 
 import UIKit
 
-final class CategoryTableViewCell: UITableViewCell {
+final class MyKarrotTableViewCell: UITableViewCell {
 
-    static let identifier = "CategoryTableViewCell"
-    
     override func awakeFromNib() {
         super.awakeFromNib()
     }
@@ -18,5 +16,4 @@ final class CategoryTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
-    
 }

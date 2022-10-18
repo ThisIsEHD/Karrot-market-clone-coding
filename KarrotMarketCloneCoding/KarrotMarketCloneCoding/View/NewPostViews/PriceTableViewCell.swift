@@ -10,12 +10,15 @@ import UIKit
 final class PriceTableViewCell: UITableViewCell {
 
     static let identifier = "PriceTableViewCell"
+    internal var textChanged: ((String?) -> ()) = { _ in }
     
+    @IBOutlet weak var wonLabel: UILabel!
     @IBOutlet weak var priceTextField: UITextField!
     
     override func awakeFromNib() {
         super.awakeFromNib()
         priceTextField.delegate = self
+        wonLabel.textColor = .systemGray
         setPriceTextField()
     }
     
@@ -33,12 +36,26 @@ final class PriceTableViewCell: UITableViewCell {
         priceTextField.autocapitalizationType = .none
         priceTextField.borderStyle = .none
         priceTextField.leftViewMode = .always
-        priceTextField.attributedPlaceholder = NSAttributedString(string: "₩ 가격 (선택사항)", attributes: [.foregroundColor : UIColor.systemGray])
+        priceTextField.keyboardType = .numberPad
+        priceTextField.attributedPlaceholder = NSAttributedString(string: "가격 (선택사항)", attributes: [.foregroundColor : UIColor.systemGray])
     }
 }
 
 extension PriceTableViewCell: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        textField.text = "₩ "
+        wonLabel.textColor = .label
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        return textField.text!.count < 11
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        
+        if textField.text == "" {
+            wonLabel.textColor = .systemGray
+        } else {
+            textChanged(textField.text)
+        }
     }
 }

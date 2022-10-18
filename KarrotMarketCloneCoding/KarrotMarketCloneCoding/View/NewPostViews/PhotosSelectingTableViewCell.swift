@@ -27,7 +27,6 @@ final class PhotosSelectingTableViewCell: UITableViewCell {
     }()
     
     static func nib() -> UINib {
-        
         return UINib(nibName: "PhotosSelectingTableViewCell", bundle: nil)
     }
     

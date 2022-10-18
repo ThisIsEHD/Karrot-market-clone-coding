@@ -37,6 +37,7 @@ final class NotificationTableView: UIView {
     }
     
     private func setupTableView() {
+        
         tableView.anchor(top: topAnchor, bottom: bottomAnchor, leading: leadingAnchor, trailing: trailingAnchor)
     }
 }

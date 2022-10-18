@@ -10,6 +10,7 @@ import UIKit
 final class NotificationTableViewCell: UITableViewCell {
     
     static let identifier = "NotificationTableViewCell"
+    
     let imgView: UIImageView = {
         
         let imgView = UIImageView()
@@ -56,16 +57,17 @@ final class NotificationTableViewCell: UITableViewCell {
     }
     
     func setupImageViewLayout() {
+        
         imgView.anchor(top: topAnchor, topConstant: 30, leading: leadingAnchor, leadingConstant: 5, width: 54, height: 54)
     }
     
     func setupDescriptionLabelLayout() {
+        
         desciptionLabel.anchor(top: imgView.topAnchor, leading: imgView.trailingAnchor, leadingConstant: 5, trailing: trailingAnchor, trailingConstant: 5)
     }
     
     func setupDateLabelLayout() {
+        
         dateLabel.anchor(top: desciptionLabel.bottomAnchor, topConstant: 5 ,leading: desciptionLabel.leadingAnchor)
     }
-    
-    
 }
