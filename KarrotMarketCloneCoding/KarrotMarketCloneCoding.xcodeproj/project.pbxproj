@@ -718,7 +718,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = G8228CR939;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KarrotMarketCloneCoding/Info.plist;
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "당근마켓에서 앨범에의 접근권한을 요청합니다.";

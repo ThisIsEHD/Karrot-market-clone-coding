@@ -61,7 +61,7 @@ struct ChatUser {
 
 /// Message 객체
 struct Message {
-    let id: Int
+
     let user: ChatUser?
     let body: String
     let sendDate: Date
