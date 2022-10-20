@@ -18,6 +18,9 @@ class ChatTableViewController: UIViewController {
         }
     }
     
+    var lastId: Int?
+    var isFetchingChat = false
+    
     let chatListView = UITableView()
     
     private let titleLabel: UILabel = {
@@ -33,11 +36,9 @@ class ChatTableViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        rooms = [
-            Chat(chatroomId: 1, productId: 1, product: nil, seller: User(chatroomId: 1, userId: "76fcfc43-5002-4d16-848f-525534c16e2", nickname: "domb", profileImageUrl: ""), buyer: User(chatroomId: 1, userId: "76fcfc43-5002-4d16-848f-525534ec16e2", nickname: "dodo", profileImageUrl: ""), lastChat: LastChat(text: "sdfsefsefsef", sendDate: Date())),
-            Chat(chatroomId: 1, productId: 1, product: nil, seller: User(chatroomId: 2, userId: "76fcfc43-5002-4d16-848f-525534c16e2", nickname: "domb", profileImageUrl: ""), buyer: User(chatroomId: 1, userId: "76fcfc43-5002-4d16-848f-525534ec16e2", nickname: "dodo", profileImageUrl: ""), lastChat: LastChat(text: "sdfsefsefsef", sendDate: Date()))
-        ]
-        
+        rooms = (1...40).map { count in
+                Chat(chatroomId: count, productId: 1, product: nil, seller: User(chatroomId: 1, userId: "76fcfc43-5002-4d16-848f-525534c16e2", nickname: "domb", profileImageUrl: ""), buyer: User(chatroomId: 1, userId: "76fcfc43-5002-4d16-848f-525534ec16e2", nickname: "dodo", profileImageUrl: ""), lastChat: LastChat(text: "sdfsefsefsef", sendDate: Date()))
+            }
         configureViews()
         //        fetchChatList()
     }
@@ -45,10 +46,15 @@ class ChatTableViewController: UIViewController {
     // MARK: - Actions
     
     private func fetchChatList() {
-        Network.shared.fetchAllChatrooms(id: userId) { result in
+        
+        isFetchingChat = true
+        
+        Network.shared.fetchAllChatrooms(id: userId, lastId: lastId) { result in
             switch result {
-                case .success(let rooms):
-                    self.rooms = rooms
+                case .success(let chatList):
+                    self.rooms?.append(contentsOf: chatList!)
+                    self.lastId = chatList?.last?.chatroomId
+                    self.isFetchingChat = false
                 case .failure(let error):
                     print(error)
             }
@@ -139,6 +145,19 @@ extension ChatTableViewController: UITableViewDelegate, UITableViewDataSource {
                 conversationVC.man = ChatUser(id: user?.id, nickname: user?.nickname, profileImage: UIImage(named: "logo"))
                 self.navigationController?.pushViewController(conversationVC, animated: true)
             }
+        }
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        
+        let position = scrollView.contentOffset.y
+        
+        /// 이미지 prefetch와 캐시이미지 저장 구현하기
+    
+        if position > chatListView.contentSize.height - 1000 {
+            guard !isFetchingChat, rooms!.count >= 20, rooms!.count % 20 == 0 else { return }
+            
+            fetchChatList()
         }
     }
 }
