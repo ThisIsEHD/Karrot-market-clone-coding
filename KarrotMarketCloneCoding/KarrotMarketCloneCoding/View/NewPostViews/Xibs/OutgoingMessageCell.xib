@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_0" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="88" id="SM4-bh-aTv" customClass="ConversationViewCell" customModule="KarrotMarketCloneCoding" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="390" height="88"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="SM4-bh-aTv" id="q4K-0e-gNb">
+                <rect key="frame" x="0.0" y="0.0" width="390" height="88"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" text="Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor i" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4vd-31-rVf" customClass="BubbleMessage" customModule="KarrotMarketCloneCoding" customModuleProvider="target">
+                        <rect key="frame" x="91.333333333333343" y="10" width="283.66666666666663" height="68"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="300" id="uQd-3j-tDN"/>
+                        </constraints>
+                        <color key="textColor" systemColor="labelColor"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    </textView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="97g-R4-kvh">
+                        <rect key="frame" x="52.666666666666664" y="58.000000000000007" width="28.666666666666664" height="13.333333333333336"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                        <color key="textColor" systemColor="systemGray3Color"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="4vd-31-rVf" secondAttribute="bottom" constant="10" id="3nV-PS-Rf5"/>
+                    <constraint firstAttribute="bottom" secondItem="97g-R4-kvh" secondAttribute="bottom" constant="16.666666666666657" id="4Uy-YD-QyO"/>
+                    <constraint firstItem="4vd-31-rVf" firstAttribute="leading" secondItem="97g-R4-kvh" secondAttribute="trailing" constant="10" id="8rs-yT-9mQ"/>
+                    <constraint firstItem="4vd-31-rVf" firstAttribute="top" secondItem="q4K-0e-gNb" secondAttribute="top" constant="10" id="BIN-fL-1Eh"/>
+                    <constraint firstAttribute="trailing" secondItem="4vd-31-rVf" secondAttribute="trailing" constant="15" id="a1o-Yw-0jC"/>
+                    <constraint firstItem="97g-R4-kvh" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="q4K-0e-gNb" secondAttribute="leading" constant="10" id="mek-76-D68"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="bubbleMessage" destination="4vd-31-rVf" id="sXN-xq-5Sr"/>
+                <outlet property="dateLabel" destination="97g-R4-kvh" id="hpq-tI-cLF"/>
+            </connections>
+            <point key="canvasLocation" x="310.76923076923077" y="3.5545023696682461"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <systemColor name="labelColor">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray3Color">
+            <color red="0.7803921568627451" green="0.7803921568627451" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

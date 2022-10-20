@@ -243,5 +243,5 @@ protocol ProfileViewDelegate: AnyObject {
     
     func goToMyProfileVC()
     func selectedItemTableVC(_ title: ListTitle)
-    func configureUserInfo(of: User?)
+    func configureUserInfo()
 }

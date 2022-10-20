@@ -20,6 +20,7 @@ enum KarrotError: Error {
     case unknownUserOrItem
     case wrongForm([String : String])
     case alreadyWished
+    case userIdMismatchWithToken
     
     case notServerError(String)
     case unknownError
@@ -452,38 +453,6 @@ struct Network {
     func fetchItem(id: ProductID, completion: @escaping (Result<Item?, KarrotError>) -> Void) {
         
         AF.request(Purpose.fetchItem(id)).response { response in
-//<<<<<<< HEAD
-//=======
-//            if let err = response.error {
-//                print(err)
-//                completion(.failure(.serverError))
-//                return
-//            }
-//
-//            if let statusCode = response.response?.statusCode, (200...299).contains(statusCode) {
-//                guard let data = response.data else { return }
-//
-//                do {
-//                    let item = try JSONDecoder().decode(Item.self, from: data)
-//                    completion(.success(item))
-//                } catch {
-//                    print(error)
-//                    completion(.failure(.serverError))
-//                }
-//
-//            } else if let data = response.data {
-//                let json = data.toDictionary()
-//
-//                print("Register Failure Response: \(json)")
-//                completion(.failure(.serverError))
-//            }
-//        }
-//    }
-//
-//    func registerItem(item: Item, images: [UIImage], completion: @escaping (Result<Data?,KarrotError>) -> ()) {
-//
-//        AF.upload(multipartFormData: { data in
-//>>>>>>> main
             
             guard let httpResponse = response.response else { return }
             
@@ -495,6 +464,112 @@ struct Network {
                         return
                     }
                     completion(.success(list))
+                default:
+                    completion(.failure(.unknownError))
+            }
+        }
+    }
+    
+    // MARK: - Chats
+    
+    func fetchAllChatrooms(id: UserId, lastId: Int? = nil, size: Int? = nil, completion: @escaping (Result<[Chat]?, KarrotError>) -> Void) {
+        
+        var queryItems = [String : Any]()
+        
+        if let lastId = lastId {
+            queryItems["last"] = lastId
+        }
+        
+        if let size = size {
+            queryItems["size"] = size
+        }
+        
+        AF.request(Purpose.fetchAllChats(id, queryItems)).response { response in
+            guard let httpResponse = response.response else { return }
+            
+            switch httpResponse.statusCode {
+                case 200:
+                    guard let data = response.data, let chatList = jsonDecode(type: ChatList.self, data: data) else {
+                        let message = "Error: response Data is nil or jsonDecoding failure, Error Point: \(#function)"
+                        completion(.failure(.notServerError(message)))
+                        return
+                    }
+                    completion(.success(chatList.chat))
+                case 400:
+                    guard let message = response.data?.toDictionary() as? [String: String] else {
+                        let message = "Error: Can't convert response Data to Dictionary, Error Point: \(#function)"
+                        completion(.failure(.notServerError(message)))
+                        return
+                    }
+                    completion(.failure(.wrongForm(message)))
+                case 401:
+                    completion(.failure(.invalidToken))
+                case 403:
+                    completion(.failure(.userIdMismatchWithToken))
+                case 404:
+                    completion(.failure(.unknownUserOrItem))
+                default:
+                    completion(.failure(.unknownError))
+            }
+        }
+    }
+    
+    func fetchItemChatroom(id: UserId, chatroomId: ChatroomId, completion: @escaping (Result<Chat, KarrotError>) -> Void) {
+        AF.request(Purpose.fetchItemChatroom(id, chatroomId)).response { response in
+            guard let httpResponse = response.response else { return }
+            
+            switch httpResponse.statusCode {
+                case 200:
+                    guard let data = response.data, let chat = jsonDecode(type: Chat.self, data: data) else {
+                        let message = "Error: response Data is nil or jsonDecoding failure, Error Point: \(#function)"
+                        completion(.failure(.notServerError(message)))
+                        return
+                    }
+                    completion(.success(chat))
+                case 400:
+                    guard let message = response.data?.toDictionary() as? [String: String] else {
+                        let message = "Error: Can't convert response Data to Dictionary, Error Point: \(#function)"
+                        completion(.failure(.notServerError(message)))
+                        return
+                    }
+                    completion(.failure(.wrongForm(message)))
+                case 401:
+                    completion(.failure(.invalidToken))
+                case 403:
+                    completion(.failure(.userIdMismatchWithToken))
+                case 404:
+                    completion(.failure(.unknownUserOrItem))
+                default:
+                    completion(.failure(.unknownError))
+            }
+        }
+    }
+    
+    func fetchMyItemChats(id: UserId, chatroomId: ChatroomId, completion: @escaping (Result<[Chat]?, KarrotError>) -> Void) {
+        AF.request(Purpose.fetchMyItemChats(id, chatroomId)).response { response in
+            guard let httpResponse = response.response else { return }
+            
+            switch httpResponse.statusCode {
+                case 200:
+                    guard let data = response.data, let chatList = jsonDecode(type: ChatList.self, data: data) else {
+                        let message = "Error: response Data is nil or jsonDecoding failure, Error Point: \(#function)"
+                        completion(.failure(.notServerError(message)))
+                        return
+                    }
+                    completion(.success(chatList.chat))
+                case 400:
+                    guard let message = response.data?.toDictionary() as? [String: String] else {
+                        let message = "Error: Can't convert response Data to Dictionary, Error Point: \(#function)"
+                        completion(.failure(.notServerError(message)))
+                        return
+                    }
+                    completion(.failure(.wrongForm(message)))
+                case 401:
+                    completion(.failure(.invalidToken))
+                case 403:
+                    completion(.failure(.userIdMismatchWithToken))
+                case 404:
+                    completion(.failure(.unknownUserOrItem))
                 default:
                     completion(.failure(.unknownError))
             }

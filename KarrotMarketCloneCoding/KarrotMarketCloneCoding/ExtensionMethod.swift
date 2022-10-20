@@ -6,6 +6,9 @@
 //
 
 import Foundation
+import UIKit
+
+//private let imgCache = NSCache<NSString, UIImage>()
 
 extension String {
     func getUserId() -> UserId? {
@@ -33,5 +36,48 @@ extension Data {
         guard let dictionaryData = try? JSONSerialization.jsonObject(with: self) as? [String: String] else { return [:] }
         
         return dictionaryData
+    }
+}
+
+extension Date {
+    
+    func formatToString() -> String {
+        let dateFormatter = DateFormatter()
+        let Today = Calendar.current.component(.day, from: Date())
+        dateFormatter.timeStyle = .short
+        if Calendar.current.component(.day, from: self) == Today {
+            dateFormatter.dateFormat = "HH:mm"
+        } else {
+            dateFormatter.dateFormat = "YYYY.MM.dd"
+        }
+        return dateFormatter.string(from: self)
+    }
+}
+
+
+extension UIImageView {
+    func loadImage(url: String) {
+        //  self.image = nil
+        
+        //   if let img = imgCache.object(forKey: url as NSString) {
+        //   self.image = img
+        //      return
+        //    }
+        if url == "" {
+            self.image = UIImage(named: "logo")
+        } else {
+            
+            Network.shared.fetchImage(url: url) { result in
+                switch result {
+                    case .success(let image):
+                        DispatchQueue.main.async {
+                            //  imgCache.setObject(image, forKey: url as NSString)
+                            self.image = image
+                        }
+                    case .failure(let error):
+                        print(error)
+                }
+            }
+        }
     }
 }

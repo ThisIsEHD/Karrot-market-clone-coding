@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="21225" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_0" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21207"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="86" id="xIg-VQ-fbm" customClass="ConversationViewCell" customModule="KarrotMarketCloneCoding" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="390" height="86"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="xIg-VQ-fbm" id="6qy-9Q-ona">
+                <rect key="frame" x="0.0" y="0.0" width="390" height="86"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultProfileImage" translatesAutoresizingMaskIntoConstraints="NO" id="pkk-UM-M1G">
+                        <rect key="frame" x="20" y="0.0" width="40" height="40"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="40" id="Bzg-nQ-e1L"/>
+                            <constraint firstAttribute="height" constant="40" id="tx5-ds-PoF"/>
+                        </constraints>
+                    </imageView>
+                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" editable="NO" text="Lorem ipsum dolor sit er elit lamet, consectetaur cillium m poen legum odioque civiuda." selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5eo-QD-vF9" customClass="BubbleMessage" customModule="KarrotMarketCloneCoding" customModuleProvider="target">
+                        <rect key="frame" x="75.000000000000014" y="5" width="239.33333333333337" height="76"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="250" id="f6Y-r1-CCF"/>
+                        </constraints>
+                        <color key="textColor" systemColor="labelColor"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                    </textView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Xl-hc-oqi">
+                        <rect key="frame" x="324.33333333333331" y="62.666666666666664" width="28.666666666666686" height="13.333333333333336"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                        <color key="textColor" systemColor="systemGray3Color"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" secondItem="5eo-QD-vF9" secondAttribute="bottom" constant="5" id="3ju-0P-z8i"/>
+                    <constraint firstAttribute="bottom" secondItem="7Xl-hc-oqi" secondAttribute="bottom" constant="10" id="45E-zx-JoN"/>
+                    <constraint firstItem="5eo-QD-vF9" firstAttribute="top" secondItem="6qy-9Q-ona" secondAttribute="top" constant="5" id="69N-wH-2UK"/>
+                    <constraint firstItem="7Xl-hc-oqi" firstAttribute="leading" secondItem="5eo-QD-vF9" secondAttribute="trailing" constant="10" id="D8G-Jb-lG4"/>
+                    <constraint firstItem="pkk-UM-M1G" firstAttribute="leading" secondItem="6qy-9Q-ona" secondAttribute="leading" constant="20" id="U5F-PH-Or9"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="7Xl-hc-oqi" secondAttribute="trailing" constant="10" id="cFY-yK-dVy"/>
+                    <constraint firstItem="5eo-QD-vF9" firstAttribute="leading" secondItem="pkk-UM-M1G" secondAttribute="trailing" constant="15" id="nJs-0b-KYP"/>
+                    <constraint firstItem="pkk-UM-M1G" firstAttribute="top" secondItem="6qy-9Q-ona" secondAttribute="top" id="zSk-nM-UTl"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="bubbleMessage" destination="5eo-QD-vF9" id="JFO-A6-GGc"/>
+                <outlet property="dateLabel" destination="7Xl-hc-oqi" id="4gh-Rc-bzn"/>
+                <outlet property="profileImageView" destination="pkk-UM-M1G" id="OOJ-DG-wHu"/>
+            </connections>
+            <point key="canvasLocation" x="88" y="-278"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="defaultProfileImage" width="376" height="376"/>
+        <systemColor name="labelColor">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemGray3Color">
+            <color red="0.7803921568627451" green="0.7803921568627451" blue="0.80000000000000004" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>

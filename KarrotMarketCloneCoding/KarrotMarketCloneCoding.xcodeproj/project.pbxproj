@@ -34,6 +34,13 @@
 		7248CA47288F5CED00DDF939 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7248CA46288F5CED00DDF939 /* HomeViewModel.swift */; };
 		72ED25C92898D87800031AD1 /* CustomAF.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72ED25C82898D87800031AD1 /* CustomAF.swift */; };
 		72ED25CB2898D95F00031AD1 /* ExtensionMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72ED25CA2898D95F00031AD1 /* ExtensionMethod.swift */; };
+		72F7CFB128F91DB200E0D0C0 /* ChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F7CFB028F91DB200E0D0C0 /* ChatTableViewCell.swift */; };
+		72F7CFB328F9222C00E0D0C0 /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F7CFB228F9222C00E0D0C0 /* ConversationViewController.swift */; };
+		72F7CFB528F922AD00E0D0C0 /* ConversationViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F7CFB428F922AD00E0D0C0 /* ConversationViewCell.swift */; };
+		72F7CFB728F92CB400E0D0C0 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F7CFB628F92CB400E0D0C0 /* Chat.swift */; };
+		72F7D02928F9BB9B00E0D0C0 /* ConversationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F7D02828F9BB9B00E0D0C0 /* ConversationView.swift */; };
+		72F7D02B28FA88C900E0D0C0 /* IncomingMessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 72F7D02A28FA88C900E0D0C0 /* IncomingMessageCell.xib */; };
+		72F7D02D28FA88DC00E0D0C0 /* OutgoingMessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 72F7D02C28FA88DC00E0D0C0 /* OutgoingMessageCell.xib */; };
 		D347FE84288BE8A100EF06B5 /* UserCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE83288BE8A100EF06B5 /* UserCheckView.swift */; };
 		D347FE86288BF1CA00EF06B5 /* NewPostTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE85288BF1CA00EF06B5 /* NewPostTableView.swift */; };
 		D347FE88288C2FC700EF06B5 /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D347FE87288C2FC700EF06B5 /* NotificationViewController.swift */; };
@@ -43,7 +50,7 @@
 		D3A2158B288D905400D06AD3 /* Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A21585288D905400D06AD3 /* Enum.swift */; };
 		D3A2158C288D905400D06AD3 /* UserInterfaceObjects.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A21587288D905400D06AD3 /* UserInterfaceObjects.swift */; };
 		D3A2158D288D905400D06AD3 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A21588288D905400D06AD3 /* Color.swift */; };
-		D3A2158F288D90E800D06AD3 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A2158E288D90E800D06AD3 /* ChatViewController.swift */; };
+		D3A2158F288D90E800D06AD3 /* ChatTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A2158E288D90E800D06AD3 /* ChatTableViewController.swift */; };
 		D3C23A5828EB28B5009B53B4 /* JWTDecode in Frameworks */ = {isa = PBXBuildFile; productRef = D3C23A5728EB28B5009B53B4 /* JWTDecode */; };
 		D3C23A5A28EB5888009B53B4 /* Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C23A5928EB5888009B53B4 /* Authentication.swift */; };
 		D3D93CDF28EB21DD00B3CE7B /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D93CDE28EB21DD00B3CE7B /* SettingViewController.swift */; };
@@ -109,6 +116,13 @@
 		7248CA46288F5CED00DDF939 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		72ED25C82898D87800031AD1 /* CustomAF.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAF.swift; sourceTree = "<group>"; };
 		72ED25CA2898D95F00031AD1 /* ExtensionMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionMethod.swift; sourceTree = "<group>"; };
+		72F7CFB028F91DB200E0D0C0 /* ChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableViewCell.swift; sourceTree = "<group>"; };
+		72F7CFB228F9222C00E0D0C0 /* ConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewController.swift; sourceTree = "<group>"; };
+		72F7CFB428F922AD00E0D0C0 /* ConversationViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewCell.swift; sourceTree = "<group>"; };
+		72F7CFB628F92CB400E0D0C0 /* Chat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
+		72F7D02828F9BB9B00E0D0C0 /* ConversationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationView.swift; sourceTree = "<group>"; };
+		72F7D02A28FA88C900E0D0C0 /* IncomingMessageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = IncomingMessageCell.xib; sourceTree = "<group>"; };
+		72F7D02C28FA88DC00E0D0C0 /* OutgoingMessageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = OutgoingMessageCell.xib; sourceTree = "<group>"; };
 		84FFF65EC2D21DA804E8D34F /* Pods_KarrotMarketCloneCoding.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_KarrotMarketCloneCoding.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D347FE83288BE8A100EF06B5 /* UserCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCheckView.swift; sourceTree = "<group>"; };
 		D347FE85288BF1CA00EF06B5 /* NewPostTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPostTableView.swift; sourceTree = "<group>"; };
@@ -119,7 +133,7 @@
 		D3A21585288D905400D06AD3 /* Enum.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Enum.swift; sourceTree = "<group>"; };
 		D3A21587288D905400D06AD3 /* UserInterfaceObjects.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserInterfaceObjects.swift; sourceTree = "<group>"; };
 		D3A21588288D905400D06AD3 /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
-		D3A2158E288D90E800D06AD3 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
+		D3A2158E288D90E800D06AD3 /* ChatTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableViewController.swift; sourceTree = "<group>"; };
 		D3C23A5928EB5888009B53B4 /* Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Authentication.swift; sourceTree = "<group>"; };
 		D3D93CDE28EB21DD00B3CE7B /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		D3DF36282881AF5100F20065 /* ProfileEditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditingViewController.swift; sourceTree = "<group>"; };
@@ -199,6 +213,7 @@
 				D3A21585288D905400D06AD3 /* Enum.swift */,
 				D3F0E7C528E28717006AEB3D /* Alert.swift */,
 				D3F0E7C728E28B89006AEB3D /* Const.swift */,
+				72F7CFB628F92CB400E0D0C0 /* Chat.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -238,6 +253,8 @@
 				D3DF366228842A7300F20065 /* TitleTableViewCell.xib */,
 				D3DF366F288457FD00F20065 /* PriceTableViewCell.xib */,
 				D3DF36732884601600F20065 /* DetailTableViewCell.xib */,
+				72F7D02A28FA88C900E0D0C0 /* IncomingMessageCell.xib */,
+				72F7D02C28FA88DC00E0D0C0 /* OutgoingMessageCell.xib */,
 			);
 			path = Xibs;
 			sourceTree = "<group>";
@@ -291,7 +308,8 @@
 				D3E1231E28800FEE00A1EDC8 /* SignInViewController.swift */,
 				D3DF36282881AF5100F20065 /* ProfileEditingViewController.swift */,
 				D347FE87288C2FC700EF06B5 /* NotificationViewController.swift */,
-				D3A2158E288D90E800D06AD3 /* ChatViewController.swift */,
+				D3A2158E288D90E800D06AD3 /* ChatTableViewController.swift */,
+				72F7CFB228F9222C00E0D0C0 /* ConversationViewController.swift */,
 				723FE6972889091D00A987E7 /* TabbarController.swift */,
 				723FE6992889341000A987E7 /* HomeViewController.swift */,
 				7248CA46288F5CED00DDF939 /* HomeViewModel.swift */,
@@ -327,6 +345,9 @@
 				723FE61E287DACA100A987E7 /* MyKarrotTableViewCell.swift */,
 				723FE68F2887E4AE00A987E7 /* ItemDetailViewImagesCollectionViewCell.swift */,
 				723FE6A1288AC87C00A987E7 /* ItemTableViewCell.swift */,
+				72F7CFB028F91DB200E0D0C0 /* ChatTableViewCell.swift */,
+				72F7D02828F9BB9B00E0D0C0 /* ConversationView.swift */,
+				72F7CFB428F922AD00E0D0C0 /* ConversationViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -400,10 +421,12 @@
 				D3DF366428842A7300F20065 /* TitleTableViewCell.xib in Resources */,
 				D3DF36792885B53C00F20065 /* PhotosCollectionViewCell.xib in Resources */,
 				D3DF367D2887AF3C00F20065 /* PhotoPickerCollectionViewCell.xib in Resources */,
+				72F7D02D28FA88DC00E0D0C0 /* OutgoingMessageCell.xib in Resources */,
 				D3E12305287BF66100A1EDC8 /* LaunchScreen.storyboard in Resources */,
 				D3E12302287BF66100A1EDC8 /* Assets.xcassets in Resources */,
 				D3DF3671288457FD00F20065 /* PriceTableViewCell.xib in Resources */,
 				D3E12300287BF66000A1EDC8 /* (null) in Resources */,
+				72F7D02B28FA88C900E0D0C0 /* IncomingMessageCell.xib in Resources */,
 				D3DF36752884601600F20065 /* DetailTableViewCell.xib in Resources */,
 				D3DF366828842F6B00F20065 /* PhotosSelectingTableViewCell.xib in Resources */,
 			);
@@ -471,6 +494,7 @@
 				D347FE88288C2FC700EF06B5 /* NotificationViewController.swift in Sources */,
 				D3A2158D288D905400D06AD3 /* Color.swift in Sources */,
 				72ED25C92898D87800031AD1 /* CustomAF.swift in Sources */,
+				72F7CFB528F922AD00E0D0C0 /* ConversationViewCell.swift in Sources */,
 				723FE610287D649400A987E7 /* Constraints.swift in Sources */,
 				D3DF3670288457FD00F20065 /* PriceTableViewCell.swift in Sources */,
 				D3F0E7C428E0ABF4006AEB3D /* KeyChain.swift in Sources */,
@@ -497,8 +521,10 @@
 				D3D93CDF28EB21DD00B3CE7B /* SettingViewController.swift in Sources */,
 				723FE6902887E4AE00A987E7 /* ItemDetailViewImagesCollectionViewCell.swift in Sources */,
 				D3C23A5A28EB5888009B53B4 /* Authentication.swift in Sources */,
+				72F7CFB128F91DB200E0D0C0 /* ChatTableViewCell.swift in Sources */,
 				7248CA45288E57BB00DDF939 /* Network.swift in Sources */,
 				723FE6942888488600A987E7 /* ItemDetailViewBottomStickyView.swift in Sources */,
+				72F7CFB328F9222C00E0D0C0 /* ConversationViewController.swift in Sources */,
 				723FE61F287DACA100A987E7 /* MyKarrotTableViewCell.swift in Sources */,
 				723FE67B288531F300A987E7 /* ReusableProfileView.swift in Sources */,
 				723FE62728801F1600A987E7 /* MyKarrotHeaderView.swift in Sources */,
@@ -516,10 +542,12 @@
 				723FE681288539A900A987E7 /* ItemDetailViewOtherItemsCell.swift in Sources */,
 				D3E122F9287BF66000A1EDC8 /* AppDelegate.swift in Sources */,
 				D3F0E7C228E03507006AEB3D /* ProfileSettingViewController.swift in Sources */,
+				72F7CFB728F92CB400E0D0C0 /* Chat.swift in Sources */,
 				723FE692288806CB00A987E7 /* ItemDetailViewOtherItemsCollectionViewCell.swift in Sources */,
 				723FE6A02889523800A987E7 /* SearchBarBottomView.swift in Sources */,
-				D3A2158F288D90E800D06AD3 /* ChatViewController.swift in Sources */,
+				D3A2158F288D90E800D06AD3 /* ChatTableViewController.swift in Sources */,
 				723FE6A2288AC87C00A987E7 /* ItemTableViewCell.swift in Sources */,
+				72F7D02928F9BB9B00E0D0C0 /* ConversationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -661,7 +689,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = G8228CR939;
+				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KarrotMarketCloneCoding/Info.plist;
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "당근마켓에서 앨범에의 접근권한을 요청합니다.";

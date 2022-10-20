@@ -29,6 +29,10 @@ enum Purpose: Requestable {
     case deleteUser(ID)
     case addWishItem(ProductID, ID)
     case deleteWishItem(ProductID, ID)
+    case fetchAllChats(ID, [String : Any])
+    case fetchItemChatroom(ID, ChatroomId)
+    case fetchMyItemChats(ID, ChatroomId)
+    case connectWebSoket(ID, ChatroomId)
 }
 
 extension Purpose {
@@ -38,13 +42,14 @@ extension Purpose {
     
     var header: RequestHeaders {
         switch self {
+
         case .login:
             return .json
         case .registerUser:
             return .multipart
-        case .fetchUser, .update, .fetchUserWishItems ,.deleteUser, .addWishItem, .deleteWishItem:
+        case .fetchUser, .update, .fetchUserWishItems ,.deleteUser, .addWishItem, .deleteWishItem, .fetchAllChats:
             return .jsonWithToken
-        case .fetchItems, .fetchItem, .fetchUserSellingItems:
+            case .fetchItems, .fetchItem, .fetchUserSellingItems, .fetchItemChatroom, .fetchMyItemChats, .connectWebSoket:
             return .none
         case .registerItem:
             return .multipartWithToken
@@ -77,13 +82,21 @@ extension Purpose {
             return "api/v1/users/\(userId)/products/\(productID)/wish"
         case .deleteWishItem(let id, let productID):
             return "api/v1/users/\(id)/products/\(productID)/wish"
+        case .fetchAllChats(let userId, _):
+            return "api/v1/users/\(userId)/chatrooms"
+        case .fetchItemChatroom(let userId, let chatroomId):
+            return "api/v1/users/\(userId)/chatrooms/\(chatroomId)"
+        case .fetchMyItemChats(let userId, let chatroomId):
+            return "api/v1/users/\(userId)/chatrooms/\(chatroomId)/chats"
+        case .connectWebSoket(let id, let chatroomId):
+            return "api/v1/users/\(id)/chatrooms/\(chatroomId)/ws"
         }
     }
     
     var method: HTTPMethod {
         switch self {
         case .login, .registerUser, .registerItem, .addWishItem: return .post
-        case .fetchUser, .fetchItem, .fetchItems, .fetchUserSellingItems, .fetchUserWishItems: return .get
+        case .fetchUser, .fetchItem, .fetchItems, .fetchUserSellingItems, .fetchUserWishItems, .fetchAllChats, .fetchItemChatroom, .fetchMyItemChats, .connectWebSoket: return .get
         case .update: return .put
         case .deleteUser, .deleteWishItem: return .delete
         }
@@ -93,8 +106,8 @@ extension Purpose {
         switch self {
         case .login(let user): return .body(user)
         case .update(let user): return .body(user)
-        case .fetchItems(let queryItem), .fetchUserSellingItems(_, let queryItem), .fetchUserWishItems(_, let queryItem): return .query(queryItem)
-        case .fetchUser, .registerUser, .fetchItem, .registerItem, .deleteUser, .addWishItem, .deleteWishItem: return .none
+        case .fetchItems(let queryItem), .fetchUserSellingItems(_, let queryItem), .fetchUserWishItems(_, let queryItem), .fetchAllChats(_, let queryItem): return .query(queryItem)
+        case .fetchUser, .registerUser, .fetchItem, .registerItem, .deleteUser, .addWishItem, .deleteWishItem, .fetchItemChatroom, .fetchMyItemChats, .connectWebSoket: return .none
         }
     }
     
@@ -103,6 +116,8 @@ extension Purpose {
         var urlRequest = try URLRequest(url: url.appendingPathComponent(path), method: method)
         let userId = UserDefaults.standard.object(forKey: Const.userId) as? String ?? ""
         let accessToken = KeyChain.read(key: userId) ?? ""
+//        print("userId: \(userId)")
+//        print("accessToken: \(accessToken)")
         var headers = HTTPHeaders()
         
         //        header 구성
@@ -160,26 +175,6 @@ enum Header: String {
     }
 }
 
-struct MyInterceptor: RequestInterceptor {
-    func adapt(_ urlRequest: URLRequest, for session: Session, completion: @escaping (Result<URLRequest, Error>) -> Void) {
-        //        guard let accessToken = UserDefaults.standard.string(forKey: "AccessToken"), let userId = accessToken.getUserId() else {
-        //                  completion(.success(urlRequest))
-        //                  fatalError()
-        //              }
-        
-        //        var request = urlRequest
-        //        request.url?.appendPathComponent("/\(userId)")
-        //        request.addValue(accessToken, forHTTPHeaderField: "Authorization")
-        //        completion(.success(request))
-    }
-    
-    func retry(_ request: Request, for session: Session, dueTo error: Error, completion: @escaping (RetryResult) -> Void) {
-        //        guard let response = request.task?.response as? HTTPURLResponse, response.statusCode == 401 else {
-        //            completion(.doNotRetryWithError(error))
-        //            return
-        //        }
-    }
-}
-
 typealias ID = String
 typealias ProductID = Int
+typealias ChatroomId = Int

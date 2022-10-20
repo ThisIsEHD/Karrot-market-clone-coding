@@ -18,10 +18,10 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
             flag = true
             itemImagesCollectionView.reloadData()
             itemDetailViewBottomStickyView.configure(price: item?.price)
+            itemImagesCollectionViewPageControl.numberOfPages = item?.images?.count ?? 1
             itemDetailViewContentsTableView.reloadData()
+            itemDetailViewBottomStickyView.getWishButton().isSelected = item?.wished ?? false
             
-            /// 사용자의 정보를 가져와 찜한 상품인지 확인
-            /// wishButton 상태 업데이트
         }
     }
     var flag: Bool?
@@ -48,9 +48,8 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
         
         let pc = UIPageControl()
         
-        pc.numberOfPages = item?.images?.count ?? 1
         pc.currentPage = 0
-        pc.pageIndicatorTintColor = .systemGray5
+        pc.pageIndicatorTintColor = UIColor(white: 0.4, alpha: 0.4)
         pc.currentPageIndicatorTintColor = .white
         
         return pc

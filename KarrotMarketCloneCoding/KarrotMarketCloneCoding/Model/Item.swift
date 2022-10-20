@@ -33,6 +33,7 @@ struct Item: Codable {
     let regdate: String? //일단여기 잠깐 string
     let views: Int?
     let wishes: Int?
+    var wished: Bool? /// api 수정완료되면 옵셔널 제거
     let userId: String?
     let nickname: String?
     let profileImage: String?

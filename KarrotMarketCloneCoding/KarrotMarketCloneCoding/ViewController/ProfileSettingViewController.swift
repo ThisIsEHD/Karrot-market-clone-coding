@@ -183,12 +183,6 @@ class ProfileSettingViewController: UIViewController {
         return alert
     }
     
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        view.endEditing(true)
-    }
-    
     private func signIn() {
         
         Network.shared.login(email: email ?? "", pw: pw ?? "") { result in
