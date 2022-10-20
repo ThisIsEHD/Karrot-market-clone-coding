@@ -32,11 +32,14 @@ class ChatTableViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-       
-        rooms = [Chat(chatroomId: 1, productId: 1, product: nil, seller: User(chatroomId: 1, userId: "76fcfc43-5002-4d16-848f-525534c16e2", nickname: "domb", profileImageUrl: ""), buyer: User(chatroomId: 1, userId: "76fcfc43-5002-4d16-848f-525534ec16e2", nickname: "dodo", profileImageUrl: ""), lastChat: LastChat(text: "sdfsefsefsef", sendDate: Date()))]
+        
+        rooms = [
+            Chat(chatroomId: 1, productId: 1, product: nil, seller: User(chatroomId: 1, userId: "76fcfc43-5002-4d16-848f-525534c16e2", nickname: "domb", profileImageUrl: ""), buyer: User(chatroomId: 1, userId: "76fcfc43-5002-4d16-848f-525534ec16e2", nickname: "dodo", profileImageUrl: ""), lastChat: LastChat(text: "sdfsefsefsef", sendDate: Date())),
+            Chat(chatroomId: 1, productId: 1, product: nil, seller: User(chatroomId: 2, userId: "76fcfc43-5002-4d16-848f-525534c16e2", nickname: "domb", profileImageUrl: ""), buyer: User(chatroomId: 1, userId: "76fcfc43-5002-4d16-848f-525534ec16e2", nickname: "dodo", profileImageUrl: ""), lastChat: LastChat(text: "sdfsefsefsef", sendDate: Date()))
+        ]
         
         configureViews()
-//        fetchChatList()
+        //        fetchChatList()
     }
     
     // MARK: - Actions
@@ -103,7 +106,7 @@ extension ChatTableViewController: UITableViewDelegate, UITableViewDataSource {
                 cell.nicknameLabel.text = user?.nickname
                 cell.profileImageView.loadImage(url: user?.profileImageUrl ?? "")
                 cell.latestMessageLabel.text = rooms.lastChat.text
-                cell.itemThumbnailImageView.loadImage(url: rooms.product?.thumbnail ?? "")
+//                cell.itemThumbnailImageView.loadImage(url: rooms.product?.thumbnail ?? "")
             }
         }
         

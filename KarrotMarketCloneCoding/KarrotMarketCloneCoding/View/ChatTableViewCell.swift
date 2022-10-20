@@ -48,6 +48,13 @@ class ChatTableViewCell: UITableViewCell {
         setupLatestMessageLabel()
         setupItemThumbnailImageView()
     }
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        if itemThumbnailImageView.image == nil {
+            itemThumbnailImageView.removeFromSuperview()
+        }
+    }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

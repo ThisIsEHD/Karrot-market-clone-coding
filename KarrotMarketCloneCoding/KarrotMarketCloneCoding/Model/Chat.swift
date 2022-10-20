@@ -102,22 +102,6 @@ struct ChatStyle {
     
     var sendButtonTintColor: UIColor = UIColor(white: 0.6, alpha: 1)
     
-    func size(for message: Message, in collectionView: UITableView) -> CGSize {
-
-        var size: CGSize!
-
-        let bubbleMessage = BubbleMessage()
-
-        bubbleMessage.text = message.body
-        bubbleMessage.font = font
-
-        let bubbleSize = bubbleMessage.calculatedSize(in: CGSize(width: collectionView.bounds.width, height: .infinity))
-
-        size = CGSize(width: collectionView.bounds.width, height: bubbleSize.height)
-
-        return size
-    }
-    
     var inputViewTextContainerInset = UIEdgeInsets(top: 10, left: -2, bottom: 10, right: 0)
     var bubbleMessageContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
 }

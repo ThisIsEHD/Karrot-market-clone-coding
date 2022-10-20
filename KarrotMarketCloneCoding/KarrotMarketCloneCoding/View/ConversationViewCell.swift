@@ -101,9 +101,9 @@ class BubbleMessage: UITextView {
         
     }
   
-    func calculatedSize(in size: CGSize) -> CGSize {
-        return sizeThatFits(CGSize(width: size.width * 0.8, height: .infinity))
-    }
+//    func calculatedSize(in size: CGSize) -> CGSize {
+//        return sizeThatFits(CGSize(width: size.width * 0.8, height: .infinity))
+//    }
 }
 
 
