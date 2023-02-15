@@ -197,8 +197,9 @@ extension HomeViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let id = viewModel.dataSource?.itemIdentifier(for: indexPath)?.id
-        let vc = ItemDetailViewController(productId: id)
+        let userId = UserDefaults.standard.object(forKey: Const.userId) as? String ?? ""
+        let productId = viewModel.dataSource?.itemIdentifier(for: indexPath)?.id
+        let vc = ItemDetailViewController(id: userId, productId: productId)
         navigationController?.pushViewController(vc, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }

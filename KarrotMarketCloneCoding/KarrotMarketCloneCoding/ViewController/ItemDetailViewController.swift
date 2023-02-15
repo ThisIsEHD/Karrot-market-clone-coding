@@ -12,9 +12,10 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
     // MARK: - Properties
     
     private var productId: Int?
+    
     var item: Item? {
         didSet {
-            
+            print(item)
             flag = true
             itemImagesCollectionView.reloadData()
             itemDetailViewBottomStickyView.configure(price: item?.price)
@@ -87,10 +88,10 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
     
     // MARK: - Life Cycle
     
-    convenience init(productId: Int?) {
+    convenience init(id: ID, productId: ProductID?) {
         self.init()
     
-        Network.shared.fetchItem(id: productId!) { [self] result in
+        Network.shared.fetchItem(userId: id, productId: productId!) { [self] result in
             switch result {
                 case .success(let item):
                     
@@ -134,7 +135,7 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
         
         guard let itemID = item?.id, let userID = item?.userId else { return }
         
-        Network.shared.addWishItem(id: itemID, of: userID) { [unowned self] result in
+        Network.shared.addWishItem(productId: itemID, of: userID) { [unowned self] result in
             switch result {
                 case .success:
                     itemDetailViewBottomStickyView.getWishButton().isSelected = true
@@ -149,7 +150,7 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
         
         guard let itemID = item?.id, let userID = item?.userId else { return }
         
-        Network.shared.deleteWishItem(id: itemID, of: userID) { [unowned self] result in
+        Network.shared.deleteWishItem(productId: itemID, of: userID) { [unowned self] result in
             switch result {
                 case .success:
                     itemDetailViewBottomStickyView.getWishButton().isSelected = false
@@ -173,7 +174,7 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
             if item?.images?.count != nil {
                 itemDetailViewContentsTableView.contentInsetAdjustmentBehavior = .never
                 itemDetailTableHeaderView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.width)
-                gradient.frame = CGRect(x: 0, y: 0, width: UIApplication.shared.statusBarFrame.width, height: UIApplication.shared.statusBarFrame.height + navigationController!.navigationBar.frame.height)
+                gradient.frame = CGRect(x: 0, y: 0, width: UIApplication.shared.statusBarFrame.width, height: UIApplication.shared.statusBarFrame.height + (navigationController?.navigationBar.frame.height ?? 0))
                 
                 view.layer.addSublayer(gradient)
             } else {

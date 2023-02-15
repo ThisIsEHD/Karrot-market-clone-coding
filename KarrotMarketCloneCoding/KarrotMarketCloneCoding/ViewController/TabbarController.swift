@@ -20,7 +20,6 @@ final class TabbarController: UITabBarController {
         
         if !isLoggedIn { checkIfUserIsLoggedIn() }
         
-        
         /// domb: 로그아웃 이후 노티를 지워주는 과정이 없어서 반복 호출함.
         NotificationCenter.default.addObserver(self, selector: #selector(logout), name: NotificationType.logout.name, object: nil)
     }
@@ -53,6 +52,7 @@ final class TabbarController: UITabBarController {
         if token == nil {
             presentUserCheckVC()
         } else {
+    
             Network.shared.fetchUser(id: userId) { result in
                 switch result {
                     case .success(_):

@@ -22,7 +22,7 @@ enum Purpose: Requestable {
     case registerUser
     case update(User)
     case fetchItems([String : Any])
-    case fetchItem(ProductID)
+    case fetchItem(ID,ProductID)
     case fetchUserSellingItems(ID, [String : Any])
     case fetchUserWishItems(ID, [String : Any])
     case registerItem(ID, Item)
@@ -47,9 +47,9 @@ extension Purpose {
             return .json
         case .registerUser:
             return .multipart
-        case .fetchUser, .update, .fetchUserWishItems ,.deleteUser, .addWishItem, .deleteWishItem, .fetchAllChats:
+            case .fetchUser, .update, .fetchUserWishItems ,.deleteUser, .addWishItem, .deleteWishItem, .fetchAllChats, .fetchItem:
             return .jsonWithToken
-            case .fetchItems, .fetchItem, .fetchUserSellingItems, .fetchItemChatroom, .fetchMyItemChats, .connectWebSoket:
+            case .fetchItems, .fetchUserSellingItems, .fetchItemChatroom, .fetchMyItemChats, .connectWebSoket:
             return .none
         case .registerItem:
             return .multipartWithToken
@@ -58,38 +58,41 @@ extension Purpose {
     
     var path: String {
         switch self {
-        case .login:
-            return "/api/v1/users/auth/login"
-        case .registerUser:
-            return "/api/v1/users"
-        case .fetchUser(let id):
-            return "/api/v1/users/\(id)"
-        case .update(let user):
-            return "/api/v1/users/\(user.id ?? "")"
-        case .fetchItems:
-            return "/api/v1/products"
-        case .fetchItem(let productID):
-            return "/api/v1/products/\(productID)"
-        case .fetchUserSellingItems(let userId, _):
-            return "/api/v1/users/\(userId)/products"
-        case .fetchUserWishItems(let useId, _):
-            return "/api/v1/users/\(useId)/products_wish"
-        case .registerItem(let userID, _):
-            return "/api/v1/users/\(userID)/products"
-        case .deleteUser(let id):
-            return "/api/v1/users/\(id)"
-        case .addWishItem(let userId, let productID):
-            return "api/v1/users/\(userId)/products/\(productID)/wish"
-        case .deleteWishItem(let id, let productID):
-            return "api/v1/users/\(id)/products/\(productID)/wish"
-        case .fetchAllChats(let userId, _):
-            return "api/v1/users/\(userId)/chatrooms"
-        case .fetchItemChatroom(let userId, let chatroomId):
-            return "api/v1/users/\(userId)/chatrooms/\(chatroomId)"
-        case .fetchMyItemChats(let userId, let chatroomId):
-            return "api/v1/users/\(userId)/chatrooms/\(chatroomId)/chats"
-        case .connectWebSoket(let id, let chatroomId):
-            return "api/v1/users/\(id)/chatrooms/\(chatroomId)/ws"
+            case .login:
+                return "/api/v1/users/auth/login"
+            case .registerUser:
+                return "/api/v1/users"
+            case .fetchUser(let id):
+                return "/api/v1/users/\(id)"
+            case .update(let user):
+                return "/api/v1/users/\(user.id ?? "")"
+                
+            case .fetchItems:
+                return "/api/v1/products"
+            case .fetchItem(let userId, let productID):
+                return "/api/v1/users/\(userId)/products/\(productID)"
+            case .fetchUserSellingItems(let userId, _):
+                return "/api/v1/users/\(userId)/products"
+            case .fetchUserWishItems(let useId, _):
+                return "/api/v1/users/\(useId)/products_wish"
+            case .registerItem(let userID, _):
+                return "/api/v1/users/\(userID)/products"
+            
+                
+            case .deleteUser(let id):
+                return "/api/v1/users/\(id)"
+            case .addWishItem(let productID, let userId):
+                return "api/v1/users/\(userId)/products/\(productID)/wish"
+            case .deleteWishItem(let productID, let userId):
+                return "api/v1/users/\(userId)/products/\(productID)/wish"
+            case .fetchAllChats(let userId, _):
+                return "api/v1/users/\(userId)/chatrooms"
+            case .fetchItemChatroom(let userId, let chatroomId):
+                return "api/v1/users/\(userId)/chatrooms/\(chatroomId)"
+            case .fetchMyItemChats(let userId, let chatroomId):
+                return "api/v1/users/\(userId)/chatrooms/\(chatroomId)/chats"
+            case .connectWebSoket(let id, let chatroomId):
+                return "api/v1/users/\(id)/chatrooms/\(chatroomId)/ws"
         }
     }
     

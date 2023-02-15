@@ -287,6 +287,7 @@
 				D3E12310287D71AD00A1EDC8 /* View */,
 				D3E1230F287D719100A1EDC8 /* ViewController */,
 				723FE69D2889484700A987E7 /* Copyright.swift */,
+				7248CA44288E57BB00DDF939 /* Network.swift */,
 				72ED25C82898D87800031AD1 /* CustomAF.swift */,
 				72ED25CA2898D95F00031AD1 /* ExtensionMethod.swift */,
 				D3FB4CE328919C3F003300B0 /* DateFormatter.swift */,
@@ -318,7 +319,6 @@
 				D3D93CDE28EB21DD00B3CE7B /* SettingViewController.swift */,
 				723FE68728853E0800A987E7 /* ItemDetailViewController.swift */,
 				723FE6952889085400A987E7 /* SearchViewController.swift */,
-				7248CA44288E57BB00DDF939 /* Network.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -689,7 +689,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = G8228CR939;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = KarrotMarketCloneCoding/Info.plist;
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "당근마켓에서 앨범에의 접근권한을 요청합니다.";

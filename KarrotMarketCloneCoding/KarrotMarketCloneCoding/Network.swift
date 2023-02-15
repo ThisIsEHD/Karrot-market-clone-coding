@@ -340,8 +340,8 @@ struct Network {
         }
     }
     
-    func addWishItem(id: ProductID, of userID: ID, completion: @escaping (Result<Data?, KarrotError>) -> Void) {
-        AF.request(Purpose.addWishItem(id, userID)).validate().response { response in
+    func addWishItem(productId: ProductID, of userID: ID, completion: @escaping (Result<Data?, KarrotError>) -> Void) {
+        AF.request(Purpose.addWishItem(productId, userID)).response { response in
             guard let httpResponse = response.response else { return }
             
             switch httpResponse.statusCode {
@@ -361,13 +361,14 @@ struct Network {
                 case 404:
                     completion(.failure(.unknownUserOrItem))
                 default:
+                    print(httpResponse.statusCode)
                     completion(.failure(.unknownError))
             }
         }
     }
     
-    func deleteWishItem(id: ProductID, of userID: ID, completion: @escaping (Result<Data?, KarrotError>) -> Void) {
-        AF.request(Purpose.addWishItem(id, userID)).validate().response { response in
+    func deleteWishItem(productId: ProductID, of userID: ID, completion: @escaping (Result<Data?, KarrotError>) -> Void) {
+        AF.request(Purpose.deleteWishItem(productId, userID)).response { response in
             guard let httpResponse = response.response else { return }
             
             switch httpResponse.statusCode {
@@ -385,6 +386,7 @@ struct Network {
                 case 404:
                     completion(.failure(.unknownUserOrItem))
                 default:
+                    print(httpResponse.statusCode)
                     completion(.failure(.unknownError))
             }
         }
@@ -450,9 +452,9 @@ struct Network {
         }
     }
     
-    func fetchItem(id: ProductID, completion: @escaping (Result<Item?, KarrotError>) -> Void) {
+    func fetchItem(userId: ID, productId: ProductID, completion: @escaping (Result<Item?, KarrotError>) -> Void) {
         
-        AF.request(Purpose.fetchItem(id)).response { response in
+        AF.request(Purpose.fetchItem(userId,productId)).response { response in
             
             guard let httpResponse = response.response else { return }
             
@@ -465,6 +467,7 @@ struct Network {
                     }
                     completion(.success(list))
                 default:
+                    let message = response.data?.toDictionary()
                     completion(.failure(.unknownError))
             }
         }
