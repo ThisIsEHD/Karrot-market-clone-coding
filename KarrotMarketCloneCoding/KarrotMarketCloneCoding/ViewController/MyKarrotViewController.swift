@@ -207,7 +207,7 @@ extension MyKarrotViewController: ProfileViewDelegate {
 //<<<<<<< HEAD
         profileEditingVC.userId = userId
 
-//=======
+//========
 //        profileEditingVC.nickName = user?.nickname
 //        profileEditingVC.profileImage = userImage
         
