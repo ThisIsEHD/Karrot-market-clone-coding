@@ -7,10 +7,9 @@
 ## 프로젝트 멤버
 EHD - iOS. 
 domb - iOS. 
-myeolinmalchi - 백엔드. 
 
 ## 프로젝트 기간
-22.07.10 ~
+
 
 ## 구현화면
 
