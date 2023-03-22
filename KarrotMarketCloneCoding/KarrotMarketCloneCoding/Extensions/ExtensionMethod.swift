@@ -8,8 +8,6 @@
 import Foundation
 import UIKit
 
-//private let imgCache = NSCache<NSString, UIImage>()
-
 extension String {
     func getUserId() -> UserId? {
         
@@ -81,3 +79,16 @@ extension UIImageView {
         }
     }
 }
+
+extension CGFloat {
+    
+    static func getSize(of device: DeviceSize) -> CGFloat {
+        switch device {
+        case .deviceHeight:
+            return UIScreen.main.bounds.height
+        case .deviceWidth:
+            return UIScreen.main.bounds.width
+        }
+    }
+}
+

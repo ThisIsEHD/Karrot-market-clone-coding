@@ -78,16 +78,3 @@ extension UIView {
         trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
     }
 }
-
-
-extension CGFloat {
-    
-    static func getSize(of device: DeviceSize) -> CGFloat {
-        switch device {
-        case .deviceHeight:
-            return UIScreen.main.bounds.height
-        case .deviceWidth:
-            return UIScreen.main.bounds.width
-        }
-    }
-}

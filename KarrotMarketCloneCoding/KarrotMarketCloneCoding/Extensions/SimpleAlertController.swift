@@ -1,5 +1,5 @@
 //
-//  Alert.swift
+//  SimpleAlertController.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 신동훈 on 2022/09/27.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SimpleAlert: UIAlertController {
+class SimpleAlertController: UIAlertController {
     // MARK: - Initialize
     
     convenience init(message: String?, completion: ((UIAlertAction) -> Void)? = nil) {

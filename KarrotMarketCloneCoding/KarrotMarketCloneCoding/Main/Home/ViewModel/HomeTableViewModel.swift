@@ -1,5 +1,5 @@
 //
-//  HomeViewModel.swift
+//  HomeTableViewModel.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/07/26.
@@ -8,7 +8,7 @@
 import UIKit
 import Alamofire
 
-class HomeViewModel {
+class HomeTableViewModel {
     
     var dataSource: DataSource?
     var isViewBusy = true

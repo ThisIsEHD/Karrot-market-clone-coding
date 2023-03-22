@@ -46,7 +46,7 @@ final class TabbarController: UITabBarController {
     
     private func checkIfUserIsLoggedIn() {
         
-        let userId = UserDefaults.standard.object(forKey: Const.userId) as? String ?? ""
+        let userId = UserDefaults.standard.object(forKey: Constant.userId) as? String ?? ""
         let token = KeyChain.read(key: userId)
         
         if token == nil {
@@ -80,7 +80,7 @@ final class TabbarController: UITabBarController {
         tabBar.tintColor = .black
         tabBar.backgroundColor = .systemBackground
         
-        let homeViewController = templateNavigationController(selectedImage: #imageLiteral(resourceName: "home-selected"), unselectedImage: #imageLiteral(resourceName: "home-unselected"), rootViewController: HomeViewController(), title: "홈")
+        let homeViewController = templateNavigationController(selectedImage: #imageLiteral(resourceName: "home-selected"), unselectedImage: #imageLiteral(resourceName: "home-unselected"), rootViewController: HomeTableViewController(), title: "홈")
         
         let chatViewController = templateNavigationController(selectedImage: #imageLiteral(resourceName: "chat-selected"), unselectedImage: #imageLiteral(resourceName: "chat-unselected"), rootViewController: ChatTableViewController(), title: "채팅")
         

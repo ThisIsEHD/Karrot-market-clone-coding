@@ -1,5 +1,5 @@
 //
-// HomeViewController.swift
+// HomeTableViewController.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/07/21.
@@ -11,10 +11,10 @@ import Alamofire
 typealias DataSource = UITableViewDiffableDataSource<Section, Item>
 typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
 
-final class HomeViewController: UIViewController {
+final class HomeTableViewController: UIViewController {
     // MARK: - Properties
     
-    var viewModel = HomeViewModel()
+    var viewModel = HomeTableViewModel()
     var isViewBusy = true
     private var dataSource: DataSource!
     private var snapshot = Snapshot()
@@ -171,7 +171,7 @@ final class HomeViewController: UIViewController {
 
 // MARK: - UITableViewDelegate
 
-extension HomeViewController: UITableViewDelegate {
+extension HomeTableViewController: UITableViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         

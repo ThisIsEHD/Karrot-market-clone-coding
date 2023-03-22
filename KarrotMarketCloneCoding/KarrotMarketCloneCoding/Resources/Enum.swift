@@ -16,12 +16,8 @@ enum DeviceSize {
     case deviceWidth
 }
 
-enum Sort: String{
-    case price, regdate, pricedesc, regdatedesc
-}
-
 enum Section: Int, CaseIterable {
-    case main
+    case main = 0
 }
 
 enum ListTitle: String {

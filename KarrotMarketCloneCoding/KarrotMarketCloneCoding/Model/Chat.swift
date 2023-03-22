@@ -42,7 +42,7 @@ struct ChatUser {
     let profileImage: UIImage?
     var isMe: Bool {
         guard let id = id else { return false }
-        let userId = UserDefaults.standard.object(forKey: Const.userId) as? String
+        let userId = UserDefaults.standard.object(forKey: Constant.userId) as? String
         return userId == id
     }
     

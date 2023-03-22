@@ -11,7 +11,7 @@ class SearchViewController: UIViewController {
     
     // MARK: - Properties
     
-    private var viewModel = HomeViewModel()
+    private var viewModel = HomeTableViewModel()
     private var dataSource: DataSource!
     private var snapshot = Snapshot()
     

@@ -11,7 +11,7 @@ class UserItemTableViewController: UIViewController {
     // MARK: - Properties
     
     
-    var viewModel = HomeViewModel()
+    var viewModel = HomeTableViewModel()
     var isViewBusy = true
     private var userId: ID?
     private var navigationTitle: ListTitle?
