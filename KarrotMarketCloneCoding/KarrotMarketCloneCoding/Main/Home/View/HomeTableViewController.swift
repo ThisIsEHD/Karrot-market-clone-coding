@@ -8,22 +8,31 @@
 import UIKit
 import Alamofire
 
-typealias DataSource = UITableViewDiffableDataSource<Section, Item>
-typealias Snapshot = NSDiffableDataSourceSnapshot<Section, Item>
+typealias DataSource = UITableViewDiffableDataSource<Section, FetchedItem>
+typealias Snapshot = NSDiffableDataSourceSnapshot<Section, FetchedItem>
+typealias CellProvider = (UITableView, IndexPath, FetchedItem) -> UITableViewCell
 
 final class HomeTableViewController: UIViewController {
     // MARK: - Properties
     
-    var viewModel = HomeTableViewModel()
-    var isViewBusy = true
+    private let viewModel = HomeTableViewModel()
+    
     private var dataSource: DataSource!
     private var snapshot = Snapshot()
+    private var cellProvider: CellProvider = { (tableView, indexPath, item) in
+
+        let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.reuseIdentifier, for: indexPath) as! HomeTableViewCell
+
+        cell.item = item
+
+        return cell
+    }
     
     private let itemTableView : UITableView = {
         
         let tv = UITableView(frame:CGRect.zero, style: .plain)
         
-        tv.register(ItemTableViewCell.self, forCellReuseIdentifier: "ItemTableViewCell")
+        tv.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.reuseIdentifier)
         tv.separatorColor = .systemGray5
         tv.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         
@@ -70,15 +79,13 @@ final class HomeTableViewController: UIViewController {
         nav.modalPresentationStyle  = .fullScreen
         
         newPostVC.doneButtonTapped = { [weak self] in
-            
+
             guard let weakSelf = self else { return }
             
             weakSelf.viewModel.isViewBusy = false
-            weakSelf.viewModel.lastItemID = nil
-            
-            let job = { weakSelf.reloadTableViewData() }
-            
-            weakSelf.viewModel.loadData(lastID: weakSelf.viewModel.lastItemID, completion: job)
+            weakSelf.viewModel.latestPage = nil
+
+            weakSelf.viewModel.fetchItems()
         }
         
         present(nav, animated: true, completion: nil)
@@ -92,63 +99,24 @@ final class HomeTableViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    
+        congifureViews()
+        setupNavigationItems()
+        setupTableView()
         
-        view.backgroundColor = .systemBackground
-        
-        configureNavigationBar()
-        configureNavigationItems()
-        configureItemTableView()
-        configureTableViewDiffableDataSource()
-        reloadTableViewData()
-        configureAddButton()
+        viewModel.delegate = self
+        viewModel.fetchItems()
         
         setConstraints()
     }
     
-    // MARK: - DiffableDataSource
-    
-    func configureTableViewDiffableDataSource() {
-        
-        viewModel.dataSource = UITableViewDiffableDataSource(tableView: self.itemTableView, cellProvider: { tableView, indexPath, item in
-            
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ItemTableViewCell", for: indexPath) as! ItemTableViewCell
-            
-            cell.item = item
-            
-            return cell
-        })
-    }
-    
     func reloadTableViewData() {
         
-        viewModel.isViewBusy = false
-        viewModel.loadData(lastID: viewModel.lastItemID)
-    }
-    
-    // MARK: - Configure UI
-    
-    private func configureItemTableView() {
-        
-        itemTableView.delegate = self
-        itemTableView.dataSource = viewModel.dataSource
-        view.addSubview(itemTableView)
-    }
-    
-    private func configureNavigationBar() {
-//        let appearance = UINavigationBarAppearance()
-//        appearance.configureWithOpaqueBackground()
-//        appearance.backgroundColor = .white
-//        self.navigationItem.standardAppearance = appearance
-//        self.navigationItem.scrollEdgeAppearance = appearance
-    }
-    
-    private func configureNavigationItems() {
-        navigationItem.rightBarButtonItems = [
-            UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(searchButtonDidTapped)),
-            UIBarButtonItem(image: UIImage(named: "bell"), style: .plain, target: self, action: #selector(notiButtonDidTapped))]
+//        viewModel.isViewBusy = false
+//        viewModel.loadTestableData()
     }
         
-    // MARK: - Setup NavigationItems
+    // MARK: - Setup
     
     private func setupNavigationItems() {
         
@@ -159,6 +127,30 @@ final class HomeTableViewController: UIViewController {
         notiBarButton.tintColor = .label
         
         navigationItem.rightBarButtonItems = [ searchBarButton, notiBarButton ]
+    }
+    
+    private func setupTableView() {
+        
+        dataSource = UITableViewDiffableDataSource<Section, FetchedItem>(tableView: itemTableView, cellProvider: cellProvider)
+        
+        itemTableView.delegate = self
+        itemTableView.dataSource = dataSource
+    }
+    
+    // MARK: - Configure UI
+    
+    private func congifureViews() {
+        view.backgroundColor = .white
+        view.addSubview(itemTableView)
+        view.addSubview(addPostButton)
+    }
+
+    private func configureNavigationBar() {
+//        let appearance = UINavigationBarAppearance()
+//        appearance.configureWithOpaqueBackground()
+//        appearance.backgroundColor = .white
+//        self.navigationItem.standardAppearance = appearance
+//        self.navigationItem.scrollEdgeAppearance = appearance
     }
     
     // MARK: - Setting Constraints
@@ -178,34 +170,35 @@ extension HomeTableViewController: UITableViewDelegate {
         if !scrollView.frame.isEmpty && scrollView.contentOffset.y >= scrollView.frame.size.height {
             
             let contentHeight = scrollView.contentSize.height
-            ///스크롤 하기전엔 0
-            ///스크롤 하면서 증가
-            ///
-            let yOffset = scrollView.contentOffset.y
-            ///스크롤 하기전엔 0
-            ///스크롤 하면서 증가
-            ///셀의 y 좌표
-            ///
-            let heightRemainFromBottom = contentHeight - yOffset
+            let yOffsetOfScrollView = scrollView.contentOffset.y
+           
+            let heightRemainFromBottom = contentHeight - yOffsetOfScrollView
             let frameHeight = scrollView.frame.size.height
             
-            if heightRemainFromBottom < frameHeight, heightRemainFromBottom > 0, viewModel.lastItemID != nil {
-                
-                viewModel.loadData(lastID: viewModel.lastItemID)
+            if heightRemainFromBottom < frameHeight, heightRemainFromBottom > 0, let fetchedItemCount = viewModel.fetchedItemCount, fetchedItemCount == 10 {
+                viewModel.fetchItems()
             }
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let userId = UserDefaults.standard.object(forKey: Const.userId) as? String ?? ""
-        let productId = viewModel.dataSource?.itemIdentifier(for: indexPath)?.id
-        let vc = ItemDetailViewController(id: userId, productId: productId)
-        navigationController?.pushViewController(vc, animated: true)
+        let userId = UserDefaults.standard.object(forKey: Constant.userId) as? String ?? ""
+        let productId = dataSource.itemIdentifier(for: indexPath)?.id
+//        let nextVC = ItemDetailViewController(id: userId, productId: productId)
+        
+//        navigationController?.pushViewController(nextVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
         return 150
+    }
+}
+
+extension HomeTableViewController: HomeTableViewModelDelegate {
+    func applySnapshot(snapshot: Snapshot) {
+        DispatchQueue.main.async {
+            self.dataSource.apply(snapshot, animatingDifferences: true)
+        }
     }
 }

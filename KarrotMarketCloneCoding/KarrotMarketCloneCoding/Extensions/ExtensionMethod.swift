@@ -8,14 +8,19 @@
 import Foundation
 import UIKit
 
-extension String {
-    func getUserId() -> UserId? {
+func jsonDecode<T: Codable>(type: T.Type, data: Data) -> T? {
+    
+    let jsonDecoder = JSONDecoder()
+    let result: Codable?
+    
+    jsonDecoder.dateDecodingStrategy = .formatted(DateFormatter.myDateFormatter)
+    
+    do {
+        result = try jsonDecoder.decode(type, from: data)
         
-        let encodedUserId = self.components(separatedBy: ".")[1]
-        
-        guard let data = Data(base64Encoded: encodedUserId), let jsonData = try? JSONSerialization.jsonObject(with: data, options: []) as? [String : Any], let userId = jsonData["user_id"] as? String else { return nil }
-        
-        return userId
+        return result as? T
+    } catch {
+        return nil
     }
 }
 
@@ -49,34 +54,6 @@ extension Date {
             dateFormatter.dateFormat = "YYYY.MM.dd"
         }
         return dateFormatter.string(from: self)
-    }
-}
-
-
-extension UIImageView {
-    func loadImage(url: String) {
-        //  self.image = nil
-        
-        //   if let img = imgCache.object(forKey: url as NSString) {
-        //   self.image = img
-        //      return
-        //    }
-        if url == "" {
-            self.image = UIImage(named: "logo")
-        } else {
-            
-            Network.shared.fetchImage(url: url) { result in
-                switch result {
-                    case .success(let image):
-                        DispatchQueue.main.async {
-                            //  imgCache.setObject(image, forKey: url as NSString)
-                            self.image = image
-                        }
-                    case .failure(let error):
-                        print(error)
-                }
-            }
-        }
     }
 }
 

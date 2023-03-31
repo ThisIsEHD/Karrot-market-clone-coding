@@ -8,137 +8,129 @@
 import Foundation
 import Alamofire
 
-// Alamofire의 URLRequest을 커스텀 해서  사용 AF.request(URLRequestConvertible)
 protocol Requestable: URLRequestConvertible {
     var baseUrl: String { get }
     var header: RequestHeaders { get }
     var path: String { get }
     var parameters: RequestParameters { get }
 }
-
-enum Purpose: Requestable {
-    case login(User)
-    case fetchUser(ID)
-    case registerUser
-    case update(User)
-    case fetchItems([String : Any])
-    case fetchItem(ID,ProductID)
-    case fetchUserSellingItems(ID, [String : Any])
-    case fetchUserWishItems(ID, [String : Any])
-    case registerItem(ID, Item)
-    case deleteUser(ID)
-    case addWishItem(ProductID, ID)
-    case deleteWishItem(ProductID, ID)
-    case fetchAllChats(ID, [String : Any])
-    case fetchItemChatroom(ID, ChatroomId)
-    case fetchMyItemChats(ID, ChatroomId)
-    case connectWebSoket(ID, ChatroomId)
+enum RequestHeaders {
+    case json
+    case multipart
+    case none
 }
 
-extension Purpose {
-    var baseUrl: String {
-        return "http://ec2-43-200-120-225.ap-northeast-2.compute.amazonaws.com"
-    }
+enum Header: String {
+    case contentType = "Content-Type"
+    case json = "application/json"
+    case multipart = "multipart/form-data"
     
-    var header: RequestHeaders {
-        switch self {
+    var type: String {
+        return self.rawValue
+    }
+}
 
-        case .login:
-            return .json
-        case .registerUser:
-            return .multipart
-            case .fetchUser, .update, .fetchUserWishItems ,.deleteUser, .addWishItem, .deleteWishItem, .fetchAllChats, .fetchItem:
-            return .jsonWithToken
-            case .fetchItems, .fetchUserSellingItems, .fetchItemChatroom, .fetchMyItemChats, .connectWebSoket:
-            return .none
-        case .registerItem:
-            return .multipartWithToken
-        }
+enum RequestParameters {
+    case body(_ parameter: Encodable?)
+    case query([String : Any])
+    case none
+}
+
+enum KarrotRequest: Requestable {
+    
+    // User
+    case login(User)
+    case logout
+    case registerUser
+    
+    // Item
+    case fetchItems([String : Any])
+    //    case fetchItem(ID,ProductID)
+    case registerItem
+}
+
+extension KarrotRequest {
+    var baseUrl: String {
+        return "http://43.201.9.139:8080/api/v1"
     }
     
     var path: String {
         switch self {
-            case .login:
-                return "/api/v1/users/auth/login"
-            case .registerUser:
-                return "/api/v1/users"
-            case .fetchUser(let id):
-                return "/api/v1/users/\(id)"
-            case .update(let user):
-                return "/api/v1/users/\(user.id ?? "")"
-                
-            case .fetchItems:
-                return "/api/v1/products"
-            case .fetchItem(let userId, let productID):
-                return "/api/v1/users/\(userId)/products/\(productID)"
-            case .fetchUserSellingItems(let userId, _):
-                return "/api/v1/users/\(userId)/products"
-            case .fetchUserWishItems(let useId, _):
-                return "/api/v1/users/\(useId)/products_wish"
-            case .registerItem(let userID, _):
-                return "/api/v1/users/\(userID)/products"
             
-                
-            case .deleteUser(let id):
-                return "/api/v1/users/\(id)"
-            case .addWishItem(let productID, let userId):
-                return "api/v1/users/\(userId)/products/\(productID)/wish"
-            case .deleteWishItem(let productID, let userId):
-                return "api/v1/users/\(userId)/products/\(productID)/wish"
-            case .fetchAllChats(let userId, _):
-                return "api/v1/users/\(userId)/chatrooms"
-            case .fetchItemChatroom(let userId, let chatroomId):
-                return "api/v1/users/\(userId)/chatrooms/\(chatroomId)"
-            case .fetchMyItemChats(let userId, let chatroomId):
-                return "api/v1/users/\(userId)/chatrooms/\(chatroomId)/chats"
-            case .connectWebSoket(let id, let chatroomId):
-                return "api/v1/users/\(id)/chatrooms/\(chatroomId)/ws"
+            // get
+        case .fetchItems:
+            return "/post/home-list"
+        case .logout:
+            return "/logout"
+            //case .fetchItem(let userId, let productID):
+            //     return ""
+            
+            // post
+        case .login:
+            return "/login"
+        case .registerUser:
+            return "/members"
+        case .registerItem:
+            return "/post"
+            
+            // put
+            
+            // delete
         }
     }
     
     var method: HTTPMethod {
         switch self {
-        case .login, .registerUser, .registerItem, .addWishItem: return .post
-        case .fetchUser, .fetchItem, .fetchItems, .fetchUserSellingItems, .fetchUserWishItems, .fetchAllChats, .fetchItemChatroom, .fetchMyItemChats, .connectWebSoket: return .get
-        case .update: return .put
-        case .deleteUser, .deleteWishItem: return .delete
+            // get
+        case .fetchItems, .logout: return .get
+            // post
+        case .login, .registerUser, .registerItem: return .post
+            // post
+            // delete
+        }
+    }
+    
+    var header: RequestHeaders {
+        switch self {
+            
+        case .login: return .json
+        case .registerUser, .registerItem:  return .multipart
+        case .fetchItems, .logout: return .none
         }
     }
     
     var parameters: RequestParameters {
         switch self {
         case .login(let user): return .body(user)
-        case .update(let user): return .body(user)
-        case .fetchItems(let queryItem), .fetchUserSellingItems(_, let queryItem), .fetchUserWishItems(_, let queryItem), .fetchAllChats(_, let queryItem): return .query(queryItem)
-        case .fetchUser, .registerUser, .fetchItem, .registerItem, .deleteUser, .addWishItem, .deleteWishItem, .fetchItemChatroom, .fetchMyItemChats, .connectWebSoket: return .none
+        case .fetchItems(let queryItem): return .query(queryItem)
+        case .registerUser, .registerItem, .logout: return .none
         }
     }
     
     func asURLRequest() throws -> URLRequest {
         let url = try baseUrl.asURL()
         var urlRequest = try URLRequest(url: url.appendingPathComponent(path), method: method)
-        let userId = UserDefaults.standard.object(forKey: Const.userId) as? String ?? ""
-        let accessToken = KeyChain.read(key: userId) ?? ""
-//        print("userId: \(userId)")
-//        print("accessToken: \(accessToken)")
+        
         var headers = HTTPHeaders()
         
-        //        header 구성
+        guard let cookies = HTTPCookieStorage.shared.cookies else { fatalError("cookie 없음")}
+        let cookiesHeader = HTTPCookie.requestHeaderFields(with: cookies)
+        
         switch header {
         case .json:
             headers = [ Header.contentType.type : Header.json.type ]
-        case .jsonWithToken:
-            headers = [ Header.contentType.type: Header.json.type, Header.authorization.type : accessToken ]
         case .multipart:
             headers = [ Header.contentType.type: Header.multipart.type ]
-        case .multipartWithToken:
-            headers = [ Header.contentType.type: Header.multipart.type, Header.authorization.type : accessToken ]
-        case .none: break
+        case .none:
+            break
+        }
+        
+        for (key, value) in cookiesHeader {
+            headers.add(HTTPHeader(name: key, value: value))
         }
         
         urlRequest.headers = headers
         
-        //        parameter 구성
         switch parameters {
         case .body(let parameter):
             let jsonParameter = parameter?.toJSONData()
@@ -152,32 +144,5 @@ extension Purpose {
     }
 }
 
-enum RequestHeaders {
-    case json
-    case jsonWithToken
-    case multipart
-    case multipartWithToken
-    case none
-}
-
-enum RequestParameters {
-    case body(_ parameter: Encodable?)
-    case query([String : Any])
-    case none
-}
-
-enum Header: String {
-    case contentType = "Content-Type"
-    case authorization = "Authorization"
-    
-    case json = "application/json"
-    case multipart = "multipart/form-data"
-    
-    var type: String {
-        return self.rawValue
-    }
-}
-
 typealias ID = String
 typealias ProductID = Int
-typealias ChatroomId = Int

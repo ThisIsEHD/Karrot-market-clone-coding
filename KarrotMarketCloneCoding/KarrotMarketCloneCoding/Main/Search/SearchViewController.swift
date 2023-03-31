@@ -32,7 +32,7 @@ class SearchViewController: UIViewController {
         
         let tv = UITableView(frame:CGRect.zero, style: .plain)
         
-        tv.register(ItemTableViewCell.self, forCellReuseIdentifier: "ItemTableViewCell")
+        tv.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.reuseIdentifier)
         tv.separatorColor = .systemGray5
         tv.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         
@@ -76,21 +76,21 @@ class SearchViewController: UIViewController {
     
     func configureTableViewDiffableDataSource() {
         
-        viewModel.dataSource = UITableViewDiffableDataSource(tableView: self.itemTableView, cellProvider: { tableView, indexPath, item in
-            
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ItemTableViewCell", for: indexPath) as! ItemTableViewCell
-            
-            cell.item = item
-            return cell
-        })
+//        viewModel.dataSource = UITableViewDiffableDataSource(tableView: self.itemTableView, cellProvider: { tableView, indexPath, item in
+//            
+//            let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.reuseIdentifier, for: indexPath) as! HomeTableViewCell
+//            
+//            cell.item = item
+//            return cell
+//        })
     }
     
     func reloadTableViewData(keyword: String?) {
         
         viewModel.isViewBusy = false
-        viewModel.loadData(keyword: keyword) {
-            self.itemTableView.reloadData()
-        }
+//        viewModel.loadData(keyword: keyword) {
+//            self.itemTableView.reloadData()
+//        }
     }
     
     // MARK: - Configure TableView
@@ -98,7 +98,7 @@ class SearchViewController: UIViewController {
     private func configureItemTableView() {
         
         itemTableView.delegate = self
-        itemTableView.dataSource = viewModel.dataSource
+//        itemTableView.dataSource = viewModel.dataSource
         
         view.addSubview(itemTableView)
     }
@@ -135,20 +135,20 @@ extension SearchViewController: UITableViewDelegate {
 
             let frameHeight = scrollView.frame.size.height
             
-            if heightRemainFromBottom < frameHeight, viewModel.lastItemID != nil {
-                
-                viewModel.loadData(lastID: viewModel.lastItemID, keyword: searchBar.text)
-            }
+//            if heightRemainFromBottom < frameHeight, viewModel.lastItemID != nil {
+//
+//                viewModel.loadData(lastID: viewModel.lastItemID, keyword: searchBar.text)
+//            }
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        let vc = ItemDetailViewController()
-        
-        vc.item = viewModel.dataSource?.itemIdentifier(for: indexPath)
-        navigationController?.pushViewController(vc, animated: true)
-        tableView.deselectRow(at: indexPath, animated: true)
+//        let vc = ItemDetailViewController()
+//        
+//        vc.item = viewModel.dataSource?.itemIdentifier(for: indexPath)
+//        navigationController?.pushViewController(vc, animated: true)
+//        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

@@ -10,12 +10,16 @@ import UIKit
 import PhotosUI
 
 class ProfileSettingViewController: UIViewController {
+    // 키체인사용 , 임시구현
+    private let email: String
+    private let password: String
+    private var nickname: String?
+    
+    private var signUpViewModel = AuthenticationViewModel()
     
     private var isAuthForAlbum: Bool?
     internal var isImageChanged = false
     
-    internal var email: String?
-    internal var pw: String?
     internal var profileImage: UIImage? {
         willSet {
             profileView.imagePickerView.image = newValue == nil ? UIImage(systemName: "person.crop.circle.fill") : newValue
@@ -23,6 +27,17 @@ class ProfileSettingViewController: UIViewController {
     }
     
     internal let profileView = ReusableSettingProfileView(frame: .zero)
+    
+    init(email: String, password: String) {
+        self.email = email
+        self.password = password
+
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func loadView() {
         view = profileView
@@ -61,26 +76,20 @@ class ProfileSettingViewController: UIViewController {
     
     
     @objc func doneButtonTapped() {
-        let user = User(email: email, pw: pw, nickname: profileView.nicknameTextField.text)
+        
         var alert: UIAlertController?
-        Network.shared.register(user: user, image: profileImage) { result in
-            
+        
+        signUpViewModel.signup(user: User(email: email, password: password, nickname: nickname, userLocation: nil), profileImage: profileImage) { result in
             switch result {
             case .success:
                 self.signIn()
             case .failure(let error):
                 switch error {
-                case .duplicatedEmail:
-                    alert = self.prepareAlert(title: "이미 사용중인 이메일입니다.", isPop: true)
-                case .duplicatedNickname:
-                    alert = self.prepareAlert(title: "이미 사용중인 닉네임입니다.", isPop: false)
-                case .serverError:
-                    alert = self.prepareAlert(title: "서버 에러. 나중에 다시 시도해주세요.", isPop: false)
                 default:
                     alert = self.prepareAlert(title: "서버에러. 나중에 다시 시도해주세요.", isPop: false)
                 }
                 
-                DispatchQueue.main.async { self.present(alert!, animated: true) }
+                self.present(alert!, animated: true)
             }
         }
     }
@@ -184,11 +193,10 @@ class ProfileSettingViewController: UIViewController {
     }
     
     private func signIn() {
-        
-        Network.shared.login(email: email ?? "", pw: pw ?? "") { result in
+        signUpViewModel.login(user: User(email: email, password: password)) { result in
             switch result {
             case .success:
-                DispatchQueue.main.async { self.dismiss(animated: true) }
+                SceneController.shared.login()
             case .failure:
                 let alert = self.prepareAlert(title: "서버에러. 나중에 다시 시도해주세요.", isPop: false)
 
@@ -196,7 +204,6 @@ class ProfileSettingViewController: UIViewController {
             }
         }
     }
-    
 }
 
 extension ProfileSettingViewController: UITextFieldDelegate {
@@ -208,6 +215,7 @@ extension ProfileSettingViewController: UITextFieldDelegate {
         
         profileView.doneButton.isEnabled = finalText.count > 0 ? true : false
         profileView.doneButton.backgroundColor = finalText.count > 0 ? UIColor.appColor(.carrot) : .systemGray
+        nickname = textField.text
         
         return finalText.count <= 10
     }

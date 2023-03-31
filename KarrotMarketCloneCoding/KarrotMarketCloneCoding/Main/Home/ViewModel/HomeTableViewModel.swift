@@ -5,140 +5,89 @@
 //  Created by 서동운 on 2022/07/26.
 //
 
-import UIKit
+import Foundation
 import Alamofire
+
+protocol HomeTableViewModelDelegate: AnyObject {
+    func applySnapshot(snapshot: Snapshot)
+}
 
 class HomeTableViewModel {
     
-    var dataSource: DataSource?
-    var isViewBusy = true
-    var lastItemID: Int?
+    var model: FetchedItemList = []
+    weak var delegate: HomeTableViewModelDelegate?
     
-    func loadData(lastID: Int? = nil, keyword: String? = nil, category: Int? = nil, sort: String? = nil, completion: (() -> Void)? = nil) {
-        guard isViewBusy == false else { return }
-        
+    var isViewBusy = false
+    var fetchedItemCount: Int?
+    var latestPage: Int?
+    
+    func fetchItems(title: String? = nil, category: Category? = nil, page: Int? = nil, size: Int? = nil, completion: (() -> Void)? = nil) {
+        guard !isViewBusy else { return }
         isViewBusy = true
-        Network.shared.fetchItems(keyword: keyword, category: category, sort: sort, lastId: lastID) { [weak self] result in
+        
+        fetchItems(title: title, category: category, page: latestPage, size: size) { result in
             switch result {
-                case .success(let list):
-                    guard let weakSelf = self else { return }
-                    guard var snapshot = weakSelf.dataSource?.snapshot() else { return }
-                    
-                    if let _ = completion {
-                        snapshot.deleteAllItems()
-                    }
-                    
-                    DispatchQueue.global(qos: .background).async {
-                        self?.dataSource?.apply(snapshot, animatingDifferences: false)
-                        if let items = list?.items {
-                            
-                            if snapshot.numberOfSections == 0 {
-                                snapshot.appendSections([.main])
-                            }
-            
-                            snapshot.appendItems(items)
-                            weakSelf.lastItemID = items.last?.id
-                            weakSelf.isViewBusy = false
-                            
-                            DispatchQueue.global(qos: .background).async {
-                                weakSelf.dataSource?.apply(snapshot, animatingDifferences: false)
-                                if let completion = completion {
-                                    DispatchQueue.main.async {
-                                        completion()
-                                    }
-                                }
-                            }
-                        }
-                    }
-                case .failure(let error):
-                    /// 에러별 다른처리?
-                    print(error)   //홈뷰컨에 얼럿 띄워야
+            case .success(let fetchedItemListData):
+                var snapshot = NSDiffableDataSourceSnapshot<Section, FetchedItem>()
+                
+                snapshot.appendSections([Section.main])
+                snapshot.appendItems(fetchedItemListData.content)
+                
+                self.delegate?.applySnapshot(snapshot: snapshot)
+                self.isViewBusy = false
+                self.model.append(contentsOf: fetchedItemListData.content)
+                self.latestPage = fetchedItemListData.number
+                self.fetchedItemCount = fetchedItemListData.numberOfElements
+                
+            case .failure(let error):
+                print(error, #function)
             }
         }
     }
     
-    func fetchUserSellingItems(userId: String, lastId: Int? = nil, completion: (() -> Void)? = nil) {
-        guard isViewBusy == false else { return }
+    private func fetchItems(title: String?, category: Category?, page: Int?, size: Int?, completion: @escaping (Result<FetchedItemListData, KarrotError>) -> ()) {
         
-        isViewBusy = true
-        Network.shared.fetchUserSellingItems(of: userId, lastId: lastId) { [weak self] result in
-            switch result {
-                case .success(let list):
-                    guard let weakSelf = self else { return }
-                    guard var snapshot = weakSelf.dataSource?.snapshot() else { return }
-                    
-                    if let _ = completion {
-                        snapshot.deleteAllItems()
-                    }
-                    
-                    DispatchQueue.global(qos: .background).async {
-                        self?.dataSource?.apply(snapshot, animatingDifferences: false)
-                        if let items = list?.items {
-                            
-                            if snapshot.numberOfSections == 0 {
-                                snapshot.appendSections([.main])
-                            }
-            
-                            snapshot.appendItems(items)
-                            weakSelf.lastItemID = items.last?.id
-                            weakSelf.isViewBusy = false
-                            
-                            DispatchQueue.global(qos: .background).async {
-                                weakSelf.dataSource?.apply(snapshot, animatingDifferences: false)
-                                if let completion = completion {
-                                    DispatchQueue.main.async {
-                                        completion()
-                                    }
-                                }
-                            }
-                        }
-                    }
-                case .failure(let error):
-                    /// 에러별 다른처리?
-                    print(error)   //홈뷰컨에 얼럿 띄워야
-            }
+        var queryItems = [String : Any]()
+        
+        if let title = title {
+            queryItems["title"] = title
         }
-    }
-    
-    func fetchUserWishItems(userId: String, lastId: Int? = nil, completion: (() -> Void)? = nil) {
-        guard isViewBusy == false else { return }
         
-        isViewBusy = true
-        Network.shared.fetchUserWishItems(of: userId, lastId: lastId) { [weak self] result in
-            switch result {
-                case .success(let list):
-                    guard let weakSelf = self else { return }
-                    guard var snapshot = weakSelf.dataSource?.snapshot() else { return }
-                    
-                    if let _ = completion {
-                        snapshot.deleteAllItems()
-                    }
-                    
-                    DispatchQueue.global(qos: .background).async {
-                        self?.dataSource?.apply(snapshot, animatingDifferences: false)
-                        if let items = list?.items {
-                            
-                            if snapshot.numberOfSections == 0 {
-                                snapshot.appendSections([.main])
-                            }
+        if let category = category {
+            queryItems["category"] = category
+        }
+        
+        if let page = page {
+            queryItems["page"] = page
+        }
+        
+        if let size = size {
+            queryItems["size"] = size
+        }
+        
+        AF.request(KarrotRequest.fetchItems(queryItems)).response { response in
+            if let err = response.error {
+                print(err)
+                completion(.failure(.internalServerError))
+                return
+            }
             
-                            snapshot.appendItems(items)
-                            weakSelf.lastItemID = items.last?.id
-                            weakSelf.isViewBusy = false
-                            
-                            DispatchQueue.global(qos: .background).async {
-                                weakSelf.dataSource?.apply(snapshot, animatingDifferences: false)
-                                if let completion = completion {
-                                    DispatchQueue.main.async {
-                                        completion()
-                                    }
-                                }
-                            }
-                        }
-                    }
-                case .failure(let error):
-                    /// 에러별 다른처리?
-                    print(error)   //홈뷰컨에 얼럿 띄워야
+            guard let httpResponse = response.response else { return }
+            
+            switch httpResponse.statusCode {
+            case 200:
+                guard let responseBody = response.data,
+                      let responseData = jsonDecode(type: ItemListResponse.self, data: responseBody) else {
+                    completion(.failure(.decodingError))
+                    return
+                }
+                let fetchedItemListData = responseData.data
+                completion(.success(fetchedItemListData))
+            case 400:
+                completion(.failure(.badRequest))
+            default:
+                print(httpResponse.statusCode)
+                completion(.failure(.unknownError))
             }
         }
     }

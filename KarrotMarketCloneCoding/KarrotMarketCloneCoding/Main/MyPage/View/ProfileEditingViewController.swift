@@ -10,36 +10,6 @@ import PhotosUI
 
 final class ProfileEditingViewController: ProfileSettingViewController {
     
-    var userId: String? {
-        didSet {
-            
-            guard let userId = userId else { return }
-            
-            Network.shared.fetchUser(id: userId) { result in
-                switch result {
-                    case .success(let user):
-                        
-                        self.nickName = user.nickname
-                        self.profileView.nicknameTextField.text = user.nickname
-                        
-                        guard let profileImageUrl = user.profileImageUrl else { return }
-                        
-                        Network.shared.fetchImage(url: profileImageUrl) { result in
-                            switch result {
-                                case .success(let image):
-                                    self.profileView.imagePickerView.image = image
-                                case .failure(let error):
-                                    /// 에러별 다른처리?
-                                    print(error)
-                            }
-                        }
-                    case .failure(let error):
-                        print(error)
-                }
-            }
-        }
-    }
-    
     internal var nickName: String?
     override var isImageChanged: Bool {
         willSet {
@@ -61,9 +31,9 @@ final class ProfileEditingViewController: ProfileSettingViewController {
         tabBarController?.tabBar.isHidden = false
     }
     
-    override func doneButtonTapped() {
-        //        api 업데이트 후 수정로직 구현
-    }
+//    override func doneButtonTapped() {
+//        //        api 업데이트 후 수정로직 구현
+//    }
     
     private func enableDoneButton() {
         profileView.doneButton.isEnabled = true

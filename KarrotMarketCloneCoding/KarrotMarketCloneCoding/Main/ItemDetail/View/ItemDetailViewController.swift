@@ -13,16 +13,13 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
     
     private var productId: Int?
     
-    var item: Item? {
+    var item: FetchedItemDetail? {
         didSet {
-            print(item)
             flag = true
             itemImagesCollectionView.reloadData()
             itemDetailViewBottomStickyView.configure(price: item?.price)
-            itemImagesCollectionViewPageControl.numberOfPages = item?.images?.count ?? 1
+            itemImagesCollectionViewPageControl.numberOfPages = item?.imageUrls.count ?? 1
             itemDetailViewContentsTableView.reloadData()
-            itemDetailViewBottomStickyView.getWishButton().isSelected = item?.wished ?? false
-            
         }
     }
     var flag: Bool?
@@ -90,17 +87,6 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
     
     convenience init(id: ID, productId: ProductID?) {
         self.init()
-    
-        Network.shared.fetchItem(userId: id, productId: productId!) { [self] result in
-            switch result {
-                case .success(let item):
-                    
-                    self.item = item
-                case .failure(let error):
-                    /// 에러별 다른처리?
-                    print(error)
-            }
-        }
     }
     
     override func viewDidLoad() {
@@ -130,35 +116,16 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
     }
     
     // MARK: - Actions
-   
+    
     func addWishList() {
         
-        guard let itemID = item?.id, let userID = item?.userId else { return }
         
-        Network.shared.addWishItem(productId: itemID, of: userID) { [unowned self] result in
-            switch result {
-                case .success:
-                    itemDetailViewBottomStickyView.getWishButton().isSelected = true
-                    return
-                case .failure(let error):
-                    print(error)
-            }
-        }
+        
     }
     
     func deleteWishList() {
         
-        guard let itemID = item?.id, let userID = item?.userId else { return }
         
-        Network.shared.deleteWishItem(productId: itemID, of: userID) { [unowned self] result in
-            switch result {
-                case .success:
-                    itemDetailViewBottomStickyView.getWishButton().isSelected = false
-                    return
-                case .failure(let error):
-                    print(error)
-            }
-        }
     }
     
     // MARK: - Configure Views
@@ -171,16 +138,16 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
         
         /// 이미지 백그라운드 다운로드 후 구성하기 위한 코드 작성하기
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) { [self] in
-            if item?.images?.count != nil {
-                itemDetailViewContentsTableView.contentInsetAdjustmentBehavior = .never
-                itemDetailTableHeaderView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.width)
-                gradient.frame = CGRect(x: 0, y: 0, width: UIApplication.shared.statusBarFrame.width, height: UIApplication.shared.statusBarFrame.height + (navigationController?.navigationBar.frame.height ?? 0))
-                
-                view.layer.addSublayer(gradient)
-            } else {
-                itemDetailViewContentsTableView.contentInsetAdjustmentBehavior = .automatic
-                itemDetailTableHeaderView.frame = .zero
-            }
+            //            if item?.images?.count != nil {
+            //                itemDetailViewContentsTableView.contentInsetAdjustmentBehavior = .never
+            //                itemDetailTableHeaderView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.width)
+            //                gradient.frame = CGRect(x: 0, y: 0, width: UIApplication.shared.statusBarFrame.width, height: UIApplication.shared.statusBarFrame.height + (navigationController?.navigationBar.frame.height ?? 0))
+            //
+            //                view.layer.addSublayer(gradient)
+            //            } else {
+            //                itemDetailViewContentsTableView.contentInsetAdjustmentBehavior = .automatic
+            //                itemDetailTableHeaderView.frame = .zero
+            //            }
         }
         
         itemImagesCollectionView.dataSource = self
@@ -207,7 +174,7 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
             statusBarView.alpha = 1
             gradient.isHidden = true
         } else {
-            if item?.images?.count == nil {
+            if item?.imageUrls.count == nil {
                 
                 navigationController?.navigationBar.backgroundColor = .systemBackground
                 navigationController?.navigationBar.tintColor = .black
@@ -248,27 +215,27 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
 
 extension ItemDetailViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return item?.images?.count ?? 0
+        return item?.imageUrls.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ItemDetailViewImagesCollectionViewCell", for: indexPath) as! ItemDetailViewImagesCollectionViewCell
         
-        guard let url = item?.images?[indexPath.row].url else {
+        guard let stringURL = item?.imageUrls[indexPath.row] else {
             return ItemDetailViewImagesCollectionViewCell()
         }
         
-        Network.shared.fetchImage(url: url) { result in
-            switch result {
-                case .success(let image):
-                    DispatchQueue.main.async {
-                        cell.imageView.image = image
-                    }
-                case .failure(let error):
-                    print(error)
-            }
-        }
+        //        Network.shared.fetchImage(url: url) { result in
+        //            switch result {
+        //                case .success(let image):
+        //                    DispatchQueue.main.async {
+        //                        cell.imageView.image = image
+        //                    }
+        //                case .failure(let error):
+        //                    print(error)
+        //            }
+        //        }
         return cell
     }
 }
@@ -292,46 +259,42 @@ extension ItemDetailViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.row {
-            case 0:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewProfileCell", for: indexPath) as! ItemDetailViewProfileCell
-                cell.selectionStyle = .none
-                
-                guard let url = item?.profileImage else {
-                    cell.setProfile(nickname: item?.nickname, image: nil)
-                    return cell }
-                
-                Network.shared.fetchImage(url: url) {[unowned self] result in
-                    switch result {
-                        case .success(let image):
-                            cell.setProfile(nickname: item?.nickname, image: image)
-                        case .failure(let error):
-                            print(error)
-                    }
-                }
-                return cell
-                
-            case 1:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewDescriptionCell", for: indexPath) as! ItemDetailViewDescriptionCell
-                cell.selectionStyle = .none
-                cell.setDescription(itemName: item?.title ?? "", category: item?.categoryId ?? 0, content: item?.content ?? "", wishs: item?.wishes ?? 0, views: item?.views ?? 0)
-                return cell
-            case 2:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewOtherPostsCell", for: indexPath) as! ItemDetailViewOtherItemsCell
-                cell.selectionStyle = .none
-                if let nickname = item?.nickname {
-                    cell.tableTitlelabel.text = "\(nickname)님의 판매 상품"
-                }
-                return cell
-            case 3:
-                let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewOtherPostsCell", for: indexPath) as! ItemDetailViewOtherItemsCell
-                cell.selectionStyle = .none
-                if let nickname = item?.nickname {
-                    cell.tableTitlelabel.text = "\(nickname)님, 이건어때요?"
-                }
-              
-                return cell
-            default:
-                return UITableViewCell()
+        case 0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewProfileCell", for: indexPath) as! ItemDetailViewProfileCell
+            cell.selectionStyle = .none
+            
+            //            guard let url = item. else {
+            //                    cell.setProfile(nickname: item?.nickname, image: nil)
+            //                    return cell }
+            //
+            return cell
+            
+        case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewDescriptionCell", for: indexPath) as! ItemDetailViewDescriptionCell
+            cell.selectionStyle = .none
+            
+            if let item = item {
+                cell.configure(title: item.title, category: item.category!, content: item.content, wishs: item.favoriteUserCount, views: item.views)
+            }
+            
+            return cell
+        case 2:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewOtherPostsCell", for: indexPath) as! ItemDetailViewOtherItemsCell
+            cell.selectionStyle = .none
+            if let nickname = item?.nickName {
+                cell.tableTitlelabel.text = "\(nickname)님의 판매 상품"
+            }
+            return cell
+        case 3:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewOtherPostsCell", for: indexPath) as! ItemDetailViewOtherItemsCell
+            cell.selectionStyle = .none
+            if let nickname = item?.nickName {
+                cell.tableTitlelabel.text = "\(nickname)님, 이건어때요?"
+            }
+            
+            return cell
+        default:
+            return UITableViewCell()
         }
     }
 }
@@ -342,7 +305,7 @@ extension ItemDetailViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
         if scrollView == itemImagesCollectionView {
-
+            
             let width = scrollView.bounds.size.width
             let x = scrollView.contentOffset.x + (width/2.0)
             let newPage = Int(x / width)

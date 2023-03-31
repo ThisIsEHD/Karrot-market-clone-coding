@@ -11,7 +11,7 @@ import Alamofire
 final class MyKarrotViewController: UIViewController {
     // MARK: - Properties
     
-    private var userId: ID = UserDefaults.standard.object(forKey: Const.userId) as? String ?? ""
+    private var userId: ID = UserDefaults.standard.object(forKey: Constant.userId) as? String ?? ""
     private var userImage: UIImage?
     
     private let tableView = UITableView(frame: .zero, style: .grouped)
@@ -177,35 +177,35 @@ extension MyKarrotViewController: ProfileViewDelegate {
     
     func configureUserInfo() {
         
-        Network.shared.fetchUser(id: userId) { result in
-            switch result {
-            case .success(let user):
-                self.profileView.configureUser(nickname: user.nickname)
-                
-                guard let url = user.profileImageUrl else { return }
-                
-                Network.shared.fetchImage(url: url) { result in
-                    switch result {
-                        case .success(let image):
-                            self.profileView.configureUser(image: image)
-                        case .failure(let error):
-                            /// 에러별 다른처리?
-                            print(error)
-                    }
-                }
-            case .failure(let error):
-
-                print(error)
-            }
-        }
+//        Network.shared.fetchUser(id: userId) { result in
+//            switch result {
+//            case .success(let user):
+//                self.profileView.configureUser(nickname: user.nickname)
+//                
+//                guard let url = user.profileImageUrl else { return }
+//                
+//                Network.shared.fetchImage(url: url) { result in
+//                    switch result {
+//                        case .success(let image):
+//                            self.profileView.configureUser(image: image)
+//                        case .failure(let error):
+//                            /// 에러별 다른처리?
+//                            print(error)
+//                    }
+//                }
+//            case .failure(let error):
+//
+//                print(error)
+//            }
+//        }
     }
     
     func goToMyProfileVC() {
         
-        let profileEditingVC = ProfileEditingViewController()
+        let profileEditingVC = ProfileEditingViewController(email: String(), password: String())
         
 //<<<<<<< HEAD
-        profileEditingVC.userId = userId
+//        profileEditingVC.userId = userId
 
 //========
 //        profileEditingVC.nickName = user?.nickname

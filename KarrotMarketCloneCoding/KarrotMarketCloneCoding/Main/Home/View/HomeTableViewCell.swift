@@ -1,5 +1,5 @@
 //
-//  itemTableViewCell.swift
+//  HomeTableViewCell.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/07/22.
@@ -8,16 +8,18 @@
 import UIKit
 import Alamofire
 
-class ItemTableViewCell: UITableViewCell {
+class HomeTableViewCell: UITableViewCell {
     
     // MARK: - Properties
     
-    var item: Item? {
+    static let reuseIdentifier = "HomeTableViewCell"
+    
+    var item: FetchedItem? {
         didSet {
-            nameLabel.text = item?.title
-            priceLabel.text = item?.price != nil ? "\(item?.price ?? 0) 원" : "무료 나눔🧡"
-            wishLabel.text = "\(item?.wishes ?? 0)"
-            
+            guard let item = item else { return }
+            nameLabel.text = item.title
+            priceLabel.text = item.price != 0 ? NumberFormatter.Decimal.string(from: NSNumber(value: item.price))! + "원" : "나눔 🧡"
+            wishLabel.text = "\(item.favoriteUserCount)"
             getThumbnailImage { [self] image in
                 thumbnailImageView.image = image
             }
@@ -26,10 +28,12 @@ class ItemTableViewCell: UITableViewCell {
     
     private let thumbnailImageView: UIImageView = {
         
-        let iv = UIImageView()
+        let iv = UIImageView(image: UIImage(named: "logo"))
         iv.contentMode = .scaleAspectFill
         iv.layer.cornerRadius = 8
         iv.layer.masksToBounds = true
+        iv.layer.borderWidth = 0.5
+        iv.layer.borderColor = UIColor.lightGray.cgColor
         iv.clipsToBounds = true
         iv.backgroundColor = .white
         return iv
@@ -37,7 +41,7 @@ class ItemTableViewCell: UITableViewCell {
     let nameLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 2
-        lbl.text = ""
+        lbl.text = "당근마켓 상품"
         lbl.font = UIFont.systemFont(ofSize: 17)
         return lbl
     }()
@@ -54,26 +58,27 @@ class ItemTableViewCell: UITableViewCell {
     //            lb.font = UIFont(name: "Helvetica", size: 13)
     //            return lb
     //        }()
+    
     let priceLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
-        lbl.text = ""
-        lbl.font = UIFont.systemFont(ofSize: 17)
+        lbl.text = "0 원"
+        lbl.font = UIFont.boldSystemFont(ofSize: 18)
         return lbl
     }()
     private let wishIcon: UIButton = {
         let btn = UIButton()
-        btn.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
+//        btn.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
         btn.imageView?.contentMode = .scaleAspectFit
-        btn.imageView?.tintColor = .systemGray3
+        btn.imageView?.tintColor = .black.withAlphaComponent(0.6)
         btn.setImage(UIImage(named: "wish-gray"), for: .normal)
         return btn
     }()
     let wishLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
-        lbl.text = ""
-        lbl.tintColor = .systemGray3
+//        lbl.text = ""
+        lbl.textColor = .black.withAlphaComponent(0.6)
         lbl.font = UIFont.systemFont(ofSize: 15)
         return lbl
     }()
@@ -81,7 +86,7 @@ class ItemTableViewCell: UITableViewCell {
         let btn = UIButton()
         btn.frame = CGRect(x: 0, y: 0, width: 38, height: 38)
         btn.imageView?.contentMode = .scaleAspectFit
-        btn.imageView?.tintColor = .systemGray3
+        btn.imageView?.tintColor = .black.withAlphaComponent(0.6)
         btn.setImage(UIImage(named: "chat-gray"), for: .normal)
         return btn
     }()
@@ -89,7 +94,7 @@ class ItemTableViewCell: UITableViewCell {
         let lbl = UILabel()
         lbl.numberOfLines = 0
         lbl.text = "0"
-        lbl.tintColor = .systemGray3
+        lbl.textColor = .black.withAlphaComponent(0.6)
         lbl.font = UIFont.systemFont(ofSize: 15)
         return lbl
     }()
@@ -108,31 +113,6 @@ class ItemTableViewCell: UITableViewCell {
     //            lb.font = UIFont(name: "Helvetica", size: 15)
     //            return lb
     //        }()
-    private lazy var wishView: UIView = {
-        let view = UIView()
-        view.addSubview(wishLabel)
-        view.addSubview(wishIcon)
-        return view
-    }()
-    private lazy var chatView: UIView = {
-        let view = UIView()
-        view.addSubview(chatLabel)
-        view.addSubview(chatIcon)
-        return view
-    }()
-    //        lazy var replyView: UIView = {
-    //            let view = UIView()
-    //            return view
-    //        }()
-    private lazy var iconStackView: UIStackView = {
-        let sv = UIStackView(arrangedSubviews: [wishView, chatView])
-        sv.axis = .horizontal
-        sv.spacing = 3
-        sv.alignment = .center
-        sv.distribution = .fill
-        sv.isUserInteractionEnabled = false
-        return sv
-    }()
     
     // MARK: - Actions
     
@@ -154,9 +134,16 @@ class ItemTableViewCell: UITableViewCell {
     
     //  MARK: - Configure Views
     private func configureViews() {
-        [thumbnailImageView, nameLabel, priceLabel, iconStackView].forEach { view in
-            contentView.addSubview(view)
-        }
+        
+        contentView.addSubview(thumbnailImageView)
+        contentView.addSubview(nameLabel)
+//        contentView.addSubview(locationLabel)
+        contentView.addSubview(priceLabel)
+        
+        contentView.addSubview(chatIcon)
+        contentView.addSubview(chatLabel)
+        contentView.addSubview(wishIcon)
+        contentView.addSubview(wishLabel)
     }
     
     // MARK: - Setting Constraints
@@ -167,18 +154,19 @@ class ItemTableViewCell: UITableViewCell {
     }
     
     private func setIconStackViewConstraints() {
-        wishIcon.anchor(top: wishView.topAnchor, bottom: wishView.bottomAnchor, leading: wishView.leadingAnchor, height: 17)
-        wishLabel.anchor(bottom: wishIcon.bottomAnchor)
-        wishLabel.anchor(leading: wishIcon.trailingAnchor, trailing: wishView.trailingAnchor)
+        wishLabel.anchor(bottom: contentView.bottomAnchor, bottomConstant: 15, trailing: contentView.trailingAnchor, trailingConstant: 10)
+        wishIcon.centerY(inView: wishLabel)
+        wishIcon.anchor(trailing: wishLabel.leadingAnchor, trailingConstant: 5, width: 18, height: 18)
         
-        chatIcon.anchor(top: chatView.topAnchor, bottom: chatView.bottomAnchor, leading: chatView.leadingAnchor, height: 17)
-        chatLabel.anchor(bottom: chatIcon.bottomAnchor)
-        chatLabel.anchor(leading: chatIcon.trailingAnchor, trailing: chatView.trailingAnchor)
+        chatLabel.centerY(inView: wishIcon)
+        chatLabel.anchor(trailing: wishIcon.leadingAnchor, trailingConstant: 7)
+        
+        chatIcon.centerY(inView: chatLabel)
+        chatIcon.anchor(trailing: chatLabel.leadingAnchor, trailingConstant: 5, width: 18, height: 18)
     }
     
     private func setContentViewConstraints() {
-        thumbnailImageView.anchor(top: topAnchor, topConstant: 18, bottom: bottomAnchor, bottomConstant: 18 ,leading: leadingAnchor, leadingConstant: 18, width: 114)
-        //width를 동적으로 가져오지 못함 해결해야함.
+        thumbnailImageView.anchor(top: contentView.topAnchor, topConstant: 18, bottom: contentView.bottomAnchor, bottomConstant: 18 ,leading: contentView.leadingAnchor, leadingConstant: 18, width: 114)
         
         nameLabel.anchor(top: thumbnailImageView.topAnchor, topConstant: 5,  leading: thumbnailImageView.trailingAnchor, leadingConstant: 15, trailing: trailingAnchor, trailingConstant: 15)
         
@@ -186,25 +174,9 @@ class ItemTableViewCell: UITableViewCell {
         //        timeLabel.anchor()
         priceLabel.anchor(top: nameLabel.bottomAnchor, topConstant: 10, leading: nameLabel.leadingAnchor)
         
-        iconStackView.anchor(bottom: bottomAnchor, bottomConstant: 10, trailing: trailingAnchor, trailingConstant: 15)
     }
     
     private func getThumbnailImage(completion: @escaping (UIImage?) -> ()) {
-        
-        if let url = item?.thumbnail {
-            Network.shared.fetchImage(url: url) { result in
-                switch result {
-                    case .success(let image):
-                        completion(image)
-                    case .failure(let error):
-                        /// 에러별 다른처리?
-                        print(error)
-                }
-            }
-        } else {
-            let image = UIImage(systemName: "clear.fill")?.withTintColor(.systemGray, renderingMode: .alwaysOriginal)
-            completion(image)
-        }
         
     }
 }

@@ -41,7 +41,7 @@ final class UserCheckView: UIView {
         
         let button = UIButton(type: .system)
         
-        button.setTitle("시작하기", for: .normal)
+        button.setTitle("회원가입", for: .normal)
         button.setTitleColor(.label, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
         button.backgroundColor = UIColor.appColor(.carrot)

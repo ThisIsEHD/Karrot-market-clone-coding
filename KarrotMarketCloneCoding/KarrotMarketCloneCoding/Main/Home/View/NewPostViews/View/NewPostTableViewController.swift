@@ -12,27 +12,33 @@ import Alamofire
 final class NewPostTableViewController: UIViewController {
     
     private var selectedImages: [UIImage] = [UIImage]() {
-        
         didSet {
             maxChoosableImages = 10 - selectedImages.count
-            newPostTableView.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
+            newPostTableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
         }
     }
-    private var item = Item(id: nil, title: nil, content: nil, categoryId: nil, price: nil, regdate: nil, views: nil, wishes: nil, wished: false, userId: nil, nickname: nil, profileImage: nil, thumbnail: nil, images: nil)
+    private var item = Item() {
+        didSet {
+            if item.preferPlace?.alias != nil {
+                newPostTableView.reloadRows(at: [IndexPath(row: 5, section: 0)], with: .automatic)
+            }
+        }
+    }
+    
     internal var maxChoosableImages = 10
     internal var doneButtonTapped: () -> () = { }
     
-    private let newPostTableView = NewPostTableView(frame: .zero)
+    private let newPostTableView = NewPostTableView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.addSubview(newPostTableView)
         
-        newPostTableView.tableView.delegate = self
-        newPostTableView.tableView.dataSource = self
+        newPostTableView.delegate = self
+        newPostTableView.dataSource = self
         
-        NotificationCenter.default.addObserver(self, selector: #selector(removeImage), name: NotificationType.deleteButtonTapped.name, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(removeImage), name: .imageRemoved, object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(handle(keyboardShowNotification:)),
                                                name: UIResponder.keyboardDidShowNotification,
@@ -49,6 +55,7 @@ final class NewPostTableViewController: UIViewController {
     
     private func setupNaviBar() {
         title = "중고거래 글쓰기"
+        
         navigationController?.navigationBar.tintColor = .label
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .plain, target: self, action: #selector(close))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(post))
@@ -102,75 +109,60 @@ extension NewPostTableViewController {
     @objc func post() {
         view.endEditing(true)
         
-        Network.shared.registerItem(item: Item(id: nil, title: item.title, content: item.content, categoryId: item.categoryId, price: item.price, regdate: nil, views: nil, wishes: nil, wished: false, userId: (UserDefaults.standard.object(forKey: Const.userId) as? String), nickname: nil, profileImage: nil, thumbnail: nil, images: nil), images: selectedImages) { result in
-            
-            switch result {
-            case .success:
-                self.doneButtonTapped()
-                self.dismiss(animated: true, completion: nil)
-            case .failure(let error):
-                var alertMessage = ""
-                var completion: ((UIAlertAction) -> ())?
-                
-                switch error {
-                case .wrongForm(let data):
-
-                    if let titleError = data["title"] {
-                        alertMessage.append("📌")
-                        alertMessage.append(titleError)
-                        alertMessage.append("\n")
-                    }
-                    if let categoryError = data["categoryId"] {
-                        alertMessage.append("📌")
-                        alertMessage.append(categoryError)
-                        alertMessage.append("\n")
-                    }
-                    if let priceError = data["price"] {
-                        alertMessage.append("📌")
-                        alertMessage.append(priceError)
-                        alertMessage.append("\n")
-                    }
-                    if let contentError = data["content"] {
-                        alertMessage.append("📌")
-                        alertMessage.append(contentError)
-                    }
-                case .invalidToken:
-                    alertMessage = "로그인 시간 만료. 다시 로그인 해주세요."
-                    completion = { _ in
-                        let BackToHome = { self.dismiss(animated: true) }
-                        Authentication.goHomeAndLogout(go: BackToHome)
-                    }
-                case .serverError, .unknownError:
-                    alertMessage = "알 수 없는 에러. 나중에 다시 시도해 주세요."
-                default:
-                    alertMessage = "알 수 없는 에러. 나중에 다시 시도해 주세요."
-                }
-                
-                let alert = completion == nil ?
-                SimpleAlert(message: alertMessage) : SimpleAlert(message: alertMessage, completion: completion)
-                
-                self.present(alert, animated: true)
-            }
+        if item.title == nil || item.title == "" {
+            let alert = SimpleAlertController(message: "제목을 입력해주세요.")
+            present(alert, animated: true)
+            return
         }
+        
+        if item.category == nil {
+            let alert = SimpleAlertController(message: "카테고리를 선택해주세요.")
+            present(alert, animated: true)
+            return
+        }
+        
+        if item.content == nil || item.content == "" {
+            let alert = SimpleAlertController(message: "내용을 입력해주세요.")
+            present(alert, animated: true)
+            return
+        }
+        
+//        Network.shared.registerItem(item: item, images: selectedImages) { result in
+//
+//            switch result {
+//            case .success:
+//                self.doneButtonTapped()
+//                self.dismiss(animated: true, completion: nil)
+//            case .failure(let error):
+//                var alertMessage = ""
+//                switch error {
+//                case .wrongForm:
+//                    alertMessage = "잘못된 요청"
+//                case .invalidToken:
+//                    alertMessage = "로그인 시간 만료. 다시 로그인 해주세요."
+//                default:
+//                    alertMessage = "알 수 없는 에러. 나중에 다시 시도해 주세요."
+//                }
+//
+//                let alert = SimpleAlert(message: alertMessage)
+//
+//                self.present(alert, animated: true)
+//            }
+//        }
     }
 }
 
 extension NewPostTableViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return 5
+        return 6
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.row == 0 {
-            
             return 110
-        } else if indexPath.row == 4 {
-            
-            return UITableView.automaticDimension
         } else {
-            
-            return 85
+            return UITableView.automaticDimension
         }
     }
     
@@ -200,9 +192,8 @@ extension NewPostTableViewController: UITableViewDataSource {
         } else if indexPath.row == 2 {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: BasicTableViewCell.identifier, for: indexPath)
-            
+    
             cell.textLabel?.text = "카테고리 선택"
-            cell.textLabel?.font = UIFont.systemFont(ofSize: 20)
             cell.accessoryType = .disclosureIndicator
             cell.selectionStyle = .none
             
@@ -210,20 +201,44 @@ extension NewPostTableViewController: UITableViewDataSource {
         } else if indexPath.row == 3 {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: PriceTableViewCell.identifier, for: indexPath) as! PriceTableViewCell
-            
+    
             cell.selectionStyle = .none
-            cell.textChanged = { self.item.price = Int($0 ?? "0") }
+            cell.textChanged = { self.item.price = Int($0 ?? "0") ?? 0 }
             
             return cell
-        } else {
+        } else if indexPath.row == 4 {
             
-            let cell = tableView.dequeueReusableCell(withIdentifier: DetailTableViewCell.identifier, for: indexPath) as! DetailTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: ContentTableViewCell.identifier, for: indexPath) as! ContentTableViewCell
             
-            cell.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 999)
+            cell.delegate = self
             cell.selectionStyle = .none
             cell.textChanged = { self.item.content = $0 }
             
             return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: LocationSelectTableViewCell.identifier, for: indexPath) as!
+                    LocationSelectTableViewCell
+            
+            cell.textLabel?.text = "거래 희망 장소"
+            cell.accessoryType = .disclosureIndicator
+            cell.selectionStyle = .none
+            cell.location = item.preferPlace?.alias
+            
+            return cell
+        }
+    }
+}
+
+extension NewPostTableViewController: TableViewCellDelegate {
+    func updateTextViewHeight(_ cell: ContentTableViewCell, _ textView: UITextView) {
+        let height = textView.bounds.size.height > 120 ? textView.bounds.size.height : 120
+        let newSize = newPostTableView.sizeThatFits(CGSize(width: textView.bounds.size.width, height: .infinity))
+    
+        if height != newSize.height {
+            UIView.setAnimationsEnabled(false)
+            newPostTableView.beginUpdates()
+            newPostTableView.endUpdates()
+            UIView.setAnimationsEnabled(true)
         }
     }
 }
@@ -241,11 +256,20 @@ extension NewPostTableViewController: UITableViewDelegate {
                 vc.cellTapped = { indexPathRow in
 
                     cell.textLabel?.text = "\(vc.categories[indexPathRow])"
-                    self.item.categoryId = indexPathRow + 1
+                    self.item.category = Category.allCases[indexPathRow]
                     vc.tableView.reloadRows(at: [indexPath], with: .fade)
                 }
                 navigationController?.pushViewController(vc, animated: true)
             }
+        }
+        
+        if indexPath.row == 5 {
+           let mapvVC = MapViewController()
+            mapvVC.locationIsSelctedAction = { locationInfo in
+                self.item.preferPlace = locationInfo
+            }
+            mapvVC.modalPresentationStyle = .fullScreen
+            present(mapvVC, animated: true)
         }
     }
 }

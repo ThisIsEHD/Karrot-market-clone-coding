@@ -54,10 +54,8 @@ class SignUpViewController: UIViewController {
         guard let email = RealView.emailTextField.text else { return }
         guard let password = RealView.passwordTextField.text else { return }
         
-        let nextVC = ProfileSettingViewController()
+        let nextVC = ProfileSettingViewController(email: email, password: password)
         
-        nextVC.email = email
-        nextVC.pw = password
         navigationController?.pushViewController(nextVC, animated: true)
     }
     

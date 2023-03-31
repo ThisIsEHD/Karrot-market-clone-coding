@@ -10,7 +10,7 @@ import UIKit
 class ItemDetailViewDescriptionCell: UITableViewCell {
     // MARK: - Properties
     
-    private let itemNameLabel: UILabel = {
+    private let itemTitleLabel: UILabel = {
         
         let lbl = UILabel()
         
@@ -52,11 +52,11 @@ class ItemDetailViewDescriptionCell: UITableViewCell {
     
     // MARK: - Actions
     
-    func setDescription(itemName: String, category: Int, content: String, wishs: Int, views: Int) {
+    func configure(title: String, category: Category, content: String, wishs: Int, views: Int) {
         
-        let attributeString = NSMutableAttributedString(string: "\(category)", attributes: [.underlineStyle: NSUnderlineStyle.single.rawValue, .font: UIFont.systemFont(ofSize: 13)])
+        let attributeString = NSMutableAttributedString(string: "\(category.translatedKorean)", attributes: [.underlineStyle: NSUnderlineStyle.single.rawValue, .font: UIFont.systemFont(ofSize: 13)])
         
-        itemNameLabel.text =  itemName
+        itemTitleLabel.text = title
         itemCategoryButton.setAttributedTitle(attributeString, for: .normal)
         itemDescriptionTextView.text = content
         extraInfoLabel.text = "0 chats, \(wishs) favorites, \(views) views"
@@ -83,7 +83,7 @@ class ItemDetailViewDescriptionCell: UITableViewCell {
     
     private func configureViews() {
         
-        addSubview(itemNameLabel)
+        addSubview(itemTitleLabel)
         addSubview(itemCategoryButton)
         addSubview(itemDescriptionTextView)
         addSubview(extraInfoLabel)
@@ -93,8 +93,8 @@ class ItemDetailViewDescriptionCell: UITableViewCell {
     
     private func setConstraints() {
         
-        itemNameLabel.anchor(top: self.topAnchor, topConstant: 20, leading: self.leadingAnchor, leadingConstant: 15)
-        itemCategoryButton.anchor(top: itemNameLabel.bottomAnchor, topConstant: 15, leading: itemNameLabel.leadingAnchor)
+        itemTitleLabel.anchor(top: self.topAnchor, topConstant: 20, leading: self.leadingAnchor, leadingConstant: 15)
+        itemCategoryButton.anchor(top: itemTitleLabel.bottomAnchor, topConstant: 15, leading: itemTitleLabel.leadingAnchor)
         itemDescriptionTextView.anchor(top: itemCategoryButton.bottomAnchor, topConstant: 15, leading: itemCategoryButton.leadingAnchor, trailing: self.trailingAnchor, trailingConstant: 20)
         extraInfoLabel.anchor(top: itemDescriptionTextView.bottomAnchor, topConstant: 15, bottom: self.bottomAnchor, bottomConstant: 30, leading: itemCategoryButton.leadingAnchor)
     }

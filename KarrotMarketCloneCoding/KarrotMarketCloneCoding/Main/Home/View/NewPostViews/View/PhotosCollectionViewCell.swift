@@ -14,9 +14,9 @@ final class PhotosCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var photo: UIImageView!
     @IBOutlet weak var deleteButton: UIButton!
     
-    @IBAction func delteButtonTapped(_ sender: Any) {
+    @IBAction func deleteButtonTapped(_ sender: Any) {
         
-        NotificationCenter.default.post(name: NotificationType.deleteButtonTapped.name, object: nil, userInfo: [UserInfo.indexPath : indexPath])
+        NotificationCenter.default.post(name: .imageRemoved, object: nil, userInfo: [UserInfo.indexPath : indexPath])
     }
     
     
