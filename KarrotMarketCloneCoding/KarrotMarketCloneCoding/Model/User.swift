@@ -8,51 +8,39 @@
 import Foundation
 
 struct User: Codable {
-    
-    let id: String?
     let email: String?
-    let pw: String?
+    let password: String?
     let nickname: String?
-    let profileImageUrl: String?
+    let profileImageURL: String?
+    var userLocation: LocationInfo?
     
-    let chatroomId: Int?
-    let userId: String?
-    
-    init(id: String?, email: String?, pw: String?, nickname: String?, profileImageUrl: String?, chatroomId: Int?, userId: String?) {
-        self.id = id
+    init(email: String?, password: String?, nickname: String?, profileImageURL: String?, userLocation: LocationInfo?) {
         self.email = email
-        self.pw = pw
+        self.password = password
         self.nickname = nickname
-        self.profileImageUrl = profileImageUrl
-        self.chatroomId = chatroomId
-        self.userId = userId
+        self.profileImageURL = profileImageURL
+        self.userLocation = userLocation
     }
-    
     /// 로그인
-    init(email: String?, pw: String?) {
-        self.init(id: nil, email: email, pw: pw, nickname: nil, profileImageUrl: nil, chatroomId: nil, userId: nil)
+    init(email: String?, password: String?) {
+        self.init(email: email, password: password, nickname: nil, profileImageURL: nil, userLocation: nil)
     }
     
     /// 회원가입
-    init(email: String?, pw: String?, nickname: String?) {
-        self.init(id: nil, email: email, pw: pw, nickname: nickname, profileImageUrl: nil, chatroomId: nil, userId: nil)
+    init(email: String?, password: String?, nickname: String?, userLocation: LocationInfo?) {
+        self.init(email: email, password: password, nickname: nickname, profileImageURL: nil, userLocation: userLocation)
     }
     
     /// 프로필 수정
-    init(nickname: String?, profileImageUrl: String?) {
-        self.init(id: nil, email: nil, pw: nil, nickname: nickname, profileImageUrl: profileImageUrl, chatroomId: nil, userId: nil)
-    }
-    
-    init(chatroomId: Int?, userId: String?, nickname: String?, profileImageUrl: String?) {
-        self.init(id: nil, email: nil, pw: nil, nickname: nickname, profileImageUrl: profileImageUrl, chatroomId: chatroomId, userId: userId)
+    init(nickname: String, profileImageURL: String?) {
+        self.init(email: nil, password: nil, nickname: nickname, profileImageURL: profileImageURL, userLocation: nil)
     }
     
     enum CodingKeys: String, CodingKey {
         case email
-        case id
-        case pw
+        case password
         case nickname
-        case profileImageUrl = "profileImage"
-        case chatroomId, userId
+        case profileImageURL = "profileImage"
+        case userLocation = "town"
     }
 }
