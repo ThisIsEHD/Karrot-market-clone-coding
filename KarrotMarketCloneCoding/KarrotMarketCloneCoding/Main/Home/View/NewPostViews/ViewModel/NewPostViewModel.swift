@@ -10,8 +10,6 @@ import Alamofire
 
 struct NewPostViewModel {
     
-    var item = Item()
-    
     func registerItem(item: Item, images: [UIImage], completion: @escaping (Result<Data?,KarrotError>) -> ()) {
         guard let title = item.title,
               let content = item.content,
@@ -50,7 +48,7 @@ struct NewPostViewModel {
             guard let httpResponse = response.response else { return }
 
             switch httpResponse.statusCode {
-            case 201:
+            case 200,201:
                 completion(.success(.none))
             case 400:
                 guard let message = response.data?.toDictionary() else {

@@ -14,7 +14,6 @@ protocol HomeTableViewModelDelegate: AnyObject {
 
 class HomeTableViewModel {
     
-    var model: FetchedItemList = []
     weak var delegate: HomeTableViewModelDelegate?
     
     var isViewBusy = false
@@ -35,7 +34,6 @@ class HomeTableViewModel {
                 
                 self.delegate?.applySnapshot(snapshot: snapshot)
                 self.isViewBusy = false
-                self.model.append(contentsOf: fetchedItemListData.content)
                 self.latestPage = fetchedItemListData.number
                 self.fetchedItemCount = fetchedItemListData.numberOfElements
                 
@@ -66,8 +64,7 @@ class HomeTableViewModel {
         }
         
         AF.request(KarrotRequest.fetchItems(queryItems)).response { response in
-            if let err = response.error {
-                print(err)
+            if response.error != nil {
                 completion(.failure(.internalServerError))
                 return
             }
@@ -86,7 +83,6 @@ class HomeTableViewModel {
             case 400:
                 completion(.failure(.badRequest))
             default:
-                print(httpResponse.statusCode)
                 completion(.failure(.unknownError))
             }
         }

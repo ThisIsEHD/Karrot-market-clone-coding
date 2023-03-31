@@ -11,6 +11,8 @@ import Alamofire
 
 final class NewPostTableViewController: UIViewController {
     
+    private let newPostViewModel = NewPostViewModel()
+    
     private var selectedImages: [UIImage] = [UIImage]() {
         didSet {
             maxChoosableImages = 10 - selectedImages.count
@@ -127,28 +129,14 @@ extension NewPostTableViewController {
             return
         }
         
-//        Network.shared.registerItem(item: item, images: selectedImages) { result in
-//
-//            switch result {
-//            case .success:
-//                self.doneButtonTapped()
-//                self.dismiss(animated: true, completion: nil)
-//            case .failure(let error):
-//                var alertMessage = ""
-//                switch error {
-//                case .wrongForm:
-//                    alertMessage = "잘못된 요청"
-//                case .invalidToken:
-//                    alertMessage = "로그인 시간 만료. 다시 로그인 해주세요."
-//                default:
-//                    alertMessage = "알 수 없는 에러. 나중에 다시 시도해 주세요."
-//                }
-//
-//                let alert = SimpleAlert(message: alertMessage)
-//
-//                self.present(alert, animated: true)
-//            }
-//        }
+        newPostViewModel.registerItem(item: item, images: selectedImages) { result in
+            switch result {
+            case .success:
+                self.dismiss(animated: true)
+            case .failure(let failure):
+                print(failure)
+            }
+        }
     }
 }
 
@@ -255,7 +243,7 @@ extension NewPostTableViewController: UITableViewDelegate {
                 
                 vc.cellTapped = { indexPathRow in
 
-                    cell.textLabel?.text = "\(vc.categories[indexPathRow])"
+                    cell.textLabel?.text = "\(vc.categories[indexPathRow].translatedKorean)"
                     self.item.category = Category.allCases[indexPathRow]
                     vc.tableView.reloadRows(at: [indexPath], with: .fade)
                 }
