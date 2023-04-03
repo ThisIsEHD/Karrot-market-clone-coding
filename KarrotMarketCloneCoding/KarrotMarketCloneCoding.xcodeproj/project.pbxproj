@@ -47,6 +47,8 @@
 		72C456B529D660B700E359CD /* LocationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C456B429D660B700E359CD /* LocationInfo.swift */; };
 		72C456B829D6D0E200E359CD /* NewPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C456B729D6D0E200E359CD /* NewPostViewModel.swift */; };
 		72C7143E29DAC1F600A93575 /* LocationSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C7143D29DAC1F600A93575 /* LocationSettingViewController.swift */; };
+		72C7144029DACBC600A93575 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72C7143F29DACBC600A93575 /* GoogleService-Info.plist */; };
+		72C7144329DACDA600A93575 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 72C7144229DACDA600A93575 /* FirebaseMessaging */; };
 		72ED25C92898D87800031AD1 /* CustomAF.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72ED25C82898D87800031AD1 /* CustomAF.swift */; };
 		72ED25CB2898D95F00031AD1 /* ExtensionMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72ED25CA2898D95F00031AD1 /* ExtensionMethod.swift */; };
 		72F7CFB128F91DB200E0D0C0 /* ChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F7CFB028F91DB200E0D0C0 /* ChatTableViewCell.swift */; };
@@ -138,6 +140,8 @@
 		72C456B429D660B700E359CD /* LocationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInfo.swift; sourceTree = "<group>"; };
 		72C456B729D6D0E200E359CD /* NewPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPostViewModel.swift; sourceTree = "<group>"; };
 		72C7143D29DAC1F600A93575 /* LocationSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSettingViewController.swift; sourceTree = "<group>"; };
+		72C7143F29DACBC600A93575 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		72C7144429DAD31700A93575 /* KarrotMarketCloneCoding.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KarrotMarketCloneCoding.entitlements; sourceTree = "<group>"; };
 		72ED25C82898D87800031AD1 /* CustomAF.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAF.swift; sourceTree = "<group>"; };
 		72ED25CA2898D95F00031AD1 /* ExtensionMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionMethod.swift; sourceTree = "<group>"; };
 		72F7CFB028F91DB200E0D0C0 /* ChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableViewCell.swift; sourceTree = "<group>"; };
@@ -195,6 +199,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				72C7144329DACDA600A93575 /* FirebaseMessaging in Frameworks */,
 				D3C23A5828EB28B5009B53B4 /* JWTDecode in Frameworks */,
 				56BC395A9ADB51E880D921C7 /* Pods_KarrotMarketCloneCoding.framework in Frameworks */,
 			);
@@ -547,6 +552,7 @@
 		D3E122F7287BF66000A1EDC8 /* KarrotMarketCloneCoding */ = {
 			isa = PBXGroup;
 			children = (
+				72C7144429DAD31700A93575 /* KarrotMarketCloneCoding.entitlements */,
 				D3E122F8287BF66000A1EDC8 /* AppDelegate.swift */,
 				D3E122FA287BF66000A1EDC8 /* SceneDelegate.swift */,
 				7252269029CAB09800491C64 /* SceneController.swift */,
@@ -559,6 +565,7 @@
 				7252267629CAAD8900491C64 /* Resources */,
 				D3E12303287BF66100A1EDC8 /* LaunchScreen.storyboard */,
 				D3E12306287BF66100A1EDC8 /* Info.plist */,
+				72C7143F29DACBC600A93575 /* GoogleService-Info.plist */,
 			);
 			path = KarrotMarketCloneCoding;
 			sourceTree = "<group>";
@@ -583,6 +590,7 @@
 			name = KarrotMarketCloneCoding;
 			packageProductDependencies = (
 				D3C23A5728EB28B5009B53B4 /* JWTDecode */,
+				72C7144229DACDA600A93575 /* FirebaseMessaging */,
 			);
 			productName = KarrotMarketCloneCoding;
 			productReference = D3E122F5287BF66000A1EDC8 /* KarrotMarketCloneCoding.app */;
@@ -614,6 +622,7 @@
 			mainGroup = D3E122EC287BF66000A1EDC8;
 			packageReferences = (
 				D3C23A5628EB28B5009B53B4 /* XCRemoteSwiftPackageReference "JWTDecode" */,
+				72C7144129DACDA600A93575 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = D3E122F6287BF66000A1EDC8 /* Products */;
 			projectDirPath = "";
@@ -631,6 +640,7 @@
 			files = (
 				D3DF36792885B53C00F20065 /* PhotosCollectionViewCell.xib in Resources */,
 				D3DF367D2887AF3C00F20065 /* PhotoPickerCollectionViewCell.xib in Resources */,
+				72C7144029DACBC600A93575 /* GoogleService-Info.plist in Resources */,
 				72F7D02D28FA88DC00E0D0C0 /* OutgoingMessageCell.xib in Resources */,
 				D3E12305287BF66100A1EDC8 /* LaunchScreen.storyboard in Resources */,
 				D3E12302287BF66100A1EDC8 /* Assets.xcassets in Resources */,
@@ -907,6 +917,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = KarrotMarketCloneCoding/KarrotMarketCloneCoding.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = G8228CR939;
@@ -937,6 +948,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = KarrotMarketCloneCoding/KarrotMarketCloneCoding.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = G8228CR939;
@@ -985,6 +997,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		72C7144129DACDA600A93575 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 9.0.0;
+			};
+		};
 		D3C23A5628EB28B5009B53B4 /* XCRemoteSwiftPackageReference "JWTDecode" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/auth0/JWTDecode.swift";
@@ -996,6 +1016,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		72C7144229DACDA600A93575 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 72C7144129DACDA600A93575 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
 		D3C23A5728EB28B5009B53B4 /* JWTDecode */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = D3C23A5628EB28B5009B53B4 /* XCRemoteSwiftPackageReference "JWTDecode" */;
