@@ -202,7 +202,7 @@ extension MyKarrotViewController: ProfileViewDelegate {
     
     func goToMyProfileVC() {
         
-        let profileEditingVC = ProfileEditingViewController(email: String(), password: String())
+//        let profileEditingVC = ProfileEditingViewController(email: String(), password: String())
         
 //<<<<<<< HEAD
 //        profileEditingVC.userId = userId
@@ -226,7 +226,7 @@ extension MyKarrotViewController: ProfileViewDelegate {
 //            }
 //        }
 ////>>>>>>> main
-        navigationController?.pushViewController(profileEditingVC, animated: true)
+//        navigationController?.pushViewController(profileEditingVC, animated: true)
     }
     
     func selectedItemTableVC(_ title: ListTitle) {

@@ -28,8 +28,8 @@ final class UserCheckViewController: UIViewController {
     }
     
     @objc func signUp() {
-        let signUpVC = SignUpViewController()
-        navigationController?.pushViewController(signUpVC, animated: true)
+        let locationSettingVC = LocationSettingViewController()
+        navigationController?.pushViewController(locationSettingVC, animated: true)
     }
     
     @objc func logIn() {

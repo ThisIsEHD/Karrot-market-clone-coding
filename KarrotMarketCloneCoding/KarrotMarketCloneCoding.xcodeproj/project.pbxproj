@@ -46,6 +46,7 @@
 		725226B529CAF85000491C64 /* BottomSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725226B429CAF85000491C64 /* BottomSheetViewController.swift */; };
 		72C456B529D660B700E359CD /* LocationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C456B429D660B700E359CD /* LocationInfo.swift */; };
 		72C456B829D6D0E200E359CD /* NewPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C456B729D6D0E200E359CD /* NewPostViewModel.swift */; };
+		72C7143E29DAC1F600A93575 /* LocationSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C7143D29DAC1F600A93575 /* LocationSettingViewController.swift */; };
 		72ED25C92898D87800031AD1 /* CustomAF.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72ED25C82898D87800031AD1 /* CustomAF.swift */; };
 		72ED25CB2898D95F00031AD1 /* ExtensionMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72ED25CA2898D95F00031AD1 /* ExtensionMethod.swift */; };
 		72F7CFB128F91DB200E0D0C0 /* ChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F7CFB028F91DB200E0D0C0 /* ChatTableViewCell.swift */; };
@@ -136,6 +137,7 @@
 		725226B429CAF85000491C64 /* BottomSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetViewController.swift; sourceTree = "<group>"; };
 		72C456B429D660B700E359CD /* LocationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInfo.swift; sourceTree = "<group>"; };
 		72C456B729D6D0E200E359CD /* NewPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPostViewModel.swift; sourceTree = "<group>"; };
+		72C7143D29DAC1F600A93575 /* LocationSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSettingViewController.swift; sourceTree = "<group>"; };
 		72ED25C82898D87800031AD1 /* CustomAF.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAF.swift; sourceTree = "<group>"; };
 		72ED25CA2898D95F00031AD1 /* ExtensionMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionMethod.swift; sourceTree = "<group>"; };
 		72F7CFB028F91DB200E0D0C0 /* ChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableViewCell.swift; sourceTree = "<group>"; };
@@ -361,6 +363,7 @@
 				D3E12318287FF55E00A1EDC8 /* SignUpViewController.swift */,
 				D3E1231E28800FEE00A1EDC8 /* SignInViewController.swift */,
 				D3F0E7C128E03507006AEB3D /* ProfileSettingViewController.swift */,
+				72C7143D29DAC1F600A93575 /* LocationSettingViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -703,6 +706,7 @@
 				D3A2158D288D905400D06AD3 /* Color.swift in Sources */,
 				72ED25C92898D87800031AD1 /* CustomAF.swift in Sources */,
 				72F7CFB528F922AD00E0D0C0 /* ConversationViewCell.swift in Sources */,
+				72C7143E29DAC1F600A93575 /* LocationSettingViewController.swift in Sources */,
 				723FE610287D649400A987E7 /* Constraints.swift in Sources */,
 				D3DF3670288457FD00F20065 /* PriceTableViewCell.swift in Sources */,
 				D3F0E7C428E0ABF4006AEB3D /* KeyChain.swift in Sources */,

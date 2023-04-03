@@ -14,6 +14,7 @@ class SignUpViewController: UIViewController {
     internal let RealView = ReusableSignView(frame: .zero)
     private var emailValidationOkay = false
     private var passwordValidationOkay = false
+    var userLocation: LocationInfo?
     
     override func loadView() {
         view = RealView
@@ -53,8 +54,9 @@ class SignUpViewController: UIViewController {
         
         guard let email = RealView.emailTextField.text else { return }
         guard let password = RealView.passwordTextField.text else { return }
+        guard let location = userLocation else { return }
         
-        let nextVC = ProfileSettingViewController(email: email, password: password)
+        let nextVC = ProfileSettingViewController(email: email, password: password, location: location)
         
         navigationController?.pushViewController(nextVC, animated: true)
     }

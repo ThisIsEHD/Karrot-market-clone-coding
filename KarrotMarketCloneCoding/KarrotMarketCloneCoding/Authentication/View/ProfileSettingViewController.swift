@@ -10,9 +10,11 @@ import UIKit
 import PhotosUI
 
 class ProfileSettingViewController: UIViewController {
+    
     // 키체인사용 , 임시구현
     private let email: String
     private let password: String
+    private let location: LocationInfo
     private var nickname: String?
     
     private var signUpViewModel = AuthenticationViewModel()
@@ -28,9 +30,10 @@ class ProfileSettingViewController: UIViewController {
     
     internal let profileView = ReusableSettingProfileView(frame: .zero)
     
-    init(email: String, password: String) {
+    init(email: String, password: String, location: LocationInfo) {
         self.email = email
         self.password = password
+        self.location = location
 
         super.init(nibName: nil, bundle: nil)
     }
@@ -79,7 +82,7 @@ class ProfileSettingViewController: UIViewController {
         
         var alert: UIAlertController?
         
-        signUpViewModel.signup(user: User(email: email, password: password, nickname: nickname, userLocation: nil), profileImage: profileImage) { result in
+        signUpViewModel.signup(user: User(email: email, password: password, nickname: nickname, userLocation: location), profileImage: profileImage) { result in
             switch result {
             case .success:
                 self.signIn()

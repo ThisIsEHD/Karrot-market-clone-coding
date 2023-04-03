@@ -112,8 +112,8 @@ final class HomeTableViewController: UIViewController {
     
     func reloadTableViewData() {
         
-//        viewModel.isViewBusy = false
-//        viewModel.loadTestableData()
+        viewModel.isViewBusy = false
+        viewModel.fetchItems()
     }
         
     // MARK: - Setup
@@ -184,9 +184,9 @@ extension HomeTableViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let userId = UserDefaults.standard.object(forKey: Constant.userId) as? String ?? ""
         let productId = dataSource.itemIdentifier(for: indexPath)?.id
-//        let nextVC = ItemDetailViewController(id: userId, productId: productId)
+        let nextVC = ItemDetailViewController(id: userId, productId: productId)
         
-//        navigationController?.pushViewController(nextVC, animated: true)
+        navigationController?.pushViewController(nextVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
