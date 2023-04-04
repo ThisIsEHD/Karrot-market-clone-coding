@@ -19,7 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // 클라우드 메세징 대리자 설정
         Messaging.messaging().delegate = self
-        Messaging.messaging().isAutoInitEnabled = true // 자동 초기화 설정
         
         // push notification 대리자 설정
         UNUserNotificationCenter.current().delegate = self
@@ -35,10 +34,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             }
         )
-        
-        Messaging.messaging().token { token, error in
-            print("토큰 = \(token)")
-        }
         
         return true
     }
