@@ -115,7 +115,7 @@ extension KarrotRequest {
         
         guard let cookies = HTTPCookieStorage.shared.cookies else { fatalError("cookie 없음")}
         let cookiesHeader = HTTPCookie.requestHeaderFields(with: cookies)
-        
+        print(cookiesHeader)
         switch header {
         case .json:
             headers = [ Header.contentType.type : Header.json.type ]
@@ -141,6 +141,64 @@ extension KarrotRequest {
             return try URLEncoding.default.encode(urlRequest, with: query)
         }
         return urlRequest
+    }
+}
+
+func handleResponse(_ response: DataResponse<Bool, AFError>) -> Result<Bool, KarrotError> {
+    if let error = response.error {
+        print(error)
+    }
+    
+    guard let httpResponse = response.response else {
+        return  .failure(.serverError)
+    }
+    
+    switch httpResponse.statusCode {
+    case 200:
+        return .success(true)
+    case 401:
+        return .failure(.unauthorized)
+    case 403:
+        return .failure(.forbidden)
+    case 404:
+        return .failure(.notFound)
+    default:
+        guard let data = response.data, let error = jsonDecode(type: KarrotResponseError.self, data: data) else {
+            return .failure(.decodingError)
+        }
+        print(error)
+        return .failure(.unknownError)
+    }
+}
+
+func handleResponse<T: Codable>(_ response: DataResponse<T, AFError>) -> Result<T, KarrotError> {
+    if let error = response.error {
+        print(error)
+    }
+    
+    guard let httpResponse = response.response else {
+        return  .failure(.serverError)
+    }
+    
+    switch httpResponse.statusCode {
+    case 200:
+        guard let responseBody = response.data,
+              let responseData = jsonDecode(type: T.self, data: responseBody) else {
+            return .failure(.decodingError)
+        }
+        return .success(responseData)
+    case 401:
+        return .failure(.unauthorized)
+    case 403:
+        return .failure(.forbidden)
+    case 404:
+        return .failure(.notFound)
+    default:
+        guard let data = response.data, let error = jsonDecode(type: KarrotResponseError.self, data: data) else {
+            return .failure(.decodingError)
+        }
+        print(error)
+        return .failure(.unknownError)
     }
 }
 

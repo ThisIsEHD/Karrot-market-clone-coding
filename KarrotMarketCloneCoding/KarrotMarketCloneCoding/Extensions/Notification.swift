@@ -12,4 +12,5 @@ extension Notification.Name {
     static let loginStateChanged = Notification.Name("loginStateChanged")
     static let imageRemoved = Notification.Name("imageRemoved")
     static let updateLocationInfo = Notification.Name("updateLocationInfo")
+    static let updateItemList = Notification.Name("updateItemList")
 }

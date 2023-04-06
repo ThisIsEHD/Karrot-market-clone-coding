@@ -32,8 +32,9 @@ enum KarrotError: Error {
     // 404
     case notFound
     // 500
-    case internalServerError
+    case serverError
     
     case decodingError
+    case imageError
     case unknownError
 }

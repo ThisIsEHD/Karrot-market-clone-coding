@@ -49,6 +49,7 @@
 		72C7143E29DAC1F600A93575 /* LocationSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C7143D29DAC1F600A93575 /* LocationSettingViewController.swift */; };
 		72C7144029DACBC600A93575 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 72C7143F29DACBC600A93575 /* GoogleService-Info.plist */; };
 		72C7144329DACDA600A93575 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 72C7144229DACDA600A93575 /* FirebaseMessaging */; };
+		72C7144629DE83DA00A93575 /* KarrotViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C7144529DE83DA00A93575 /* KarrotViewController.swift */; };
 		72ED25C92898D87800031AD1 /* CustomAF.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72ED25C82898D87800031AD1 /* CustomAF.swift */; };
 		72ED25CB2898D95F00031AD1 /* ExtensionMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72ED25CA2898D95F00031AD1 /* ExtensionMethod.swift */; };
 		72F7CFB128F91DB200E0D0C0 /* ChatTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F7CFB028F91DB200E0D0C0 /* ChatTableViewCell.swift */; };
@@ -142,6 +143,7 @@
 		72C7143D29DAC1F600A93575 /* LocationSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSettingViewController.swift; sourceTree = "<group>"; };
 		72C7143F29DACBC600A93575 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		72C7144429DAD31700A93575 /* KarrotMarketCloneCoding.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = KarrotMarketCloneCoding.entitlements; sourceTree = "<group>"; };
+		72C7144529DE83DA00A93575 /* KarrotViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KarrotViewController.swift; sourceTree = "<group>"; };
 		72ED25C82898D87800031AD1 /* CustomAF.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomAF.swift; sourceTree = "<group>"; };
 		72ED25CA2898D95F00031AD1 /* ExtensionMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionMethod.swift; sourceTree = "<group>"; };
 		72F7CFB028F91DB200E0D0C0 /* ChatTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableViewCell.swift; sourceTree = "<group>"; };
@@ -346,7 +348,6 @@
 			children = (
 				723FE6992889341000A987E7 /* HomeTableViewController.swift */,
 				723FE6A1288AC87C00A987E7 /* HomeTableViewCell.swift */,
-				D3DF36692884491F00F20065 /* NewPostViews */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -411,8 +412,10 @@
 			isa = PBXGroup;
 			children = (
 				723FE6972889091D00A987E7 /* TabbarController.swift */,
+				72C7144529DE83DA00A93575 /* KarrotViewController.swift */,
 				7252267929CAAEDA00491C64 /* Home */,
 				7252267C29CAAF0500491C64 /* Search */,
+				D3DF36692884491F00F20065 /* NewPost */,
 				7252269529CAB1CB00491C64 /* ItemDetail */,
 				7252267E29CAAF1A00491C64 /* Notification */,
 				7252267829CAAED400491C64 /* Chat */,
@@ -510,13 +513,13 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		D3DF36692884491F00F20065 /* NewPostViews */ = {
+		D3DF36692884491F00F20065 /* NewPost */ = {
 			isa = PBXGroup;
 			children = (
 				72C456B929D6D10700E359CD /* View */,
 				72C456B629D6D0D300E359CD /* ViewModel */,
 			);
-			path = NewPostViews;
+			path = NewPost;
 			sourceTree = "<group>";
 		};
 		D3DF367E28894FB400F20065 /* Xibs */ = {
@@ -738,6 +741,7 @@
 				722CE3AF28EDD0D800D22AB4 /* UserItemTableViewController.swift in Sources */,
 				725226A329CAB97C00491C64 /* CustomPlaceholderTextView.swift in Sources */,
 				D3FB4CE428919C3F003300B0 /* Formatters.swift in Sources */,
+				72C7144629DE83DA00A93575 /* KarrotViewController.swift in Sources */,
 				D3E122FB287BF66000A1EDC8 /* SceneDelegate.swift in Sources */,
 				D3DF36782885B53C00F20065 /* PhotosCollectionViewCell.swift in Sources */,
 				D3DF36802889785000F20065 /* PhotosCollectionView.swift in Sources */,

@@ -41,14 +41,13 @@ final class HomeTableViewController: UIViewController {
     
     private lazy var addPostButton: UIButton = {
         
-        let btn = UIButton(frame: CGRect(x: 0, y: 0, width: 70, height: 70))
-        let image = UIImage(systemName: "plus.circle.fill", withConfiguration: UIImage.SymbolConfiguration(pointSize: 60, weight: .medium))
+        let btn = UIButton(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+        let image = UIImage(named: "plusButton")
         
         btn.backgroundColor = .white
         btn.layer.cornerRadius = 60 / 2
         btn.clipsToBounds = true
         btn.setImage(image, for: .normal)
-        btn.tintColor = UIColor.appColor(.carrot)
         btn.addTarget(self, action: #selector(addButtonDidTapped), for: .touchUpInside)
 
         return btn
@@ -79,13 +78,14 @@ final class HomeTableViewController: UIViewController {
         nav.modalPresentationStyle  = .fullScreen
         
         newPostVC.doneButtonTapped = { [weak self] in
-
-            guard let weakSelf = self else { return }
-            
-            weakSelf.viewModel.isViewBusy = false
-            weakSelf.viewModel.latestPage = nil
-
-            weakSelf.viewModel.fetchItems()
+            Task {
+                guard let weakSelf = self else { return }
+                
+                weakSelf.viewModel.isViewBusy = false
+                weakSelf.viewModel.latestPage = nil
+                
+                await weakSelf.viewModel.fetchItems()
+            }
         }
         
         present(nav, animated: true, completion: nil)
@@ -105,17 +105,29 @@ final class HomeTableViewController: UIViewController {
         setupTableView()
         
         viewModel.delegate = self
-        viewModel.fetchItems()
+        Task {
+            await viewModel.fetchItems()
+        }
+        
+        NotificationCenter.default.addObserver(forName: .updateItemList, object: nil, queue: .main) { [weak self] _ in
+            self?.reloadTableViewData()
+        }
         
         setConstraints()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     func reloadTableViewData() {
         
         viewModel.isViewBusy = false
-        viewModel.fetchItems()
+        Task {
+            await viewModel.fetchItems()
+        }
     }
-        
+    
     // MARK: - Setup
     
     private func setupNavigationItems() {
@@ -157,7 +169,7 @@ final class HomeTableViewController: UIViewController {
     private func setConstraints() {
         
         itemTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
-        addPostButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, bottomConstant: 10, trailing: view.trailingAnchor, trailingConstant: 20)
+        addPostButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, bottomConstant: 20, trailing: view.trailingAnchor, trailingConstant: 20)
     }
 }
 
@@ -176,7 +188,9 @@ extension HomeTableViewController: UITableViewDelegate {
             let frameHeight = scrollView.frame.size.height
             
             if heightRemainFromBottom < frameHeight, heightRemainFromBottom > 0, let fetchedItemCount = viewModel.fetchedItemCount, fetchedItemCount == 10 {
-                viewModel.fetchItems()
+                Task {
+                    await viewModel.fetchItems()
+                }
             }
         }
     }
@@ -192,6 +206,31 @@ extension HomeTableViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
+    }
+}
+
+extension HomeTableViewController: UITableViewDataSourcePrefetching{
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        for indexPath in indexPaths {
+            let imageURLs = indexPaths.compactMap { getImageURL(at: $0) }
+            imageURLs.forEach { url in
+                AF.download(url).responseData { response in
+                    guard let data = response.value else {
+                        return
+                    }
+                    let image = UIImage(data: data)
+                    DispatchQueue.main.async {
+                        let cell = tableView.cellForRow(at: indexPath) as? HomeTableViewCell
+                        cell?.thumbnailImageView.image = image
+                    }
+                }
+            }
+        }
+    }
+    func getImageURL(at indexPath: IndexPath) -> URL? {
+        let fetchedItemList = snapshot.itemIdentifiers(inSection: .main)
+        guard let stringURL = fetchedItemList[indexPath.row].imageURL else { return nil }
+        return URL(string: stringURL)
     }
 }
 

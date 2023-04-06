@@ -45,14 +45,16 @@ final class SettingViewController: UITableViewController {
         if indexPath.row == 0 {
             
             tableView.deselectRow(at: indexPath, animated: true)
-            settingViewModel.logout { result in
-                switch result {
-                case .success:
-                    SceneController.shared.logout()
-                case .failure(let failure):
-                    print(failure)
-                }
-            }
+            SceneController.shared.logout()
+//            쿠키문제로 로그아웃 api 호출시 실패
+//            settingViewModel.logout { result in
+//                switch result {
+//                case .success:
+//                    SceneController.shared.logout()
+//                case .failure(let failure):
+//                    print(failure)
+//                }
+//            }
            
         } else {
             

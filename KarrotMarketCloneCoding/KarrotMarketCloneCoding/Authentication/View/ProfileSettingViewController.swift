@@ -79,20 +79,18 @@ class ProfileSettingViewController: UIViewController {
     
     
     @objc func doneButtonTapped() {
+        print("사용자의 위치: \(location)")
         
-        var alert: UIAlertController?
-        
-        signUpViewModel.signup(user: User(email: email, password: password, nickname: nickname, userLocation: location), profileImage: profileImage) { result in
+        Task {
+            let result = await signUpViewModel.signup(user: User(email: email, password: password, nickname: nickname, userLocation: location), profileImage: profileImage)
+            
             switch result {
             case .success:
                 self.signIn()
             case .failure(let error):
-                switch error {
-                default:
-                    alert = self.prepareAlert(title: "서버에러. 나중에 다시 시도해주세요.", isPop: false)
-                }
+                let alert = self.prepareAlert(title: "서버에러. 나중에 다시 시도해주세요\n \(error).", isPop: false)
                 
-                self.present(alert!, animated: true)
+                self.present(alert, animated: true)
             }
         }
     }
@@ -196,7 +194,8 @@ class ProfileSettingViewController: UIViewController {
     }
     
     private func signIn() {
-        signUpViewModel.login(user: User(email: email, password: password)) { result in
+        Task {
+            let result = await signUpViewModel.login(user: User(email: email, password: password))
             switch result {
             case .success:
                 SceneController.shared.login()

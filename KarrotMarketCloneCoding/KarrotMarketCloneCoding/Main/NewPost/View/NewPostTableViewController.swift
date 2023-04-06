@@ -129,9 +129,16 @@ extension NewPostTableViewController {
             return
         }
         
+        if item.preferPlace == nil {
+            let alert = SimpleAlertController(message: "거래장소를 입력해주세요.")
+            present(alert, animated: true)
+            return
+        }
+        
         newPostViewModel.registerItem(item: item, images: selectedImages) { result in
             switch result {
             case .success:
+                NotificationCenter.default.post(name: .updateItemList, object: nil)
                 self.dismiss(animated: true)
             case .failure(let failure):
                 print(failure)

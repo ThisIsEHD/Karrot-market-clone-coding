@@ -57,24 +57,63 @@ extension PriceTableViewCell: UITextFieldDelegate {
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        
+        let utf8Char = string.cString(using: .utf8)
+        let isBackSpace = strcmp(utf8Char, "\\b")
+        if !string.checkOnlyNumbers() && isBackSpace != -92 {
+            return false
+        }
+        
+        // Limit the number of characters
         guard let text = textField.text else { return true }
-
-        let newLength = text.count + string.count - range.length
-        let maxLength = 11
         
         if string.isEmpty {
             return true
         }
-  
+        
+        let newLength = text.count + string.count - range.length
+        let maxLength = 11
+        if newLength > maxLength {
+            return false
+        }
+        
+        // Check if the number is too large
         if range.location + range.length <= 10 {
             if let number = Int(text), number >= 1_000_000_000 {
                 return false
-            } else {
-                return newLength <= maxLength
             }
-        } else {
-            return false
         }
+        
+        return true
+        
+//        let currentText = NSString(string: textField.text ?? "")
+//        let finalText = currentText.replacingCharacters(in: range, with: string)
+//        
+//        let utf8Char = string.cString(using: .utf8)
+//        let isBackSpace = strcmp(utf8Char, "\\b")
+//        
+//        if string.checkOnlyNumbers() || isBackSpace == -92 { return true }
+//        
+//        return false
+//        
+//        guard let text = textField.text else { return true }
+//
+//        let newLength = text.count + string.count - range.length
+//        let maxLength = 11
+//        
+//        if string.isEmpty {
+//            return true
+//        }
+//  
+//        if range.location + range.length <= 10 {
+//            if let number = Int(text), number >= 1_000_000_000 {
+//                return false
+//            } else {
+//                return newLength <= maxLength
+//            }
+//        } else {
+//            return false
+//        }
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {

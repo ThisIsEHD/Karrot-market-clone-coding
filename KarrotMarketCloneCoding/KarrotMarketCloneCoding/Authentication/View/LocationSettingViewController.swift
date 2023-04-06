@@ -10,7 +10,7 @@ import MapKit
 
 
 
-class LocationSettingViewController: UIViewController {
+class LocationSettingViewController: UIViewController, MKMapViewDelegate {
     
     // MARK: - Properties
 
@@ -23,7 +23,7 @@ class LocationSettingViewController: UIViewController {
     private let locationSelectButton = UIButton()
     
     private var locationAlias: String?
-    private var currentLoaction: CLLocation? = CLLocation(latitude: 37.47622, longitude: 126.79563)
+    private let initialLocation = CLLocation(latitude: 37.47622, longitude: 126.79563)
     
     // MARK: - Life Cycle
     
@@ -55,7 +55,11 @@ class LocationSettingViewController: UIViewController {
     
     @objc func saveLocationAndPushNextVC() {
         let clGeocoder = CLGeocoder()
-        guard let location = currentLoaction else { return }
+        
+        let latitude = mapView.centerCoordinate.latitude
+        let longitude = mapView.centerCoordinate.longitude
+        let location = CLLocation(latitude: latitude, longitude: longitude)
+        
         clGeocoder.reverseGeocodeLocation(location) { [weak self] (placeMarks, error) in
             guard let place = placeMarks?.first else {
                 return
@@ -68,8 +72,10 @@ class LocationSettingViewController: UIViewController {
             guard let townName = place.subLocality else { return }
             let alias = self?.locationAlias ?? "내동네" // domb 회원가입에서도 필수입력값인지 나중에 확인해서 없애기.
             
+            let userLocation = LocationInfo(latitude: intLatitude, longitude: intLongitude, townName: townName, alias: alias)
+            print(userLocation)
             DispatchQueue.main.async {
-                self?.pushNextVC(location: LocationInfo(latitude: intLatitude, longitude: intLongitude, townName: townName, alias: alias))
+                self?.pushNextVC(location: userLocation)
             }
         }
     }
@@ -100,7 +106,7 @@ class LocationSettingViewController: UIViewController {
     
     private func setMapView() {
         mapView.delegate = self
-        mapView.updateLocation(currentLoaction)
+        mapView.updateLocation(initialLocation)
     }
     
     private func setLocationManager() {
@@ -131,44 +137,31 @@ class LocationSettingViewController: UIViewController {
     }
 }
 
-// MARK: - MKMapViewDelegate
-
-extension LocationSettingViewController: MKMapViewDelegate {
-    
-    func mapViewDidChangeVisibleRegion(_ mapView: MKMapView) {
-        let latitude = mapView.centerCoordinate.latitude
-        let longitude = mapView.centerCoordinate.longitude
-        let location = CLLocation(latitude: latitude, longitude: longitude)
-        
-        self.currentLoaction = location
-    }
-}
-
 // MARK: - CLLocationManagerDelegate
 
 extension LocationSettingViewController: CLLocationManagerDelegate {
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        
         if manager.authorizationStatus == .authorizedWhenInUse {
+            locationManager.requestLocation()
+            
+            let currentLocation = locationManager.location
+            mapView.updateLocation(currentLocation)
+            
             locationManager.startUpdatingLocation()
         } else {
             // 권한이 거절됐을 때 처리할 내용을 작성합니다.
-            mapView.updateLocation(currentLoaction)
-        }
-    }
-    
-    func locationManager(_ manager: CLLocationManager,
-                         didChangeAuthorization status: CLAuthorizationStatus) {
-        
-        if status == .authorizedWhenInUse || status == .authorizedAlways {
-            locationManager.requestLocation()
-        } else {
-            mapView.updateLocation(currentLoaction)
+            mapView.updateLocation(initialLocation)
         }
     }
 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print(error)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        self.locationManager.stopUpdatingLocation()
     }
     
     func locationManagerRequestAuthorization() {

@@ -20,13 +20,14 @@ class HomeTableViewCell: UITableViewCell {
             nameLabel.text = item.title
             priceLabel.text = item.price != 0 ? NumberFormatter.Decimal.string(from: NSNumber(value: item.price))! + "원" : "나눔 🧡"
             wishLabel.text = "\(item.favoriteUserCount)"
-            getThumbnailImage { [self] image in
-                thumbnailImageView.image = image
+            locationLabel.text = item.townName
+            getThumbnailImage(url: item.imageURL) { [weak self] image in
+                self?.thumbnailImageView.image = image
             }
         }
     }
     
-    private let thumbnailImageView: UIImageView = {
+    let thumbnailImageView: UIImageView = {
         
         let iv = UIImageView(image: UIImage(named: "logo"))
         iv.contentMode = .scaleAspectFill
@@ -45,20 +46,19 @@ class HomeTableViewCell: UITableViewCell {
         lbl.font = UIFont.systemFont(ofSize: 17)
         return lbl
     }()
-    //        let locationLabel: UILabel = {
-    //            let lb = UILabel()
-    //            lb.numberOfLines = 1
-    //            lb.font = UIFont(name: "Helvetica", size: 13)
-    //            return lb
-    //        }()
-    
-    //        let timeLabel: UILabel = {
-    //            let lb = UILabel()
-    //            lb.numberOfLines = 2
-    //            lb.font = UIFont(name: "Helvetica", size: 13)
-    //            return lb
-    //        }()
-    
+    let locationLabel: UILabel = {
+        let lb = UILabel()
+        lb.numberOfLines = 1
+        lb.textColor = .systemGray
+        lb.font = UIFont(name: "Helvetica", size: 15)
+        return lb
+    }()
+    let timeLabel: UILabel = {
+        let lb = UILabel()
+        lb.numberOfLines = 2
+        lb.font = UIFont(name: "Helvetica", size: 13)
+        return lb
+    }()
     let priceLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
@@ -68,8 +68,8 @@ class HomeTableViewCell: UITableViewCell {
     }()
     private let wishIcon: UIButton = {
         let btn = UIButton()
-//        btn.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
         btn.imageView?.contentMode = .scaleAspectFit
+        btn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         btn.imageView?.tintColor = .black.withAlphaComponent(0.6)
         btn.setImage(UIImage(named: "wish-gray"), for: .normal)
         return btn
@@ -77,15 +77,14 @@ class HomeTableViewCell: UITableViewCell {
     let wishLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
-//        lbl.text = ""
         lbl.textColor = .black.withAlphaComponent(0.6)
         lbl.font = UIFont.systemFont(ofSize: 15)
         return lbl
     }()
     private let chatIcon: UIButton = {
         let btn = UIButton()
-        btn.frame = CGRect(x: 0, y: 0, width: 38, height: 38)
         btn.imageView?.contentMode = .scaleAspectFit
+        btn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         btn.imageView?.tintColor = .black.withAlphaComponent(0.6)
         btn.setImage(UIImage(named: "chat-gray"), for: .normal)
         return btn
@@ -137,7 +136,7 @@ class HomeTableViewCell: UITableViewCell {
         
         contentView.addSubview(thumbnailImageView)
         contentView.addSubview(nameLabel)
-//        contentView.addSubview(locationLabel)
+        contentView.addSubview(locationLabel)
         contentView.addSubview(priceLabel)
         
         contentView.addSubview(chatIcon)
@@ -170,13 +169,24 @@ class HomeTableViewCell: UITableViewCell {
         
         nameLabel.anchor(top: thumbnailImageView.topAnchor, topConstant: 5,  leading: thumbnailImageView.trailingAnchor, leadingConstant: 15, trailing: trailingAnchor, trailingConstant: 15)
         
-        //        locationLabel.anchor()
+        locationLabel.snp.makeConstraints { make in
+            make.top.equalTo(nameLabel.snp.bottom).offset(3)
+            make.leading.equalTo(nameLabel)
+        }
         //        timeLabel.anchor()
-        priceLabel.anchor(top: nameLabel.bottomAnchor, topConstant: 10, leading: nameLabel.leadingAnchor)
+        priceLabel.anchor(top: locationLabel.bottomAnchor, topConstant: 10, leading: nameLabel.leadingAnchor)
         
     }
     
-    private func getThumbnailImage(completion: @escaping (UIImage?) -> ()) {
-        
+    func getThumbnailImage(url: String?, completion: @escaping (UIImage?) -> ()) {
+        guard let stringURL = url else { return }
+        AF.download(stringURL).responseData { response in
+            guard let data = response.value else {
+                completion(nil)
+                return
+            }
+            let image = UIImage(data: data)
+            completion(image)
+        }
     }
 }

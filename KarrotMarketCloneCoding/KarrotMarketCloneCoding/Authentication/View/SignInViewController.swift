@@ -15,8 +15,8 @@ final class SignInViewController: SignUpViewController {
         
         guard let email = RealView.emailTextField.text else { return }
         guard let password = RealView.passwordTextField.text else { return }
-        
-        signInViewModel.login(user: User(email: email, password: password)) { result in
+        Task {
+            let result = await signInViewModel.login(user: User(email: email, password: password))
             switch result {
             case .success:
                 SceneController.shared.login()
@@ -25,7 +25,7 @@ final class SignInViewController: SignUpViewController {
             }
         }
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
