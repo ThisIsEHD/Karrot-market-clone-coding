@@ -8,11 +8,6 @@
 import Foundation
 import UIKit
 
-struct ItemListResponse: KarrotResponse {
-    var message: String?
-    var data: FetchedItemListData
-}
-
 // MARK: - FetchedItemListData
 
 struct FetchedItemListData: Codable {

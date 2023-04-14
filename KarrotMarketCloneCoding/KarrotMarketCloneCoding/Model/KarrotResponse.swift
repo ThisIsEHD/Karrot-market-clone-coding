@@ -7,18 +7,18 @@
 
 import Foundation
 
-protocol KarrotResponse<KarrotData>: Codable {
+protocol Response<KarrotData>: Codable {
     associatedtype KarrotData
     
     var message: String? { get }
     var data: KarrotData { get }
 }
 
-struct KarrotResponseError: KarrotResponse {
-    typealias KarrotData = String?
+struct KarrotResponse<T: Codable>: Response {
+    typealias KarrotData = T?
     
     var message: String?
-    var data: String?
+    var data: T?
 }
 
 enum KarrotError: Error {
@@ -36,5 +36,6 @@ enum KarrotError: Error {
     
     case decodingError
     case imageError
-    case unknownError
+    case unwrappingError
+    case unknownError(statusCode: Int)
 }

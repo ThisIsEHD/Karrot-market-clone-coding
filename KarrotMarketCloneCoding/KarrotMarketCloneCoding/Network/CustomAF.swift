@@ -45,7 +45,7 @@ enum KarrotRequest: Requestable {
     
     // Item
     case fetchItems([String : Any])
-    //    case fetchItem(ID,ProductID)
+    case fetchItemDetail(ProductID)
     case registerItem
 }
 
@@ -62,8 +62,8 @@ extension KarrotRequest {
             return "/post/home-list"
         case .logout:
             return "/logout"
-            //case .fetchItem(let userId, let productID):
-            //     return ""
+        case .fetchItemDetail(let productID):
+            return "/post/\(productID)"
             
             // post
         case .login:
@@ -82,7 +82,7 @@ extension KarrotRequest {
     var method: HTTPMethod {
         switch self {
             // get
-        case .fetchItems, .logout: return .get
+        case .fetchItems, .fetchItemDetail, .logout: return .get
             // post
         case .login, .registerUser, .registerItem: return .post
             // post
@@ -95,15 +95,18 @@ extension KarrotRequest {
             
         case .login: return .json
         case .registerUser, .registerItem:  return .multipart
-        case .fetchItems, .logout: return .none
+        case .fetchItems, .fetchItemDetail, .logout: return .none
         }
     }
     
     var parameters: RequestParameters {
         switch self {
+            // body
         case .login(let user): return .body(user)
+            // query
         case .fetchItems(let queryItem): return .query(queryItem)
-        case .registerUser, .registerItem, .logout: return .none
+            // none
+        case .registerUser, .registerItem, .logout, .fetchItemDetail: return .none
         }
     }
     
@@ -116,6 +119,7 @@ extension KarrotRequest {
         guard let cookies = HTTPCookieStorage.shared.cookies else { fatalError("cookie 없음")}
         let cookiesHeader = HTTPCookie.requestHeaderFields(with: cookies)
         print(cookiesHeader)
+        
         switch header {
         case .json:
             headers = [ Header.contentType.type : Header.json.type ]
@@ -144,33 +148,6 @@ extension KarrotRequest {
     }
 }
 
-func handleResponse(_ response: DataResponse<Bool, AFError>) -> Result<Bool, KarrotError> {
-    if let error = response.error {
-        print(error)
-    }
-    
-    guard let httpResponse = response.response else {
-        return  .failure(.serverError)
-    }
-    
-    switch httpResponse.statusCode {
-    case 200:
-        return .success(true)
-    case 401:
-        return .failure(.unauthorized)
-    case 403:
-        return .failure(.forbidden)
-    case 404:
-        return .failure(.notFound)
-    default:
-        guard let data = response.data, let error = jsonDecode(type: KarrotResponseError.self, data: data) else {
-            return .failure(.decodingError)
-        }
-        print(error)
-        return .failure(.unknownError)
-    }
-}
-
 func handleResponse<T: Codable>(_ response: DataResponse<T, AFError>) -> Result<T, KarrotError> {
     if let error = response.error {
         print(error)
@@ -181,11 +158,12 @@ func handleResponse<T: Codable>(_ response: DataResponse<T, AFError>) -> Result<
     }
     
     switch httpResponse.statusCode {
-    case 200:
+    case (200...299):
         guard let responseBody = response.data,
               let responseData = jsonDecode(type: T.self, data: responseBody) else {
             return .failure(.decodingError)
         }
+        
         return .success(responseData)
     case 401:
         return .failure(.unauthorized)
@@ -194,11 +172,13 @@ func handleResponse<T: Codable>(_ response: DataResponse<T, AFError>) -> Result<
     case 404:
         return .failure(.notFound)
     default:
-        guard let data = response.data, let error = jsonDecode(type: KarrotResponseError.self, data: data) else {
+        
+        guard let data = response.data, let response = jsonDecode(type: KarrotResponse<String>.self, data: data) else {
             return .failure(.decodingError)
         }
-        print(error)
-        return .failure(.unknownError)
+        print(response.message ?? "에러 위치: \(#function)")
+        
+        return .failure(.unknownError(statusCode: httpResponse.statusCode))
     }
 }
 
