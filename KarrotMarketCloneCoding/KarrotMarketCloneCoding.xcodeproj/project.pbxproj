@@ -68,7 +68,6 @@
 		D3A2158B288D905400D06AD3 /* Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A21585288D905400D06AD3 /* Enum.swift */; };
 		D3A2158D288D905400D06AD3 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A21588288D905400D06AD3 /* Color.swift */; };
 		D3A2158F288D90E800D06AD3 /* ChatTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3A2158E288D90E800D06AD3 /* ChatTableViewController.swift */; };
-		D3C23A5828EB28B5009B53B4 /* JWTDecode in Frameworks */ = {isa = PBXBuildFile; productRef = D3C23A5728EB28B5009B53B4 /* JWTDecode */; };
 		D3D93CDF28EB21DD00B3CE7B /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D93CDE28EB21DD00B3CE7B /* SettingViewController.swift */; };
 		D3DF36292881AF5100F20065 /* ProfileEditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF36282881AF5100F20065 /* ProfileEditingViewController.swift */; };
 		D3DF362B2881B35200F20065 /* ReusableSettingProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF362A2881B35200F20065 /* ReusableSettingProfileView.swift */; };
@@ -86,7 +85,6 @@
 		D3DF368A288ACC0900F20065 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DF3689288ACC0900F20065 /* CategoryTableViewController.swift */; };
 		D3E122F9287BF66000A1EDC8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E122F8287BF66000A1EDC8 /* AppDelegate.swift */; };
 		D3E122FB287BF66000A1EDC8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E122FA287BF66000A1EDC8 /* SceneDelegate.swift */; };
-		D3E12300287BF66000A1EDC8 /* (null) in Resources */ = {isa = PBXBuildFile; };
 		D3E12302287BF66100A1EDC8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3E12301287BF66100A1EDC8 /* Assets.xcassets */; };
 		D3E12305287BF66100A1EDC8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3E12303287BF66100A1EDC8 /* LaunchScreen.storyboard */; };
 		D3E12313287D9AF800A1EDC8 /* UserCheckViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E12312287D9AF800A1EDC8 /* UserCheckViewController.swift */; };
@@ -202,7 +200,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				72C7144329DACDA600A93575 /* FirebaseMessaging in Frameworks */,
-				D3C23A5828EB28B5009B53B4 /* JWTDecode in Frameworks */,
 				56BC395A9ADB51E880D921C7 /* Pods_KarrotMarketCloneCoding.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -592,7 +589,6 @@
 			);
 			name = KarrotMarketCloneCoding;
 			packageProductDependencies = (
-				D3C23A5728EB28B5009B53B4 /* JWTDecode */,
 				72C7144229DACDA600A93575 /* FirebaseMessaging */,
 			);
 			productName = KarrotMarketCloneCoding;
@@ -607,7 +603,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1320;
-				LastUpgradeCheck = 1320;
+				LastUpgradeCheck = 1420;
 				TargetAttributes = {
 					D3E122F4287BF66000A1EDC8 = {
 						CreatedOnToolsVersion = 13.2.1;
@@ -624,7 +620,6 @@
 			);
 			mainGroup = D3E122EC287BF66000A1EDC8;
 			packageReferences = (
-				D3C23A5628EB28B5009B53B4 /* XCRemoteSwiftPackageReference "JWTDecode" */,
 				72C7144129DACDA600A93575 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = D3E122F6287BF66000A1EDC8 /* Products */;
@@ -647,7 +642,6 @@
 				72F7D02D28FA88DC00E0D0C0 /* OutgoingMessageCell.xib in Resources */,
 				D3E12305287BF66100A1EDC8 /* LaunchScreen.storyboard in Resources */,
 				D3E12302287BF66100A1EDC8 /* Assets.xcassets in Resources */,
-				D3E12300287BF66000A1EDC8 /* (null) in Resources */,
 				72F7D02B28FA88C900E0D0C0 /* IncomingMessageCell.xib in Resources */,
 				D3DF366828842F6B00F20065 /* PhotosSelectingTableViewCell.xib in Resources */,
 			);
@@ -773,7 +767,6 @@
 				723FE67D2885385000A987E7 /* ItemDetailViewProfileCell.swift in Sources */,
 				D3A2158B288D905400D06AD3 /* Enum.swift in Sources */,
 				723FE681288539A900A987E7 /* ItemDetailViewOtherItemsCell.swift in Sources */,
-				D3E122F9287BF66000A1EDC8 /* AppDelegate.swift in Sources */,
 				D3F0E7C228E03507006AEB3D /* ProfileSettingViewController.swift in Sources */,
 				72F7CFB728F92CB400E0D0C0 /* Chat.swift in Sources */,
 				723FE692288806CB00A987E7 /* ItemDetailViewOtherItemsCollectionViewCell.swift in Sources */,
@@ -1009,14 +1002,6 @@
 				minimumVersion = 9.0.0;
 			};
 		};
-		D3C23A5628EB28B5009B53B4 /* XCRemoteSwiftPackageReference "JWTDecode" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/auth0/JWTDecode.swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1024,11 +1009,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 72C7144129DACDA600A93575 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
-		};
-		D3C23A5728EB28B5009B53B4 /* JWTDecode */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D3C23A5628EB28B5009B53B4 /* XCRemoteSwiftPackageReference "JWTDecode" */;
-			productName = JWTDecode;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
