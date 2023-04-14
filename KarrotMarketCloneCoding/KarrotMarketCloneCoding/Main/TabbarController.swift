@@ -25,6 +25,9 @@ extension TabbarController {
     private func configureTabbarController() {
         tabBar.tintColor = .black
         tabBar.backgroundColor = .white
+        tabBar.shadowImage = .none
+        tabBar.barTintColor = .white
+        tabBar.backgroundImage = UIImage()
         
         let homeViewController = templateNavigationController(selectedImage: #imageLiteral(resourceName: "home-selected"), unselectedImage: #imageLiteral(resourceName: "home-unselected"), rootViewController: HomeTableViewController(), title: "홈")
         
@@ -38,13 +41,15 @@ extension TabbarController {
     private func templateNavigationController(selectedImage: UIImage, unselectedImage: UIImage, rootViewController: UIViewController, title: String) -> UINavigationController {
         
         let nav = UINavigationController(rootViewController: rootViewController)
+        nav.navigationBar.shadowImage = .none
+        nav.navigationBar.backgroundColor = .white
+        nav.navigationBar.isTranslucent = false
+        nav.navigationBar.barTintColor = UIColor.white
+        nav.navigationBar.tintColor = .black
         
         nav.tabBarItem.image = unselectedImage
         nav.tabBarItem.selectedImage = selectedImage
-        nav.navigationBar.tintColor = .black
-        nav.navigationBar.barTintColor = .systemBackground
-        nav.navigationBar.backgroundColor = .systemBackground
-        nav.navigationBar.isTranslucent = true
+//        nav.tabBarController?.tabBar.barTintColor = .white
         nav.title = title
         nav.navigationBar.topItem?.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         
