@@ -59,11 +59,53 @@ func application(_ application: UIApplication, didDiscardSceneSessions sceneSess
 }
 
 extension AppDelegate: UNUserNotificationCenterDelegate {
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        print(#function)
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+        //        sharedMeetingManager.queueMeetingForDelivery(user: userID, meetingID: meetingID)
+        return [.badge, .sound]
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {
+        let request = response.notification.request
+        request.identifier
+        
+        let content = request.content
+        content.title
+        content.userInfo
+        content.body
+        content.categoryIdentifier
+        content.subtitle
+        // 알림 페이로드에 click_action을 사용해도됨?.
+        switch response.actionIdentifier {
+        case "ACCEPT_ACTION":
+            //                sharedMeetingManager.acceptMeeting(user: userID, meetingID: meetingID)
+            break
+            
+        case "DECLINE_ACTION":
+            //                sharedMeetingManager.declineMeeting(user: userID, meetingID: meetingID)
+            break
+        default:
+            break
+        }
+        
+        return
+    }
+//    {
+//       "aps" : {
+//          "alert" : {
+//             "title" : "Game Request",
+//             "subtitle" : "Five Card Draw",
+//             "body" : "Bob wants to play poker"
+//          },
+//          "category" : "GAME_INVITATION"
+//       },
+//       "gameID" : "12345678"
+//    }
+    // 백그라운드 업데이트
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        
+        completionHandler(UIBackgroundFetchResult.newData)
     }
 }
-
 
 extension AppDelegate : MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
