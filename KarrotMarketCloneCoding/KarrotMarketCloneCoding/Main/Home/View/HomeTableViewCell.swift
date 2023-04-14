@@ -21,15 +21,17 @@ class HomeTableViewCell: UITableViewCell {
             priceLabel.text = item.price != 0 ? NumberFormatter.Decimal.string(from: NSNumber(value: item.price))! + "원" : "나눔 🧡"
             wishLabel.text = "\(item.favoriteUserCount)"
             locationLabel.text = item.townName
-            getThumbnailImage(url: item.imageURL) { [weak self] image in
-                self?.thumbnailImageView.image = image
+            
+            Task {
+                let image = await getThumbnailImage(url: item.imageURL)
+                self.thumbnailImageView.image = image ??  UIImage(named: "logo")
             }
         }
     }
     
     let thumbnailImageView: UIImageView = {
         
-        let iv = UIImageView(image: UIImage(named: "logo"))
+        let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
         iv.layer.cornerRadius = 8
         iv.layer.masksToBounds = true
@@ -97,21 +99,6 @@ class HomeTableViewCell: UITableViewCell {
         lbl.font = UIFont.systemFont(ofSize: 15)
         return lbl
     }()
-    //        let replyIcon: UIButton = {
-    //            let bt = UIButton()
-    //            bt.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-    //            let size: CGFloat = 19
-    //            bt.imageEdgeInsets = UIEdgeInsets(top: size, left: size, bottom: size, right: size)
-    //            bt.imageView?.contentMode = .scaleAspectFit
-    //            return bt
-    //        }()
-    //
-    //        let replyLabel: UILabel = {
-    //            let lb = UILabel()
-    //            lb.numberOfLines = 0
-    //            lb.font = UIFont(name: "Helvetica", size: 15)
-    //            return lb
-    //        }()
     
     // MARK: - Actions
     
@@ -176,17 +163,5 @@ class HomeTableViewCell: UITableViewCell {
         //        timeLabel.anchor()
         priceLabel.anchor(top: locationLabel.bottomAnchor, topConstant: 10, leading: nameLabel.leadingAnchor)
         
-    }
-    
-    func getThumbnailImage(url: String?, completion: @escaping (UIImage?) -> ()) {
-        guard let stringURL = url else { return }
-        AF.download(stringURL).responseData { response in
-            guard let data = response.value else {
-                completion(nil)
-                return
-            }
-            let image = UIImage(data: data)
-            completion(image)
-        }
     }
 }

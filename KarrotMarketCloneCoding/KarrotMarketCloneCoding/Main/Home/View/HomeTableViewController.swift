@@ -16,6 +16,7 @@ final class HomeTableViewController: UIViewController {
     // MARK: - Properties
     
     private let viewModel = HomeTableViewModel()
+    var isViewBusy = false
     
     private var dataSource: DataSource!
     private var snapshot = Snapshot()
@@ -80,11 +81,10 @@ final class HomeTableViewController: UIViewController {
         newPostVC.doneButtonTapped = { [weak self] in
             Task {
                 guard let weakSelf = self else { return }
-                
-                weakSelf.viewModel.isViewBusy = false
+
                 weakSelf.viewModel.latestPage = nil
                 
-                await weakSelf.viewModel.fetchItems()
+                await weakSelf.fetchItems()
             }
         }
         
@@ -104,14 +104,11 @@ final class HomeTableViewController: UIViewController {
         setupNavigationItems()
         setupTableView()
         
-        viewModel.delegate = self
         Task {
-            await viewModel.fetchItems()
+            await fetchItems()
         }
         
-        NotificationCenter.default.addObserver(forName: .updateItemList, object: nil, queue: .main) { [weak self] _ in
-            self?.reloadTableViewData()
-        }
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchItems), name: .updateItemList, object: nil)
         
         setConstraints()
     }
@@ -120,11 +117,28 @@ final class HomeTableViewController: UIViewController {
         NotificationCenter.default.removeObserver(self)
     }
     
-    func reloadTableViewData() {
+    // MARK: - Actions
+    
+    @objc
+    private func fetchItems() async {
         
-        viewModel.isViewBusy = false
-        Task {
-            await viewModel.fetchItems()
+        isViewBusy = true
+        
+        let result = await viewModel.fetchItems()
+        
+        switch result {
+        case .success(let fetchedItemListData):
+            var snapshot = NSDiffableDataSourceSnapshot<Section, FetchedItem>()
+            
+            snapshot.appendSections([Section.main])
+            snapshot.appendItems(fetchedItemListData.content)
+            
+            await self.dataSource.apply(snapshot, animatingDifferences: true)
+            self.isViewBusy = false
+            
+        case .failure(let error):
+            print(error)
+            SceneController.shared.logout()
         }
     }
     
@@ -147,6 +161,7 @@ final class HomeTableViewController: UIViewController {
         
         itemTableView.delegate = self
         itemTableView.dataSource = dataSource
+//        itemTableView.prefetchDataSource = self
     }
     
     // MARK: - Configure UI
@@ -196,9 +211,8 @@ extension HomeTableViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let userId = UserDefaults.standard.object(forKey: Constant.userId) as? String ?? ""
-        let productId = dataSource.itemIdentifier(for: indexPath)?.id
-        let nextVC = ItemDetailViewController(id: userId, productId: productId)
+        guard let productId = dataSource.itemIdentifier(for: indexPath)?.id else { return }
+        let nextVC = ItemDetailViewController(productId: productId)
         
         navigationController?.pushViewController(nextVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
@@ -209,35 +223,28 @@ extension HomeTableViewController: UITableViewDelegate {
     }
 }
 
-extension HomeTableViewController: UITableViewDataSourcePrefetching{
-    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        for indexPath in indexPaths {
-            let imageURLs = indexPaths.compactMap { getImageURL(at: $0) }
-            imageURLs.forEach { url in
-                AF.download(url).responseData { response in
-                    guard let data = response.value else {
-                        return
-                    }
-                    let image = UIImage(data: data)
-                    DispatchQueue.main.async {
-                        let cell = tableView.cellForRow(at: indexPath) as? HomeTableViewCell
-                        cell?.thumbnailImageView.image = image
-                    }
-                }
-            }
-        }
-    }
-    func getImageURL(at indexPath: IndexPath) -> URL? {
-        let fetchedItemList = snapshot.itemIdentifiers(inSection: .main)
-        guard let stringURL = fetchedItemList[indexPath.row].imageURL else { return nil }
-        return URL(string: stringURL)
-    }
-}
-
-extension HomeTableViewController: HomeTableViewModelDelegate {
-    func applySnapshot(snapshot: Snapshot) {
-        DispatchQueue.main.async {
-            self.dataSource.apply(snapshot, animatingDifferences: true)
-        }
-    }
-}
+//extension HomeTableViewController: UITableViewDataSourcePrefetching {
+    // prefetch 어떻게 하더라...
+//    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+//        for indexPath in indexPaths {
+//            let imageURLs = indexPaths.compactMap { getImageURL(at: $0) }
+//            imageURLs.forEach { url in
+//                AF.download(url).responseData { response in
+//                    guard let data = response.value else {
+//                        return
+//                    }
+//                    let image = UIImage(data: data)
+//                    DispatchQueue.main.async {
+//                        let cell = tableView.cellForRow(at: indexPath) as? HomeTableViewCell
+//                        cell?.thumbnailImageView.image = image
+//                    }
+//                }
+//            }
+//        }
+//    }
+//    func getImageURL(at indexPath: IndexPath) -> URL? {
+//        let fetchedItemList = snapshot.itemIdentifiers(inSection: .main)
+//        guard let stringURL = fetchedItemList[indexPath.row].imageURL else { return nil }
+//        return URL(string: stringURL)
+//    }
+//}

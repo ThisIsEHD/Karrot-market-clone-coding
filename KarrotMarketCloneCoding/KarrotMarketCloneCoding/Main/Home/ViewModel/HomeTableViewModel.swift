@@ -8,44 +8,12 @@
 import Foundation
 import Alamofire
 
-protocol HomeTableViewModelDelegate: AnyObject {
-    func applySnapshot(snapshot: Snapshot)
-}
-
 class HomeTableViewModel {
     
-    weak var delegate: HomeTableViewModelDelegate?
-    
-    var isViewBusy = false
     var fetchedItemCount: Int?
     var latestPage: Int?
     
-    func fetchItems(title: String? = nil, category: Category? = nil, page: Int? = nil, size: Int? = nil, completion: (() -> Void)? = nil) async {
-        guard !isViewBusy else { return }
-        isViewBusy = true
-        Task {
-            
-            let result = await fetchItems(title: title, category: category, page: latestPage, size: size)
-            
-            switch result {
-            case .success(let fetchedItemListData):
-                var snapshot = NSDiffableDataSourceSnapshot<Section, FetchedItem>()
-                
-                snapshot.appendSections([Section.main])
-                snapshot.appendItems(fetchedItemListData.content)
-                
-                self.delegate?.applySnapshot(snapshot: snapshot)
-                self.isViewBusy = false
-                self.latestPage = fetchedItemListData.number
-                self.fetchedItemCount = fetchedItemListData.numberOfElements
-                
-            case .failure(let error):
-                print(error, #function)
-            }
-        }
-    }
-    
-    private func fetchItems(title: String?, category: Category?, page: Int?, size: Int?) async -> Result<FetchedItemListData, KarrotError> {
+    func fetchItems(title: String? = nil, category: Category? = nil, page: Int? = nil, size: Int? = nil, completion: (() -> Void)? = nil) async -> Result<FetchedItemListData, KarrotError> {
         
         var queryItems = [String : Any]()
         
@@ -65,13 +33,22 @@ class HomeTableViewModel {
             queryItems["size"] = size
         }
         
-        let response = await AF.request(KarrotRequest.fetchItems(queryItems)).serializingDecodable(ItemListResponse.self).response
-        let result = handleResponse(response)
+        let dataResponse = await AF.request(KarrotRequest.fetchItems(queryItems)).serializingDecodable(KarrotResponse<FetchedItemListData>.self).response
+        let result = handleResponse(dataResponse)
+        
         switch result {
-        case .success(let itemListResponse):
-            let fetchedItemListData = itemListResponse.data
+        case .success(let response):
+            
+            guard let fetchedItemListData = response.data else {
+                return .failure(.unwrappingError)
+            }
+            
+            self.latestPage = fetchedItemListData.number
+            self.fetchedItemCount = fetchedItemListData.numberOfElements
+            
             return .success(fetchedItemListData)
         case .failure(let error):
+            
             return .failure(error)
         }
     }
