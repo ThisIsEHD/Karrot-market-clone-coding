@@ -11,9 +11,16 @@ import Alamofire
 struct AuthenticationViewModel {
     
     func login(user: User) async -> Result<Bool, KarrotError> {
-        let response = await AF.request(KarrotRequest.login(user)).serializingDecodable(Bool.self).response
         
-        return handleResponse(response)
+        let dataResponse = await AF.request(KarrotRequest.login(user)).serializingDecodable(KarrotResponse<Bool>.self).response
+        let result = handleResponse(dataResponse)
+        
+        switch result {
+        case .success:
+            return .success(true)
+        case .failure(let error):
+            return .failure(error)
+        }
     }
     
     func signup(user: User, profileImage: UIImage?) async -> Result<Bool, KarrotError> {
@@ -32,7 +39,7 @@ struct AuthenticationViewModel {
             parameters["town.townName"] = user.userLocation?.townName
         }
         
-        let response = await AF.upload(multipartFormData: { data in
+        let dataResponse = await AF.upload(multipartFormData: { data in
             
             for (key, value) in parameters {
                 data.append(value?.data(using: .utf8) ?? Data(), withName: key)
@@ -44,7 +51,13 @@ struct AuthenticationViewModel {
                         mimeType: "image/png")
             
         }, with: KarrotRequest.registerUser).serializingDecodable(Bool.self).response
+        let result = handleResponse(dataResponse)
         
-        return handleResponse(response)
+        switch result {
+        case .success:
+            return .success(true)
+        case .failure(let error):
+            return .failure(error)
+        }
     }
 }
