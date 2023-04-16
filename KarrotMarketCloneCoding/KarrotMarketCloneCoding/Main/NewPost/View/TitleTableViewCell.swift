@@ -24,7 +24,7 @@ final class TitleTableViewCell: UITableViewCell {
         
         contentView.addSubview(titleTextField)
         
-        titleTextField.anchor(top: contentView.topAnchor, topConstant: 20, bottom: contentView.bottomAnchor, bottomConstant: 20, leading: contentView.leadingAnchor, leadingConstant: 20, trailing: contentView.trailingAnchor, trailingConstant: 10)
+        titleTextField.anchor(top: contentView.topAnchor, topConstant: 15, bottom: contentView.bottomAnchor, bottomConstant: 15, leading: contentView.leadingAnchor, leadingConstant: 20, trailing: contentView.trailingAnchor, trailingConstant: 20)
     }
     
     required init?(coder: NSCoder) {

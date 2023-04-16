@@ -7,15 +7,10 @@
 
 import UIKit
 
-protocol TableViewCellDelegate: AnyObject {
-    func updateTextViewHeight(_ cell: ContentTableViewCell, _ textView: UITextView)
-}
-
 final class ContentTableViewCell: UITableViewCell {
 
     static let identifier = "ContentTableViewCell"
     internal var textChanged: (String?) -> Void = { _ in }
-    weak var delegate: TableViewCellDelegate?
     
     private let textViewPlaceHolder = "게시글 내용을 작성해주세요."
     let contentTextView = UITextView()
@@ -27,12 +22,15 @@ final class ContentTableViewCell: UITableViewCell {
         contentTextView.font = .systemFont(ofSize: 18)
         contentTextView.text = textViewPlaceHolder
         contentTextView.textColor = .systemGray
-        contentTextView.isScrollEnabled = false
+        contentTextView.isScrollEnabled = true
+        contentTextView.textContainerInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
     
         
         contentView.addSubview(contentTextView)
         
-        contentTextView.anchor(top: contentView.topAnchor, topConstant: 10, bottom: contentView.bottomAnchor, bottomConstant: 10, leading: contentView.leadingAnchor, leadingConstant: 20, trailing: contentView.trailingAnchor, trailingConstant: 20)
+        contentTextView.snp.makeConstraints { make in
+            make.edges.equalTo(contentView).inset(UIEdgeInsets(top: 10, left: 15, bottom: 10, right: 20))
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -61,12 +59,6 @@ extension ContentTableViewCell: UITextViewDelegate {
             textView.textColor = .lightGray
         } else {
             textChanged(textView.text)
-        }
-    }
-    
-    func textViewDidChange(_ textView: UITextView) {
-        if let delegate = delegate {
-            delegate.updateTextViewHeight(self, textView)
         }
     }
     

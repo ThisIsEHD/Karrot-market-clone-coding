@@ -181,9 +181,9 @@ extension MyKarrotViewController: ProfileViewDelegate {
 //            switch result {
 //            case .success(let user):
 //                self.profileView.configureUser(nickname: user.nickname)
-//                
+//
 //                guard let url = user.profileImageUrl else { return }
-//                
+//
 //                Network.shared.fetchImage(url: url) { result in
 //                    switch result {
 //                        case .success(let image):

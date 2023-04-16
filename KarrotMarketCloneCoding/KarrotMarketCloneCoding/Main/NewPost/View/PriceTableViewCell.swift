@@ -28,7 +28,7 @@ final class PriceTableViewCell: UITableViewCell {
         contentView.addSubview(priceTextField)
         
         wonLabel.anchor(top: contentView.topAnchor, topConstant: 10, bottom: contentView.bottomAnchor, bottomConstant: 10, leading: contentView.leadingAnchor, leadingConstant: 20, width: 20)
-        priceTextField.anchor(top: contentView.topAnchor, topConstant: 20, bottom: contentView.bottomAnchor, bottomConstant: 20, leading: wonLabel.trailingAnchor, trailing: contentView.trailingAnchor, trailingConstant: 10)
+        priceTextField.anchor(top: contentView.topAnchor, topConstant: 15, bottom: contentView.bottomAnchor, bottomConstant: 15, leading: wonLabel.trailingAnchor, trailing: contentView.trailingAnchor, trailingConstant: 10)
     }
     
     required init?(coder: NSCoder) {
@@ -88,23 +88,23 @@ extension PriceTableViewCell: UITextFieldDelegate {
         
 //        let currentText = NSString(string: textField.text ?? "")
 //        let finalText = currentText.replacingCharacters(in: range, with: string)
-//        
+//
 //        let utf8Char = string.cString(using: .utf8)
 //        let isBackSpace = strcmp(utf8Char, "\\b")
-//        
+//
 //        if string.checkOnlyNumbers() || isBackSpace == -92 { return true }
-//        
+//
 //        return false
-//        
+//
 //        guard let text = textField.text else { return true }
 //
 //        let newLength = text.count + string.count - range.length
 //        let maxLength = 11
-//        
+//
 //        if string.isEmpty {
 //            return true
 //        }
-//  
+//
 //        if range.location + range.length <= 10 {
 //            if let number = Int(text), number >= 1_000_000_000 {
 //                return false
