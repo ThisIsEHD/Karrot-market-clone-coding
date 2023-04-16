@@ -34,7 +34,7 @@ final class NewPostTableViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         view.addSubview(newPostTableView)
         
         newPostTableView.delegate = self
@@ -46,7 +46,7 @@ final class NewPostTableViewController: UIViewController {
                                                name: UIResponder.keyboardDidShowNotification,
                                                object: nil)
     }
-
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -88,8 +88,8 @@ final class NewPostTableViewController: UIViewController {
         
         // 2
         if let userInfo = notification.userInfo,
-            // 3
-            let keyboardRectangle = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+           // 3
+           let keyboardRectangle = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
             print(keyboardRectangle.width)
         }
     }
@@ -135,13 +135,14 @@ extension NewPostTableViewController {
             return
         }
         
-        newPostViewModel.registerItem(item: item, images: selectedImages) { result in
+        Task {
+            let result = await newPostViewModel.registerItem(item: item, images: selectedImages)
             switch result {
             case .success:
                 NotificationCenter.default.post(name: .updateItemList, object: nil)
                 self.dismiss(animated: true)
-            case .failure(let failure):
-                print(failure)
+            case .failure(let error):
+                self.presentError(error: error)
             }
         }
     }
@@ -156,6 +157,10 @@ extension NewPostTableViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.row == 0 {
             return 110
+        } else if indexPath.row == 2 {
+            return 50
+        } else if indexPath.row == 4 {
+            return 200
         } else {
             return UITableView.automaticDimension
         }
@@ -187,7 +192,7 @@ extension NewPostTableViewController: UITableViewDataSource {
         } else if indexPath.row == 2 {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: BasicTableViewCell.identifier, for: indexPath)
-    
+            
             cell.textLabel?.text = "카테고리 선택"
             cell.accessoryType = .disclosureIndicator
             cell.selectionStyle = .none
@@ -196,7 +201,7 @@ extension NewPostTableViewController: UITableViewDataSource {
         } else if indexPath.row == 3 {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: PriceTableViewCell.identifier, for: indexPath) as! PriceTableViewCell
-    
+            
             cell.selectionStyle = .none
             cell.textChanged = { self.item.price = Int($0 ?? "0") ?? 0 }
             
@@ -205,14 +210,13 @@ extension NewPostTableViewController: UITableViewDataSource {
             
             let cell = tableView.dequeueReusableCell(withIdentifier: ContentTableViewCell.identifier, for: indexPath) as! ContentTableViewCell
             
-            cell.delegate = self
             cell.selectionStyle = .none
             cell.textChanged = { self.item.content = $0 }
             
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: LocationSelectTableViewCell.identifier, for: indexPath) as!
-                    LocationSelectTableViewCell
+            LocationSelectTableViewCell
             
             cell.textLabel?.text = "거래 희망 장소"
             cell.accessoryType = .disclosureIndicator
@@ -220,20 +224,6 @@ extension NewPostTableViewController: UITableViewDataSource {
             cell.location = item.preferPlace?.alias
             
             return cell
-        }
-    }
-}
-
-extension NewPostTableViewController: TableViewCellDelegate {
-    func updateTextViewHeight(_ cell: ContentTableViewCell, _ textView: UITextView) {
-        let height = textView.bounds.size.height > 120 ? textView.bounds.size.height : 120
-        let newSize = newPostTableView.sizeThatFits(CGSize(width: textView.bounds.size.width, height: .infinity))
-    
-        if height != newSize.height {
-            UIView.setAnimationsEnabled(false)
-            newPostTableView.beginUpdates()
-            newPostTableView.endUpdates()
-            UIView.setAnimationsEnabled(true)
         }
     }
 }
@@ -249,7 +239,7 @@ extension NewPostTableViewController: UITableViewDelegate {
                 let vc = CategoryTableViewController()
                 
                 vc.cellTapped = { indexPathRow in
-
+                    
                     cell.textLabel?.text = "\(vc.categories[indexPathRow].translatedKorean)"
                     self.item.category = Category.allCases[indexPathRow]
                     vc.tableView.reloadRows(at: [indexPath], with: .fade)
@@ -259,7 +249,7 @@ extension NewPostTableViewController: UITableViewDelegate {
         }
         
         if indexPath.row == 5 {
-           let mapvVC = MapViewController()
+            let mapvVC = MapViewController()
             mapvVC.locationIsSelctedAction = { locationInfo in
                 self.item.preferPlace = locationInfo
             }
@@ -270,17 +260,17 @@ extension NewPostTableViewController: UITableViewDelegate {
 }
 
 extension NewPostTableViewController: PHPickerViewControllerDelegate {
-//    deinit시 제거해줘야하나?
+    //    deinit시 제거해줘야하나?
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
         
         picker.dismiss(animated: true)
-
+        
         results.forEach { result in
-
+            
             let itemProvider = result.itemProvider
             
             if itemProvider.canLoadObject(ofClass: UIImage.self) {
-
+                
                 itemProvider.loadObject(ofClass: UIImage.self) { image, error in
                     
                     DispatchQueue.main.async { self.selectedImages.append((image as? UIImage)!) }

@@ -8,6 +8,7 @@
 import UIKit
 
 class SimpleAlertController: UIAlertController {
+    
     // MARK: - Initialize
     
     convenience init(message: String?, completion: ((UIAlertAction) -> Void)? = nil) {

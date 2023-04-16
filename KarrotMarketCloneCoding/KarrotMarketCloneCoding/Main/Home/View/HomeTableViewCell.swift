@@ -23,8 +23,13 @@ class HomeTableViewCell: UITableViewCell {
             locationLabel.text = item.townName
             
             Task {
-                let image = await getThumbnailImage(url: item.imageURL)
-                self.thumbnailImageView.image = image ??  UIImage(named: "logo")
+                let result = await getImage(url: item.imageURL, size: CGSize(width: 100, height: 100))
+                switch result {
+                case .success(let image):
+                    self.thumbnailImageView.image = image
+                case .failure:
+                    self.thumbnailImageView.image = UIImage(named: "logo")
+                }
             }
         }
     }

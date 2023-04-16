@@ -12,8 +12,8 @@ class SearchViewController: UIViewController {
     // MARK: - Properties
     
     private var viewModel = HomeTableViewModel()
-    private var dataSource: DataSource!
-    private var snapshot = Snapshot()
+    private var dataSource: TableViewDataSource!
+    private var snapshot = TableViewSnapshot()
     
     var isViewBusy = true
     
@@ -87,7 +87,7 @@ class SearchViewController: UIViewController {
     
     func reloadTableViewData(keyword: String?) {
         
-        viewModel.isViewBusy = false
+//        viewModel.isViewBusy = false
 //        viewModel.loadData(keyword: keyword) {
 //            self.itemTableView.reloadData()
 //        }

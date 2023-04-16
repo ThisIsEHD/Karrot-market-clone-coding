@@ -10,6 +10,8 @@ import UIKit
 class ItemDetailViewDescriptionCell: UITableViewCell {
     // MARK: - Properties
     
+    static let identifier = "ItemDetailViewDescriptionCell"
+    
     private let itemTitleLabel: UILabel = {
         
         let lbl = UILabel()
@@ -52,14 +54,17 @@ class ItemDetailViewDescriptionCell: UITableViewCell {
     
     // MARK: - Actions
     
-    func configure(title: String, category: Category, content: String, wishs: Int, views: Int) {
+    func configure(with item: FetchedItemDetail?) {
+        
+        guard let item = item else { return }
+        guard let category = item.category else { return }
         
         let attributeString = NSMutableAttributedString(string: "\(category.translatedKorean)", attributes: [.underlineStyle: NSUnderlineStyle.single.rawValue, .font: UIFont.systemFont(ofSize: 13)])
         
-        itemTitleLabel.text = title
+        itemTitleLabel.text = item.title
         itemCategoryButton.setAttributedTitle(attributeString, for: .normal)
-        itemDescriptionTextView.text = content
-        extraInfoLabel.text = "0 chats, \(wishs) favorites, \(views) views"
+        itemDescriptionTextView.text = item.content
+        extraInfoLabel.text = "0 chats, \(item.favoriteUserCount) favorites, \(item.views) views"
     }
     
     // MARK: - Life Cycle

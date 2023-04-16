@@ -7,10 +7,24 @@
 
 import UIKit
 
+protocol Presentable: AnyObject {
+    func presentError(error: KarrotError)
+}
+
 class ItemDetailViewOtherItemsCell: UITableViewCell {
     // MARK: - Properties
     
-    let tableTitlelabel: UILabel = {
+    static let identifier = "ItemDetailViewOtherItemsCell"
+    
+    weak var delegate: Presentable?
+    
+    var items: [FetchedItem]? {
+        didSet {
+            postsCollectionView.reloadData()
+        }
+    }
+    
+    let titleLabel: UILabel = {
         
         let lbl = UILabel()
         
@@ -18,11 +32,12 @@ class ItemDetailViewOtherItemsCell: UITableViewCell {
         
         return lbl
     }()
+    
     private let postsCollectionView: UICollectionView = {
         
         let cv = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         
-        cv.register(ItemDetailViewOtherItemsCollectionViewCell.self, forCellWithReuseIdentifier: "PostCell")
+        cv.register(CollectionViewPostCell.self, forCellWithReuseIdentifier: "PostCell")
         
         return cv
     }()
@@ -32,7 +47,7 @@ class ItemDetailViewOtherItemsCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        addSubview(tableTitlelabel)
+        addSubview(titleLabel)
         addSubview(postsCollectionView)
         
         postsCollectionView.dataSource = self
@@ -53,8 +68,8 @@ class ItemDetailViewOtherItemsCell: UITableViewCell {
     
     private func setupConstraints() {
         
-        tableTitlelabel.anchor(top: topAnchor, topConstant: 20, leading: leadingAnchor, leadingConstant: 15)
-        postsCollectionView.anchor(top: tableTitlelabel.bottomAnchor, topConstant: 15, bottom: self.bottomAnchor, bottomConstant: 20, leading: tableTitlelabel.leadingAnchor, trailing: self.trailingAnchor, trailingConstant: 20, height: 230)
+        titleLabel.anchor(top: topAnchor, topConstant: 20, leading: leadingAnchor, leadingConstant: 15)
+        postsCollectionView.anchor(top: titleLabel.bottomAnchor, topConstant: 15, bottom: self.bottomAnchor, bottomConstant: 20, leading: titleLabel.leadingAnchor, trailing: self.trailingAnchor, trailingConstant: 20, height: 230)
     }
 }
 
@@ -62,12 +77,31 @@ class ItemDetailViewOtherItemsCell: UITableViewCell {
 
 extension ItemDetailViewOtherItemsCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 2
+        return items?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PostCell", for: indexPath) as! ItemDetailViewOtherItemsCollectionViewCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CollectionViewPostCell.identifier, for: indexPath) as? CollectionViewPostCell else { return UICollectionViewCell() }
+        
+        let item = items?[indexPath.row]
+        
+        cell.configure(title: item?.title, price: item?.price)
+        
+        if let imageURL = item?.imageURL {
+            
+            Task {
+                let result = await getImage(url: imageURL)
+                
+                switch result {
+                case .success(let image):
+                    cell.loadImage(image)
+                case .failure(let error):
+                    self.delegate?.presentError(error: error)
+                }
+            }
+        }
+    
         return cell
     }
 }

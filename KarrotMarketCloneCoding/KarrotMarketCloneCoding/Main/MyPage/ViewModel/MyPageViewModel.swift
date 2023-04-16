@@ -10,31 +10,16 @@ import Alamofire
 
 struct MyPageViewModel {
     
-    func logout(completion: @escaping (Result<Bool?, KarrotError>) -> Void) {
-        AF.request(KarrotRequest.logout).response { response in
-            if let error = response.error {
-                print(error)
-            }
-            
-            guard let httpResponse = response.response else { return }
-            
-            switch httpResponse.statusCode {
-            case 200:
-                completion(.success(true))
-            case 401:
-                completion(.failure(.unauthorized))
-            case 403:
-                completion(.failure(.forbidden))
-            case 404:
-                completion(.failure(.notFound))
-            default:
-                guard let data = response.data, let error =  jsonDecode(type: KarrotResponseError.self, data: data) else {
-                    completion(.failure(.decodingError))
-                    return
-                }
-                print(error)
-                completion(.failure(.unknownError))
-            }
+    func logout() async -> Result<Bool, KarrotError> {
+        
+        let dataResponse = await AF.request(KarrotRequest.logout).serializingDecodable(KarrotResponse<Bool>.self).response
+        let result = handleResponse(dataResponse)
+        
+        switch result {
+        case .success:
+            return .success(true)
+        case .failure(let error):
+            return .failure(error)
         }
     }
 }

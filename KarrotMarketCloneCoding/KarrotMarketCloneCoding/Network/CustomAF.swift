@@ -182,5 +182,24 @@ func handleResponse<T: Codable>(_ response: DataResponse<T, AFError>) -> Result<
     }
 }
 
+func getImage(url: String?, size: CGSize? = nil) async -> Result<UIImage, KarrotError> {
+    guard let stringURL = url else {
+        return .failure(.unwrappingError)
+    }
+    
+    let response = await AF.download(stringURL).serializingData().response
+    
+    guard let data = response.value, let image = UIImage(data: data) else {
+        return .failure(.unwrappingError)
+    }
+    
+    guard let size = size else {
+        return .success(image)
+    }
+
+    let resizedImage = image.resize(to: size)
+    return .success(resizedImage)
+}
+
 typealias ID = String
 typealias ProductID = Int

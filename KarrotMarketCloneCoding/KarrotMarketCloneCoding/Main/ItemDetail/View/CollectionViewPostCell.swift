@@ -7,19 +7,26 @@
 
 import UIKit
 
-class ItemDetailViewOtherItemsCollectionViewCell: UICollectionViewCell {
+class CollectionViewPostCell: UICollectionViewCell {
     // MARK: - Properties
     
+    static let identifier = "PostCell"
+    
     private let itemImageView: UIImageView = {
-        
+     
         let iv = UIImageView()
-        
-        iv.image = UIImage(named: "sold")
+        iv.image = UIImage(named: "logo")
+        iv.contentMode = .scaleAspectFill
+        iv.layer.cornerRadius = 8
+        iv.layer.masksToBounds = true
+        iv.layer.borderWidth = 0.5
+        iv.layer.borderColor = UIColor.lightGray.cgColor
         iv.clipsToBounds = true
-        iv.layer.cornerRadius = 10
+        iv.backgroundColor = .white
         
         return iv
     }()
+    
     private let itemNameLabel: UILabel = {
         
         let lbl = UILabel()
@@ -56,11 +63,19 @@ class ItemDetailViewOtherItemsCollectionViewCell: UICollectionViewCell {
     
     // MARK: - Actions
     
-    func configure(image: UIImage?, title: String?, price: Int?) {
-        
-        itemImageView.image = image
+    func configure(title: String?, price: Int?) {
         itemNameLabel.text = title
-        priceLabel.text  = price != nil ? "\(price ?? 0) 원" : "무료 나눔🧡"
+        
+        guard let price = price else {
+            priceLabel.text = "나눔 🧡"
+            return
+        }
+        
+        priceLabel.text = price != 0 ? NumberFormatter.Decimal.string(from: NSNumber(value: price))! + "원" : "나눔 🧡"
+    }
+    
+    func loadImage(_ image: UIImage) {
+        self.itemImageView.image = image
     }
     
     // MARK: - Setting Constraints

@@ -7,26 +7,29 @@
 
 import Foundation
 import Alamofire
+import Combine
 
 class ItemDetailViewModel {
     
-    func fetchItem(userId: ID, productId: ProductID, completion: @escaping (Result<Item?, KarrotError>) -> Void) {
+    @Published var item: FetchedItemDetail?
+    
+    func fetchItem(productID: ProductID) async -> KarrotError? {
         
-//        AF.request(KarrotRequest.fetchItem(userId,productId)).response { response in
-//            
-//            guard let httpResponse = response.response else { return }
-//            
-//            switch httpResponse.statusCode {
-//            case 200:
-//                guard let data = response.data, let list = jsonDecode(type: Item.self, data: data) else {
-//                    completion(.failure(.decodingError))
-//                    return
-//                }
-//                completion(.success(list))
-//            default:
-//                let message = response.data?.toDictionary()
-//                completion(.failure(.unknownError))
-//            }
-//        }
+        let dataResponse = await AF.request(KarrotRequest.fetchItemDetail(productID)).serializingDecodable(KarrotResponse<FetchedItemDetail>.self).response
+        
+        let result = handleResponse(dataResponse)
+        
+        switch result {
+        case .success(let response):
+            guard let fetchedItemDetail = response.data else {
+                return .unwrappingError
+            }
+            
+            item = fetchedItemDetail
+            
+            return nil
+        case .failure(let error):
+            return error
+        }
     }
 }

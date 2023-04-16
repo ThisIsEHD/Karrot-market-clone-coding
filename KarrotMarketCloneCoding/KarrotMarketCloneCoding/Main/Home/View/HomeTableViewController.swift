@@ -8,9 +8,9 @@
 import UIKit
 import Alamofire
 
-typealias DataSource = UITableViewDiffableDataSource<Section, FetchedItem>
-typealias Snapshot = NSDiffableDataSourceSnapshot<Section, FetchedItem>
-typealias CellProvider = (UITableView, IndexPath, FetchedItem) -> UITableViewCell
+typealias TableViewDataSource = UITableViewDiffableDataSource<Section, FetchedItem>
+typealias TableViewSnapshot = NSDiffableDataSourceSnapshot<Section, FetchedItem>
+typealias TableViewCellProvider = (UITableView, IndexPath, FetchedItem) -> UITableViewCell
 
 final class HomeTableViewController: UIViewController {
     // MARK: - Properties
@@ -18,9 +18,9 @@ final class HomeTableViewController: UIViewController {
     private let viewModel = HomeTableViewModel()
     var isViewBusy = false
     
-    private var dataSource: DataSource!
-    private var snapshot = Snapshot()
-    private var cellProvider: CellProvider = { (tableView, indexPath, item) in
+    private var dataSource: TableViewDataSource!
+    private var snapshot = TableViewSnapshot()
+    private var cellProvider: TableViewCellProvider = { (tableView, indexPath, item) in
 
         let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.reuseIdentifier, for: indexPath) as! HomeTableViewCell
 
@@ -212,7 +212,7 @@ extension HomeTableViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let productId = dataSource.itemIdentifier(for: indexPath)?.id else { return }
-        let nextVC = ItemDetailViewController(productId: productId)
+        let nextVC = ItemDetailViewController(productID: productId)
         
         navigationController?.pushViewController(nextVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)

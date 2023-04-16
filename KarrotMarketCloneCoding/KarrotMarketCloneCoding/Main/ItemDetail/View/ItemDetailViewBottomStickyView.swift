@@ -101,7 +101,12 @@ class ItemDetailViewBottomStickyView: UIView {
     }
     
     func configure(price: Int?) {
-        priceLabel.text = price != nil ? "\(price ?? 0) 원" : "무료 나눔"
+        guard let price = price else {
+            priceLabel.text = "나눔 🧡"
+            return
+        }
+        
+        priceLabel.text = price != 0 ? NumberFormatter.Decimal.string(from: NSNumber(value: price))! + "원" : "나눔 🧡"
     }
     
     //  MARK: - configure Views

@@ -20,8 +20,8 @@ final class SignInViewController: SignUpViewController {
             switch result {
             case .success:
                 SceneController.shared.login()
-            case .failure(let failure):
-                print(failure)
+            case .failure(let error):
+                self.presentError(error: error)
             }
         }
     }

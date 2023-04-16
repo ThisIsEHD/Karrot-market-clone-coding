@@ -10,6 +10,10 @@ import UIKit
 class ItemDetailViewProfileCell: UITableViewCell {
     // MARK: - Properties
     
+    static let identifier = "ItemDetailViewProfileCell"
+    
+    private let separater = UIView()
+    
     private lazy var profileView: ReusableProfileView = {
         
         let v = ReusableProfileView(imageSize: 50)
@@ -31,6 +35,9 @@ class ItemDetailViewProfileCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.addSubview(profileView)
+        self.addSubview(separater)
+        
+        separater.backgroundColor = .systemGray4
         setConstraints()
     }
     
@@ -45,6 +52,11 @@ class ItemDetailViewProfileCell: UITableViewCell {
     //  MARK: - Setting Constraints
     private func setConstraints() {
         
-        profileView.anchor(top: topAnchor, topConstant: 40, bottom: bottomAnchor, bottomConstant: 40, leading: leadingAnchor, trailing: trailingAnchor)
+        profileView.anchor(top: topAnchor, topConstant: 40, bottom: separater.topAnchor, bottomConstant: 40, leading: leadingAnchor, trailing: trailingAnchor)
+        separater.snp.makeConstraints { make in
+            make.height.equalTo(0.5)
+            make.leading.trailing.equalTo(self).inset(15)
+            make.bottom.equalTo(self)
+        }
     }
 }

@@ -12,7 +12,7 @@ enum UserInfo {
 }
 
 enum DeviceSize {
-    case deviceHeight
+    case deviceHeight 
     case deviceWidth
 }
 

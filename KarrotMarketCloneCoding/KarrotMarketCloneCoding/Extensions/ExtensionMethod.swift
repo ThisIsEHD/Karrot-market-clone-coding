@@ -84,3 +84,40 @@ extension String {
     }
 }
 
+extension UIImage {
+    func resize(to targetSize: CGSize) -> UIImage {
+        let renderer = UIGraphicsImageRenderer(size: targetSize)
+        return renderer.image { _ in
+            self.draw(in: CGRect(origin: .zero, size: targetSize))
+        }
+    }
+}
+
+extension UIViewController: Presentable {
+    func presentError(error: KarrotError) {
+        let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alertController, animated: true)
+    }
+}
+
+extension UIView {
+    func setGradient(color1:UIColor, color2:UIColor) -> UIView {
+        
+        let gradient: CAGradientLayer = CAGradientLayer()
+        
+        gradient.colors = [color1.cgColor,color2.cgColor]
+        gradient.locations = [0.0 , 1.0]
+        gradient.startPoint = CGPoint(x: 0.0, y: 0.0)
+        gradient.endPoint = CGPoint(x: 0.0, y: 1.0)
+        gradient.frame = bounds
+        self.layer.addSublayer(gradient)
+        
+        return self
+    }
+    
+    func hideGradient(_ isHidden: Bool) {
+        self.layer.sublayers?.first?.isHidden = isHidden
+    }
+}
+

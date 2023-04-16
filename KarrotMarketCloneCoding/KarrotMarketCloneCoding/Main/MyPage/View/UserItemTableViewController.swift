@@ -12,10 +12,11 @@ class UserItemTableViewController: UIViewController {
     
     var viewModel = HomeTableViewModel()
     var isViewBusy = true
+    
     private var userId: ID?
     private var navigationTitle: ListTitle?
-    private var dataSource: DataSource!
-    private var snapshot = Snapshot()
+    private var dataSource: TableViewDataSource!
+    private var snapshot = TableViewSnapshot()
     
     private let itemTableView : UITableView = {
         
@@ -66,7 +67,7 @@ class UserItemTableViewController: UIViewController {
     
     func reloadTableViewData() {
         
-        viewModel.isViewBusy = false
+//        viewModel.isViewBusy = false
 //        switch navigationTitle {
 //            case .selling
 //            case .buy:

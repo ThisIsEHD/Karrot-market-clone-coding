@@ -6,95 +6,106 @@
 //
 
 import UIKit
+import Combine
 import Alamofire
 
 class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButtonDelegate {
+    
     // MARK: - Properties
     
-    private var productId: Int?
-    
-    var item: FetchedItemDetail? {
-        didSet {
-            flag = true
-            itemImagesCollectionView.reloadData()
-            itemDetailViewBottomStickyView.configure(price: item?.price)
-            itemImagesCollectionViewPageControl.numberOfPages = item?.imageUrls.count ?? 1
-            itemDetailViewContentsTableView.reloadData()
-        }
+    enum SectionType: Int {
+        case imageSection
+        case descriptionSection
     }
-    var flag: Bool?
     
-    /// 상세페이지의 이미지 컬렉션뷰
-    private let itemImagesCollectionView: UICollectionView = {
-        
-        let flowLayout = UICollectionViewFlowLayout()
-        
-        flowLayout.scrollDirection = .horizontal
-        flowLayout.minimumLineSpacing = 0
-        
-        let cv = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
-        
-        cv.showsHorizontalScrollIndicator = false
-        cv.register(ItemDetailViewImagesCollectionViewCell.self, forCellWithReuseIdentifier: "ItemDetailViewImagesCollectionViewCell")
-        cv.isPagingEnabled = true
-        
-        return cv
-    }()
+    private let viewModel = ItemDetailViewModel()
+    private var cancellables = Set<AnyCancellable>()
     
-    /// 이미지 컬렉션 뷰의 페이지컨트롤
-    private lazy var itemImagesCollectionViewPageControl: UIPageControl = {
-        
-        let pc = UIPageControl()
-        
-        pc.currentPage = 0
-        pc.pageIndicatorTintColor = UIColor(white: 0.4, alpha: 0.4)
-        pc.currentPageIndicatorTintColor = .white
-        
-        return pc
-    }()
+    private var productID: Int
+    private var itemImages: [UIImage] = []
     
-    /// 상세페이지의 컨텐츠 테이블뷰
-    private let itemDetailViewContentsTableView: UITableView = {
+    private let itemDetailTableView: UITableView = {
         
         let tv = UITableView()
         
-        tv.register(ItemDetailViewProfileCell.self, forCellReuseIdentifier: "ItemDetailViewProfileCell")
-        tv.register(ItemDetailViewDescriptionCell.self, forCellReuseIdentifier: "ItemDetailViewDescriptionCell")
-        tv.register(ItemDetailViewOtherItemsCell.self, forCellReuseIdentifier: "ItemDetailViewOtherPostsCell")
+        tv.register(ItemDetailViewImagesCell.self, forCellReuseIdentifier: ItemDetailViewImagesCell.identifier)
+        tv.register(ItemDetailViewProfileCell.self, forCellReuseIdentifier: ItemDetailViewProfileCell.identifier)
+        tv.register(ItemDetailViewDescriptionCell.self, forCellReuseIdentifier: ItemDetailViewDescriptionCell.identifier)
+        tv.register(ItemDetailViewOtherItemsCell.self, forCellReuseIdentifier: ItemDetailViewOtherItemsCell.identifier)
         
-        tv.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
+        tv.rowHeight = UITableView.automaticDimension
+        tv.contentInsetAdjustmentBehavior = .never
+        tv.separatorStyle = .none
         
         return tv
-    }()
-    
-    /// 상세페이지의 테이블 헤더뷰
-    private lazy var itemDetailTableHeaderView = UIView()
-    
-    /// 상태바 뷰
-    let statusBarView = UIView(frame: CGRect(x:0, y:0, width: UIScreen.main.bounds.width, height: UIApplication.shared.statusBarFrame.height))
-    
-    let gradient: CAGradientLayer = {
-        let gl = CAGradientLayer()
-        gl.locations = [0.0,1.0]
-        gl.colors = [UIColor.lightGray.withAlphaComponent(0.4).cgColor, UIColor.clear.cgColor]
-        return gl
     }()
     
     /// 하단 고정 뷰
     private let itemDetailViewBottomStickyView = ItemDetailViewBottomStickyView()
     
+    let scrollAppearance: UINavigationBarAppearance = {
+        let appearance = UINavigationBarAppearance()
+        appearance.backgroundColor = UIColor.white
+        appearance.shadowColor = .clear
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.red]
+        return appearance
+    }()
+    
+    let defaultAppearance: UINavigationBarAppearance = {
+        let appearance = UINavigationBarAppearance()
+        
+        appearance.backgroundColor = UIColor.clear
+        appearance.shadowColor = .clear
+        appearance.shadowImage = .none
+        appearance.backgroundEffect = .none
+        appearance.backgroundImage = .none
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.lightText]
+        
+        return appearance
+    }()
+    
     // MARK: - Life Cycle
     
-    convenience init(id: ID, productId: ProductID?) {
-        self.init()
+    init(productID: Int) {
+        self.productID = productID
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        viewModel.$item
+            .filter({ item in
+                item != nil
+            })
+            .sink { [weak self] item in
+                guard let item = item else { return }
+                Task {
+                    await self?.configure(with: item)
+                    self?.itemDetailViewBottomStickyView.configure(price: item.price)
+                    self?.itemDetailTableView.reloadData()
+                }
+            }
+            .store(in: &cancellables)
+        
+        Task {
+            let error = await viewModel.fetchItem(productID: productID)
+            guard let error = error else { return }
+            self.presentError(error: error)
+        }
+        
+        navigationItem.scrollEdgeAppearance = defaultAppearance
+        navigationItem.standardAppearance = scrollAppearance
+        navigationItem.compactAppearance = scrollAppearance
+        
         itemDetailViewBottomStickyView.delegate = self
+//        setNavigation(itemDetailTableView)
         configureViews()
-        setConstraints()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -107,145 +118,67 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
         super.viewWillDisappear(animated)
         
         tabBarController?.tabBar.isHidden = false
-        statusBarView.backgroundColor = .systemBackground
-        statusBarView.alpha = 1
-        
-        navigationController?.navigationBar.backgroundColor = .systemBackground
-        navigationController?.navigationBar.tintColor = .black
-        navigationController?.navigationBar.shadowImage = .none
     }
     
     // MARK: - Actions
     
+    func configure(with item: FetchedItemDetail) async {
+        let imageURLs = item.imageUrls
+        for imageURL in imageURLs {
+            let result = await getImage(url: imageURL)
+            switch result {
+            case .success(let image):
+                self.itemImages.append(image)
+            case .failure(let error):
+                self.presentError(error: error)
+            }
+        }
+    }
+    
     func addWishList() {
-        
-        
         
     }
     
     func deleteWishList() {
-        
         
     }
     
     // MARK: - Configure Views
     
     private func configureViews() {
-        itemDetailViewContentsTableView.dataSource = self
-        itemDetailViewContentsTableView.delegate = self
         
-        itemDetailViewContentsTableView.tableHeaderView = itemDetailTableHeaderView
+        itemDetailTableView.dataSource = self
+        itemDetailTableView.delegate = self
         
-        /// 이미지 백그라운드 다운로드 후 구성하기 위한 코드 작성하기
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) { [self] in
-            //            if item?.images?.count != nil {
-            //                itemDetailViewContentsTableView.contentInsetAdjustmentBehavior = .never
-            //                itemDetailTableHeaderView.frame = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.width)
-            //                gradient.frame = CGRect(x: 0, y: 0, width: UIApplication.shared.statusBarFrame.width, height: UIApplication.shared.statusBarFrame.height + (navigationController?.navigationBar.frame.height ?? 0))
-            //
-            //                view.layer.addSublayer(gradient)
-            //            } else {
-            //                itemDetailViewContentsTableView.contentInsetAdjustmentBehavior = .automatic
-            //                itemDetailTableHeaderView.frame = .zero
-            //            }
-        }
-        
-        itemImagesCollectionView.dataSource = self
-        itemImagesCollectionView.delegate = self
-        
-        itemDetailViewContentsTableView.addSubview(itemImagesCollectionView)
-        itemDetailViewContentsTableView.addSubview(itemImagesCollectionViewPageControl)
-        
-        statusBarView.backgroundColor = .systemBackground
-        statusBarView.alpha = 0
-        
-        view.addSubview(itemDetailViewContentsTableView)
+        view.addSubview(itemDetailTableView)
         view.addSubview(itemDetailViewBottomStickyView)
-        view.addSubview(statusBarView)
+        
+        itemDetailTableView.anchor(top: view.topAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
+        itemDetailViewBottomStickyView.anchor(top: itemDetailTableView.bottomAnchor, bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor, height: 120)
     }
     
     func setNavigation(_ sender: UITableView) {
-        if sender.contentOffset.y >= 300 {
+        if sender.contentOffset.y >= UIScreen.main.bounds.width {
             
-            navigationController?.navigationBar.backgroundColor = .systemBackground
-            navigationController?.navigationBar.tintColor = .black
-            navigationController?.navigationBar.shadowImage = .none
-            
-            statusBarView.alpha = 1
-            gradient.isHidden = true
+            navigationItem.scrollEdgeAppearance = defaultAppearance
+            navigationItem.standardAppearance = scrollAppearance
+            navigationItem.compactAppearance = scrollAppearance
+        
         } else {
-            if item?.imageUrls.count == nil {
+            if ((viewModel.item?.imageUrls.isEmpty) != nil) {
                 
-                navigationController?.navigationBar.backgroundColor = .systemBackground
-                navigationController?.navigationBar.tintColor = .black
-                navigationController?.navigationBar.shadowImage = .none
-                
-                statusBarView.alpha = 1
-                gradient.isHidden = false
+                navigationItem.scrollEdgeAppearance = defaultAppearance
+                navigationItem.standardAppearance = defaultAppearance
+                navigationItem.compactAppearance = defaultAppearance
+
             } else {
+          
+                navigationItem.scrollEdgeAppearance = defaultAppearance
+                navigationItem.standardAppearance = scrollAppearance
+                navigationItem.compactAppearance = scrollAppearance
                 
-                navigationController?.navigationBar.backgroundColor = .clear
-                navigationController?.navigationBar.tintColor = .white
-                navigationController?.navigationBar.shadowImage = UIImage()
-                navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-                
-                statusBarView.alpha = 0
-                gradient.isHidden = false
             }
         }
-    }
-    
-    // MARK: - Setting Constraints
-    
-    private func setConstraints() {
-        
-        itemImagesCollectionView.anchor(top: itemDetailViewContentsTableView.tableHeaderView?.topAnchor, bottom: itemDetailViewContentsTableView.tableHeaderView?.bottomAnchor, leading: itemDetailViewContentsTableView.tableHeaderView?.leadingAnchor, trailing: itemDetailViewContentsTableView.tableHeaderView?.trailingAnchor)
-        
-        itemImagesCollectionViewPageControl.anchor(bottom: itemImagesCollectionView.bottomAnchor)
-        itemImagesCollectionViewPageControl.centerX(inView: itemImagesCollectionView)
-        
-        itemDetailViewContentsTableView.anchor(top: view.topAnchor, bottom: view.bottomAnchor, bottomConstant: 120, leading: view.leadingAnchor, trailing: view.trailingAnchor)
-        
-        itemDetailViewBottomStickyView.anchor(bottom: view.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor, height: 120)
-    }
-}
-
-
-// MARK: - UICollectionViewDataSource
-
-extension ItemDetailViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return item?.imageUrls.count ?? 0
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ItemDetailViewImagesCollectionViewCell", for: indexPath) as! ItemDetailViewImagesCollectionViewCell
-        
-        guard let stringURL = item?.imageUrls[indexPath.row] else {
-            return ItemDetailViewImagesCollectionViewCell()
-        }
-        
-        //        Network.shared.fetchImage(url: url) { result in
-        //            switch result {
-        //                case .success(let image):
-        //                    DispatchQueue.main.async {
-        //                        cell.imageView.image = image
-        //                    }
-        //                case .failure(let error):
-        //                    print(error)
-        //            }
-        //        }
-        return cell
-    }
-}
-
-// MARK: - UICollectionViewDelegateFlowLayout
-
-extension ItemDetailViewController: UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return collectionView.bounds.size
     }
 }
 
@@ -253,48 +186,79 @@ extension ItemDetailViewController: UICollectionViewDelegateFlowLayout {
 
 extension ItemDetailViewController: UITableViewDataSource {
     
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        if section == SectionType.imageSection.rawValue {
+            return 1
+        } else {
+            return 3
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.row {
-        case 0:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewProfileCell", for: indexPath) as! ItemDetailViewProfileCell
-            cell.selectionStyle = .none
+        switch indexPath.section {
             
-            //            guard let url = item. else {
-            //                    cell.setProfile(nickname: item?.nickname, image: nil)
-            //                    return cell }
-            //
+        case SectionType.imageSection.rawValue:
+            let cell = tableView.dequeueReusableCell(withIdentifier: ItemDetailViewImagesCell.identifier, for: indexPath) as! ItemDetailViewImagesCell
+
+            cell.images = self.itemImages
+            
             return cell
             
-        case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewDescriptionCell", for: indexPath) as! ItemDetailViewDescriptionCell
-            cell.selectionStyle = .none
-            
-            if let item = item {
-                cell.configure(title: item.title, category: item.category!, content: item.content, wishs: item.favoriteUserCount, views: item.views)
+        case SectionType.descriptionSection.rawValue:
+            switch indexPath.row {
+                
+            case 0:
+                let cell = tableView.dequeueReusableCell(withIdentifier: ItemDetailViewProfileCell.identifier, for: indexPath) as! ItemDetailViewProfileCell
+                cell.selectionStyle = .none
+                
+                if let item = viewModel.item {
+                    let nickname = item.nickName
+                    cell.setProfile(nickname: nickname, image: nil)
+                }
+                
+                return cell
+                
+            case 1:
+                let cell = tableView.dequeueReusableCell(withIdentifier: ItemDetailViewDescriptionCell.identifier, for: indexPath) as! ItemDetailViewDescriptionCell
+                cell.selectionStyle = .none
+                
+                if let item = viewModel.item {
+                    cell.configure(with: item)
+                }
+                
+                return cell
+            case 2:
+                let cell = tableView.dequeueReusableCell(withIdentifier: ItemDetailViewOtherItemsCell.identifier, for: indexPath) as! ItemDetailViewOtherItemsCell
+                cell.selectionStyle = .none
+                if let nickname = viewModel.item?.nickName {
+                    cell.titleLabel.text = "\(nickname)님의 판매 상품"
+                }
+                
+                cell.delegate = self
+                cell.items = viewModel.item?.postsFromSeller
+                
+                return cell
+            default:
+                return UITableViewCell()
             }
-            
-            return cell
-        case 2:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewOtherPostsCell", for: indexPath) as! ItemDetailViewOtherItemsCell
-            cell.selectionStyle = .none
-            if let nickname = item?.nickName {
-                cell.tableTitlelabel.text = "\(nickname)님의 판매 상품"
-            }
-            return cell
-        case 3:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "ItemDetailViewOtherPostsCell", for: indexPath) as! ItemDetailViewOtherItemsCell
-            cell.selectionStyle = .none
-            if let nickname = item?.nickName {
-                cell.tableTitlelabel.text = "\(nickname)님, 이건어때요?"
-            }
-            
-            return cell
         default:
             return UITableViewCell()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if !itemImages.isEmpty {
+            return UITableView.automaticDimension
+        } else {
+            if indexPath.section == SectionType.imageSection.rawValue {
+                return 0
+            } else {
+                return UITableView.automaticDimension
+            }
         }
     }
 }
@@ -303,20 +267,8 @@ extension ItemDetailViewController: UITableViewDataSource {
 
 extension ItemDetailViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
-        if scrollView == itemImagesCollectionView {
-            
-            let width = scrollView.bounds.size.width
-            let x = scrollView.contentOffset.x + (width/2.0)
-            let newPage = Int(x / width)
-            
-            if itemImagesCollectionViewPageControl.currentPage != newPage {
-                itemImagesCollectionViewPageControl.currentPage = newPage
-            }
-        } else {
-            if flag != nil {
-                setNavigation(itemDetailViewContentsTableView)
-            }
+        if scrollView == itemDetailTableView {
+           setNavigation(itemDetailTableView)
         }
     }
 }
@@ -325,3 +277,4 @@ protocol WishButtonDelegate: AnyObject {
     func addWishList()
     func deleteWishList()
 }
+

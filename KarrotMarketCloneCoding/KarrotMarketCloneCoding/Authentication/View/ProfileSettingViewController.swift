@@ -88,9 +88,7 @@ class ProfileSettingViewController: UIViewController {
             case .success:
                 self.signIn()
             case .failure(let error):
-                let alert = self.prepareAlert(title: "서버에러. 나중에 다시 시도해주세요\n \(error).", isPop: false)
-                
-                self.present(alert, animated: true)
+                self.presentError(error: error)
             }
         }
     }
