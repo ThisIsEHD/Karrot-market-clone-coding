@@ -12,8 +12,17 @@ class SearchViewController: UIViewController {
     // MARK: - Properties
     
     private var viewModel = HomeTableViewModel()
+    
     private var dataSource: TableViewDataSource!
     private var snapshot = TableViewSnapshot()
+    private var cellProvider: TableViewCellProvider = { (tableView, indexPath, item) in
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.reuseIdentifier, for: indexPath) as! HomeTableViewCell
+        
+        cell.item = item
+        
+        return cell
+    }
     
     var isViewBusy = true
     
@@ -76,21 +85,31 @@ class SearchViewController: UIViewController {
     
     func configureTableViewDiffableDataSource() {
         
-//        viewModel.dataSource = UITableViewDiffableDataSource(tableView: self.itemTableView, cellProvider: { tableView, indexPath, item in
-//            
-//            let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.reuseIdentifier, for: indexPath) as! HomeTableViewCell
-//            
-//            cell.item = item
-//            return cell
-//        })
+        dataSource = UITableViewDiffableDataSource<Section, FetchedItem>(tableView: itemTableView, cellProvider: cellProvider)
+        
+        itemTableView.delegate = self
+        itemTableView.dataSource = dataSource
     }
     
-    func reloadTableViewData(keyword: String?) {
+    func reloadTableViewData(keyword: String?) async {
+        isViewBusy = true
         
-//        viewModel.isViewBusy = false
-//        viewModel.loadData(keyword: keyword) {
-//            self.itemTableView.reloadData()
-//        }
+        let result = await viewModel.fetchItems(title: keyword)
+        
+        switch result {
+        case .success(let fetchedItemListData):
+            var snapshot = NSDiffableDataSourceSnapshot<Section, FetchedItem>()
+            
+            snapshot.appendSections([Section.main])
+            snapshot.appendItems(fetchedItemListData.content)
+            
+            await self.dataSource.apply(snapshot, animatingDifferences: true)
+            self.isViewBusy = false
+            
+        case .failure(let error):
+            print(error)
+            SceneController.shared.logout()
+        }
     }
     
     // MARK: - Configure TableView
@@ -120,35 +139,29 @@ extension SearchViewController: UITableViewDelegate {
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
        
-        if !scrollView.frame.isEmpty, scrollView.contentOffset.y >= scrollView.frame.size.height {
-          
+        if !scrollView.frame.isEmpty && scrollView.contentOffset.y >= scrollView.frame.size.height {
+            
             let contentHeight = scrollView.contentSize.height
-            ///스크롤 하기전엔 0
-            ///스크롤 하면서 증가
-
-            let yOffset = scrollView.contentOffset.y
-            ///스크롤 하기전엔 0
-            ///스크롤 하면서 증가
-            ///셀의 y 좌표
-
-            let heightRemainFromBottom = contentHeight - yOffset
-
+            let yOffsetOfScrollView = scrollView.contentOffset.y
+           
+            let heightRemainFromBottom = contentHeight - yOffsetOfScrollView
             let frameHeight = scrollView.frame.size.height
             
-//            if heightRemainFromBottom < frameHeight, viewModel.lastItemID != nil {
-//
-//                viewModel.loadData(lastID: viewModel.lastItemID, keyword: searchBar.text)
-//            }
+            if heightRemainFromBottom < frameHeight, heightRemainFromBottom > 0, let fetchedItemCount = viewModel.fetchedItemCount, fetchedItemCount == 20 {
+                Task {
+                    await viewModel.fetchItems()
+                }
+            }
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-//        let vc = ItemDetailViewController()
-//        
-//        vc.item = viewModel.dataSource?.itemIdentifier(for: indexPath)
-//        navigationController?.pushViewController(vc, animated: true)
-//        tableView.deselectRow(at: indexPath, animated: true)
+        guard let productId = dataSource.itemIdentifier(for: indexPath)?.id else { return }
+        let nextVC = ItemDetailViewController(productID: productId)
+        
+        navigationController?.pushViewController(nextVC, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -162,6 +175,8 @@ extension SearchViewController: UITableViewDelegate {
     
 extension SearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        reloadTableViewData(keyword: searchBar.text)
+        Task {
+            await reloadTableViewData(keyword: searchBar.text)
+        }
     }
 }
