@@ -38,6 +38,9 @@ enum RequestParameters {
 
 enum KarrotRequest: Requestable {
     
+    // FCM
+    case registerFCMToken(String)
+    
     // User
     case login(User)
     case logout
@@ -66,6 +69,8 @@ extension KarrotRequest {
             return "/post/\(productID)"
             
             // post
+        case  .registerFCMToken:
+            return "/members/register-fcmtoken"
         case .login:
             return "/login"
         case .registerUser:
@@ -81,11 +86,20 @@ extension KarrotRequest {
     
     var method: HTTPMethod {
         switch self {
+            
             // get
-        case .fetchItems, .fetchItemDetail, .logout: return .get
+        case .fetchItems,
+             .fetchItemDetail,
+             .logout:
+        return .get
+            
             // post
-        case .login, .registerUser, .registerItem: return .post
-            // post
+        case .registerFCMToken,
+             .login,
+             .registerUser,
+             .registerItem:
+        return .post
+         
             // delete
         }
     }
@@ -93,15 +107,19 @@ extension KarrotRequest {
     var header: RequestHeaders {
         switch self {
             
-        case .login: return .json
-        case .registerUser, .registerItem:  return .multipart
-        case .fetchItems, .fetchItemDetail, .logout: return .none
+        case .registerFCMToken, .login:
+            return .json
+        case .registerUser, .registerItem:
+            return .multipart
+        case .fetchItems, .fetchItemDetail, .logout:
+            return .none
         }
     }
     
     var parameters: RequestParameters {
         switch self {
             // body
+        case .registerFCMToken(let token): return .body(token)
         case .login(let user): return .body(user)
             // query
         case .fetchItems(let queryItem): return .query(queryItem)

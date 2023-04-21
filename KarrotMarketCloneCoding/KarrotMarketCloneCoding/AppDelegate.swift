@@ -7,11 +7,11 @@
 
 import UIKit
 import Firebase
+import Alamofire
 import FirebaseMessaging
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // 파이어 베이스 초기 설정
@@ -25,6 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // push notification option 설정
         let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        
         UNUserNotificationCenter.current().requestAuthorization(
             options: authOptions,
             completionHandler: { _, _ in
@@ -39,8 +40,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     // 디바이스 토큰을 받아서 firebase 클라우드 메세징의 apns 토큰과 매핑
+   
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        // 2
         Messaging.messaging().apnsToken = deviceToken
+        
+        print(deviceToken, "►")
+//        Task {
+//            let response = await AF.request(KarrotRequest.registerFCMToken(deviceToken)).serializingDecodable(KarrotResponse<Bool>.self).response
+//
+//            let result = handleResponse(response)
+//
+//            switch result {
+//            case .success:
+//                print("FCM 토큰 서버에 등록 성공")
+//                return
+//            case .failure(let error):
+//                self.presentError(error: error)
+//                return
+//            }
+//        }
     }
 }
 
@@ -107,8 +126,24 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
 }
 
-extension AppDelegate : MessagingDelegate {
+// FCM delegate
+extension AppDelegate: MessagingDelegate {
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
-        print(fcmToken ?? "", #function)
+        // 1
+        // domb: fcm토큰을 먼저 생성하고 기기토큰을 매핑시키는 것으로 보임. 현재 플로우상 앱을 켤때 기기토큰을 매핑하게 되는데 그럼 설정에 들어가서 알림설정을 나중에 하더라도 앱을 켜지 않아도 받을 수 있나??
+        guard let fcmToken = fcmToken else {
+            return
+        }
+        
+       print(fcmToken)
+    }
+}
+
+extension AppDelegate: ErrorPresentable {
+    func presentError(error: KarrotError) {
+//        let alert = UIAlertController(title: "Message", message: error.localizedDescription, preferredStyle: UIAlertController.Style.alert)
+//
+//        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
+        print(error)
     }
 }
