@@ -93,7 +93,7 @@ extension UIImage {
     }
 }
 
-extension UIViewController: Presentable {
+extension UIViewController: ErrorPresentable {
     func presentError(error: KarrotError) {
         let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default))

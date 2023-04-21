@@ -13,7 +13,7 @@ class HomeTableViewModel {
     var fetchedItemCount: Int?
     var latestPage: Int?
     
-    func fetchItems(title: String? = nil, category: Category? = nil, page: Int? = nil, size: Int? = nil, completion: (() -> Void)? = nil) async -> Result<FetchedItemListData, KarrotError> {
+    func fetchItems(title: String? = nil, category: Category? = nil, page: Int? = nil, size: Int? = nil) async -> Result<FetchedItemListData, KarrotError> {
         
         var queryItems = [String : Any]()
         

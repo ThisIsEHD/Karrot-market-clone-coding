@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol Presentable: AnyObject {
+protocol ErrorPresentable: AnyObject {
     func presentError(error: KarrotError)
 }
 
@@ -16,7 +16,7 @@ class ItemDetailViewOtherItemsCell: UITableViewCell {
     
     static let identifier = "ItemDetailViewOtherItemsCell"
     
-    weak var delegate: Presentable?
+    weak var delegate: ErrorPresentable?
     
     var items: [FetchedItem]? {
         didSet {
