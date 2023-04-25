@@ -34,9 +34,9 @@ extension Encodable {
 }
 
 extension Data {
-    func toDictionary() -> [String: String] {
+    func toDictionary() -> [String: Any] {
         
-        guard let dictionaryData = try? JSONSerialization.jsonObject(with: self) as? [String: String] else { return [:] }
+        guard let dictionaryData = try? JSONSerialization.jsonObject(with: self) as? [String: Any] else { return [:] }
         
         return dictionaryData
     }
@@ -95,7 +95,7 @@ extension UIImage {
 
 extension UIViewController: ErrorPresentable {
     func presentError(error: KarrotError) {
-        let alertController = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: .alert)
+        let alertController = UIAlertController(title: "경고", message: error.description, preferredStyle: .alert)
         alertController.addAction(UIAlertAction(title: "OK", style: .default))
         present(alertController, animated: true)
     }

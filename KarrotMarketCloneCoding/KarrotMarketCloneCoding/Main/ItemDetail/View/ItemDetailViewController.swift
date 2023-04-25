@@ -9,7 +9,7 @@ import UIKit
 import Combine
 import Alamofire
 
-class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButtonDelegate {
+class ItemDetailViewController: UIViewController, UITableViewDelegate, FavoriteButtonDelegate {
     
     // MARK: - Properties
     
@@ -130,16 +130,21 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
             case .success(let image):
                 self.itemImages.append(image)
             case .failure(let error):
-                self.presentError(error: error)
+                switch error {
+                case .unauthorized:
+                    SceneController.shared.logout()
+                default:
+                    return presentError(error: error)
+                }
             }
         }
     }
     
-    func addWishList() {
+    func addFavoriteList() {
         
     }
     
-    func deleteWishList() {
+    func deleteFavoriteList() {
         
     }
     
@@ -163,20 +168,17 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, WishButto
             navigationItem.scrollEdgeAppearance = defaultAppearance
             navigationItem.standardAppearance = scrollAppearance
             navigationItem.compactAppearance = scrollAppearance
-        
         } else {
             if ((viewModel.item?.imageUrls.isEmpty) != nil) {
                 
                 navigationItem.scrollEdgeAppearance = defaultAppearance
                 navigationItem.standardAppearance = defaultAppearance
                 navigationItem.compactAppearance = defaultAppearance
-
             } else {
           
                 navigationItem.scrollEdgeAppearance = defaultAppearance
                 navigationItem.standardAppearance = scrollAppearance
                 navigationItem.compactAppearance = scrollAppearance
-                
             }
         }
     }
@@ -273,8 +275,8 @@ extension ItemDetailViewController: UIScrollViewDelegate {
     }
 }
 
-protocol WishButtonDelegate: AnyObject {
-    func addWishList()
-    func deleteWishList()
+protocol FavoriteButtonDelegate: AnyObject {
+    func addFavoriteList()
+    func deleteFavoriteList()
 }
 

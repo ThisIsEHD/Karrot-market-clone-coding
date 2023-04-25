@@ -12,14 +12,16 @@ class HomeTableViewCell: UITableViewCell {
     
     // MARK: - Properties
     
-    static let reuseIdentifier = "HomeTableViewCell"
+    static var reuseIdentifier: String {
+        return String(describing: self)
+    }
     
     var item: FetchedItem? {
         didSet {
             guard let item = item else { return }
             nameLabel.text = item.title
             priceLabel.text = item.price != 0 ? NumberFormatter.Decimal.string(from: NSNumber(value: item.price))! + "원" : "나눔 🧡"
-            wishLabel.text = "\(item.favoriteUserCount)"
+            favoriteLabel.text = "\(item.favoriteUserCount)"
             locationLabel.text = item.townName
             
             Task {
@@ -73,7 +75,7 @@ class HomeTableViewCell: UITableViewCell {
         lbl.font = UIFont.boldSystemFont(ofSize: 18)
         return lbl
     }()
-    private let wishIcon: UIButton = {
+    private let favoriteIcon: UIButton = {
         let btn = UIButton()
         btn.imageView?.contentMode = .scaleAspectFit
         btn.imageEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
@@ -81,7 +83,7 @@ class HomeTableViewCell: UITableViewCell {
         btn.setImage(UIImage(named: "wish-gray"), for: .normal)
         return btn
     }()
-    let wishLabel: UILabel = {
+    let favoriteLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
         lbl.textColor = .black.withAlphaComponent(0.6)
@@ -133,8 +135,8 @@ class HomeTableViewCell: UITableViewCell {
         
         contentView.addSubview(chatIcon)
         contentView.addSubview(chatLabel)
-        contentView.addSubview(wishIcon)
-        contentView.addSubview(wishLabel)
+        contentView.addSubview(favoriteIcon)
+        contentView.addSubview(favoriteLabel)
     }
     
     // MARK: - Setting Constraints
@@ -145,12 +147,12 @@ class HomeTableViewCell: UITableViewCell {
     }
     
     private func setIconStackViewConstraints() {
-        wishLabel.anchor(bottom: contentView.bottomAnchor, bottomConstant: 15, trailing: contentView.trailingAnchor, trailingConstant: 10)
-        wishIcon.centerY(inView: wishLabel)
-        wishIcon.anchor(trailing: wishLabel.leadingAnchor, trailingConstant: 5, width: 18, height: 18)
+        favoriteLabel.anchor(bottom: contentView.bottomAnchor, bottomConstant: 15, trailing: contentView.trailingAnchor, trailingConstant: 10)
+        favoriteIcon.centerY(inView: favoriteLabel)
+        favoriteIcon.anchor(trailing: favoriteLabel.leadingAnchor, trailingConstant: 5, width: 18, height: 18)
         
-        chatLabel.centerY(inView: wishIcon)
-        chatLabel.anchor(trailing: wishIcon.leadingAnchor, trailingConstant: 7)
+        chatLabel.centerY(inView: favoriteIcon)
+        chatLabel.anchor(trailing: favoriteIcon.leadingAnchor, trailingConstant: 7)
         
         chatIcon.centerY(inView: chatLabel)
         chatIcon.anchor(trailing: chatLabel.leadingAnchor, trailingConstant: 5, width: 18, height: 18)

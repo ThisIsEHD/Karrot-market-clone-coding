@@ -88,7 +88,12 @@ class ProfileSettingViewController: UIViewController {
             case .success:
                 self.signIn()
             case .failure(let error):
-                self.presentError(error: error)
+                switch error {
+                case .unauthorized:
+                    SceneController.shared.logout()
+                default:
+                    return presentError(error: error)
+                }
             }
         }
     }

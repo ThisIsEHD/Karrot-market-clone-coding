@@ -12,10 +12,10 @@ typealias TableViewDataSource = UITableViewDiffableDataSource<Section, FetchedIt
 typealias TableViewSnapshot = NSDiffableDataSourceSnapshot<Section, FetchedItem>
 typealias TableViewCellProvider = (UITableView, IndexPath, FetchedItem) -> UITableViewCell
 
-final class HomeTableViewController: UIViewController {
+class HomeTableViewController: UIViewController {
     // MARK: - Properties
     
-    private let viewModel = HomeTableViewModel()
+    var viewModel = HomeTableViewModel()
     var isViewBusy = false
     
     private var dataSource: TableViewDataSource!
@@ -93,24 +93,16 @@ final class HomeTableViewController: UIViewController {
     
     // MARK: - Life Cycle
     
-    private func configureAddButton() {
-        view.addSubview(addPostButton)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
     
-        congifureViews()
+        configureViews()
         setupNavigationItems()
         setupTableView()
         
-        Task {
-            await fetchItems()
-        }
+        fetchItems()
         
         NotificationCenter.default.addObserver(self, selector: #selector(fetchItems), name: .updateItemList, object: nil)
-        
-        setConstraints()
     }
     
     deinit {
@@ -120,25 +112,32 @@ final class HomeTableViewController: UIViewController {
     // MARK: - Actions
     
     @objc
-    private func fetchItems() async {
-        
+    private func fetchItems() {
         isViewBusy = true
         
-        let result = await viewModel.fetchItems()
+        Task {
+            
+            let result = await viewModel.fetchItems()
+            
+            switch result {
+            case .success(let fetchedItemListData):
+                var snapshot = NSDiffableDataSourceSnapshot<Section, FetchedItem>()
         
-        switch result {
-        case .success(let fetchedItemListData):
-            var snapshot = NSDiffableDataSourceSnapshot<Section, FetchedItem>()
-            
-            snapshot.appendSections([Section.main])
-            snapshot.appendItems(fetchedItemListData.content)
-            
-            await self.dataSource.apply(snapshot, animatingDifferences: true)
-            self.isViewBusy = false
-            
-        case .failure(let error):
-            print(error)
-            SceneController.shared.logout()
+                snapshot.appendSections([Section.main])
+                snapshot.appendItems(fetchedItemListData.content)
+                
+                await self.dataSource.apply(snapshot, animatingDifferences: true)
+                
+                self.isViewBusy = false
+                
+            case .failure(let error):
+                switch error {
+                case .unauthorized:
+                    SceneController.shared.logout()
+                default:
+                    return presentError(error: error)
+                }
+            }
         }
     }
     
@@ -157,19 +156,24 @@ final class HomeTableViewController: UIViewController {
     
     private func setupTableView() {
         
-        dataSource = UITableViewDiffableDataSource<Section, FetchedItem>(tableView: itemTableView, cellProvider: cellProvider)
+        dataSource = TableViewDataSource(tableView: itemTableView, cellProvider: cellProvider)
         
         itemTableView.delegate = self
         itemTableView.dataSource = dataSource
+        itemTableView.backgroundColor = .white
+        
 //        itemTableView.prefetchDataSource = self
     }
     
     // MARK: - Configure UI
     
-    private func congifureViews() {
+    private func configureViews() {
         view.backgroundColor = .white
         view.addSubview(itemTableView)
         view.addSubview(addPostButton)
+        
+        itemTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
+        addPostButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, bottomConstant: 20, trailing: view.trailingAnchor, trailingConstant: 20)
     }
 
     private func configureNavigationBar() {
@@ -178,13 +182,6 @@ final class HomeTableViewController: UIViewController {
 //        appearance.backgroundColor = .white
 //        self.navigationItem.standardAppearance = appearance
 //        self.navigationItem.scrollEdgeAppearance = appearance
-    }
-    
-    // MARK: - Setting Constraints
-    private func setConstraints() {
-        
-        itemTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
-        addPostButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, bottomConstant: 20, trailing: view.trailingAnchor, trailingConstant: 20)
     }
 }
 

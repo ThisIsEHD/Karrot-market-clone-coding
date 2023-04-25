@@ -53,10 +53,9 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureSearchController()
-        configureItemTableView()
-        configureTableViewDiffableDataSource()
-        setConstraints()
+        setupSearchController()
+        setupTableView()
+        configureViews()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -68,7 +67,7 @@ class SearchViewController: UIViewController {
     
     // MARK: - Configure Search View Controller
     
-    private func configureSearchController() {
+    private func setupSearchController() {
         navigationController?.navigationBar.addSubview(navigationBottomView)
         view.backgroundColor = .systemBackground
         
@@ -83,48 +82,49 @@ class SearchViewController: UIViewController {
     
     // MARK: - DiffableDataSource
     
-    func configureTableViewDiffableDataSource() {
+    func setupTableView() {
         
-        dataSource = UITableViewDiffableDataSource<Section, FetchedItem>(tableView: itemTableView, cellProvider: cellProvider)
+        dataSource = TableViewDataSource(tableView: itemTableView, cellProvider: cellProvider)
         
         itemTableView.delegate = self
         itemTableView.dataSource = dataSource
     }
     
-    func reloadTableViewData(keyword: String?) async {
+    func reloadTableViewData(keyword: String?) {
+        
         isViewBusy = true
         
-        let result = await viewModel.fetchItems(title: keyword)
-        
-        switch result {
-        case .success(let fetchedItemListData):
-            var snapshot = NSDiffableDataSourceSnapshot<Section, FetchedItem>()
+        Task {
             
-            snapshot.appendSections([Section.main])
-            snapshot.appendItems(fetchedItemListData.content)
+            let result = await viewModel.fetchItems(title: keyword)
             
-            await self.dataSource.apply(snapshot, animatingDifferences: true)
-            self.isViewBusy = false
-            
-        case .failure(let error):
-            print(error)
-            SceneController.shared.logout()
+            switch result {
+            case .success(let fetchedItemListData):
+                var snapshot = NSDiffableDataSourceSnapshot<Section, FetchedItem>()
+                
+                snapshot.appendSections([Section.main])
+                snapshot.appendItems(fetchedItemListData.content)
+                
+                await self.dataSource.apply(snapshot, animatingDifferences: true)
+                self.isViewBusy = false
+                
+            case .failure(let error):
+                switch error {
+                case .unauthorized:
+                    SceneController.shared.logout()
+                default:
+                    return presentError(error: error)
+                }
+            }
         }
     }
     
-    // MARK: - Configure TableView
+    // MARK: - ConfigureViews
     
-    private func configureItemTableView() {
-        
-        itemTableView.delegate = self
-//        itemTableView.dataSource = viewModel.dataSource
-        
+    
+    private func configureViews() {
+ 
         view.addSubview(itemTableView)
-    }
-    
-    // MARK: - Setting Constraints
-    
-    private func setConstraints() {
         
         navigationBottomView.anchor(top: navigationController?.navigationBar.bottomAnchor, leading: navigationController?.navigationBar.leadingAnchor, trailing: navigationController?.navigationBar.trailingAnchor, height: 60)
         
@@ -175,8 +175,6 @@ extension SearchViewController: UITableViewDelegate {
     
 extension SearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        Task {
-            await reloadTableViewData(keyword: searchBar.text)
-        }
+        reloadTableViewData(keyword: searchBar.text)
     }
 }

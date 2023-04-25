@@ -70,7 +70,7 @@ class ItemDetailViewImagesCell: UITableViewCell {
         contentView.addSubview(itemImagesCollectionView)
         contentView.addSubview(pageControl)
         
-        dataSource = UICollectionViewDiffableDataSource<Section, UIImage>(collectionView: itemImagesCollectionView, cellProvider: cellProvider)
+        dataSource = CollectionViewDataSource(collectionView: itemImagesCollectionView, cellProvider: cellProvider)
         
         itemImagesCollectionView.dataSource = dataSource
         itemImagesCollectionView.delegate = self

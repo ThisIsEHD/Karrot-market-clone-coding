@@ -10,7 +10,7 @@ import UIKit
 class ItemDetailViewBottomStickyView: UIView {
     // MARK: - Properties
     
-    weak var delegate: WishButtonDelegate?
+    weak var delegate: FavoriteButtonDelegate?
     
     private let separaterLine: UIView = {
         
@@ -20,7 +20,7 @@ class ItemDetailViewBottomStickyView: UIView {
         
         return v
     }()
-    private let wishButton: UIButton = {
+    private let favoriteButton: UIButton = {
         
         let btn = UIButton()
         
@@ -75,7 +75,7 @@ class ItemDetailViewBottomStickyView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        wishButton.addTarget(self, action: #selector(wishButtonDidTapped), for: .touchUpInside)
+        favoriteButton.addTarget(self, action: #selector(favoriteButtonDidTapped), for: .touchUpInside)
         
         configureViews()
         setConstraints()
@@ -87,17 +87,17 @@ class ItemDetailViewBottomStickyView: UIView {
     
     // MARK: - Actions
     
-    @objc func wishButtonDidTapped() {
+    @objc func favoriteButtonDidTapped() {
         
-        if !wishButton.isSelected {
-            delegate?.addWishList()
+        if !favoriteButton.isSelected {
+            delegate?.addFavoriteList()
         } else {
-            delegate?.deleteWishList()
+            delegate?.deleteFavoriteList()
         }
     }
     
-    func getWishButton() -> UIButton {
-        return wishButton
+    func getFavoriteButton() -> UIButton {
+        return favoriteButton
     }
     
     func configure(price: Int?) {
@@ -114,7 +114,7 @@ class ItemDetailViewBottomStickyView: UIView {
         
         self.backgroundColor = .systemBackground
         self.addSubview(separaterLine)
-        self.addSubview(wishButton)
+        self.addSubview(favoriteButton)
         self.addSubview(stackView)
         self.addSubview(chatButton)
     }
@@ -123,10 +123,10 @@ class ItemDetailViewBottomStickyView: UIView {
     func setConstraints() {
         
         separaterLine.anchor(top: self.topAnchor, leading: self.leadingAnchor, trailing: self.trailingAnchor, height: 0.7)
-        wishButton.anchor(leading: self.leadingAnchor, leadingConstant: 20, width: 20, height: 20)
-        wishButton.centerY(inView: stackView)
+        favoriteButton.anchor(leading: self.leadingAnchor, leadingConstant: 20, width: 20, height: 20)
+        favoriteButton.centerY(inView: stackView)
         
-        stackView.anchor(top: self.topAnchor, topConstant: 20, bottom: self.safeAreaLayoutGuide.bottomAnchor, bottomConstant: 20, leading: wishButton.trailingAnchor, leadingConstant: 30)
+        stackView.anchor(top: self.topAnchor, topConstant: 20, bottom: self.safeAreaLayoutGuide.bottomAnchor, bottomConstant: 20, leading: favoriteButton.trailingAnchor, leadingConstant: 30)
         
         chatButton.anchor(top: stackView.topAnchor, bottom: stackView.bottomAnchor, trailing: self.trailingAnchor, trailingConstant: 30, width: 100)
     }

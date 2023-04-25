@@ -33,7 +33,7 @@ extension TabbarController {
         
 //        let chatViewController = templateNavigationController(selectedImage: #imageLiteral(resourceName: "chat-selected"), unselectedImage: #imageLiteral(resourceName: "chat-unselected"), rootViewController: ChatTableViewController(), title: "채팅")
         
-        let profileViewController = templateNavigationController(selectedImage: #imageLiteral(resourceName: "user-selected"), unselectedImage: #imageLiteral(resourceName: "user-unselected"), rootViewController: MyKarrotViewController(), title: "나의당근")
+        let profileViewController = templateNavigationController(selectedImage: #imageLiteral(resourceName: "user-selected"), unselectedImage: #imageLiteral(resourceName: "user-unselected"), rootViewController: MyPageViewController(), title: "나의당근")
         
         viewControllers = [homeViewController/*, chatViewController*/, profileViewController]
     }

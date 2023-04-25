@@ -44,22 +44,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         // 2
         Messaging.messaging().apnsToken = deviceToken
-        
-        print(deviceToken, "►")
-//        Task {
-//            let response = await AF.request(KarrotRequest.registerFCMToken(deviceToken)).serializingDecodable(KarrotResponse<Bool>.self).response
-//
-//            let result = handleResponse(response)
-//
-//            switch result {
-//            case .success:
-//                print("FCM 토큰 서버에 등록 성공")
-//                return
-//            case .failure(let error):
-//                self.presentError(error: error)
-//                return
-//            }
-//        }
     }
 }
 
@@ -135,7 +119,24 @@ extension AppDelegate: MessagingDelegate {
             return
         }
         
-       print(fcmToken)
+        // fcm토큰 등록시 쿠키가 필요한데 이 시점에서는 사용자가 로그인 후 사용하는 쿠키가 존재하지않음.
+        // fcm 토큰을 저장해놨다가 로그인하면 fcm토큰 등록 api를 호출해야하나??
+        
+//        Task {
+//            let response = await AF.request(KarrotRequest.registerFCMToken(fcmToken)).serializingDecodable(KarrotResponse<Bool>.self).response
+//            
+//            let result = handleResponse(response)
+//            
+//            switch result {
+//            case .success:
+//                print("FCM 토큰 서버에 등록 성공")
+//                return
+//            case .failure(let error):
+//                self.presentError(error: error)
+//                return
+//            }
+//        }
+        print(fcmToken, #function)
     }
 }
 
@@ -144,6 +145,6 @@ extension AppDelegate: ErrorPresentable {
 //        let alert = UIAlertController(title: "Message", message: error.localizedDescription, preferredStyle: UIAlertController.Style.alert)
 //
 //        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
-        print(error)
+        print(error, #function)
     }
 }

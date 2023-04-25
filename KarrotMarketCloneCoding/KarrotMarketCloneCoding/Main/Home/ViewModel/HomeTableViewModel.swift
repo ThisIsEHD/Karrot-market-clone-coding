@@ -34,6 +34,7 @@ class HomeTableViewModel {
         }
         
         let dataResponse = await AF.request(KarrotRequest.fetchItems(queryItems)).serializingDecodable(KarrotResponse<FetchedItemListData>.self).response
+        // 에러 핸들링 싱글톤 객체 추가.
         let result = handleResponse(dataResponse)
         
         switch result {
