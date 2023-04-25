@@ -1,5 +1,5 @@
 //
-//  MyKarrotHeaderView.swift
+//  MyPageHeaderView.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/07/14.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class MyKarrotHeaderView: UIView {
+final class MyPageHeaderView: UIView {
     
     // MARK: Properties
     
@@ -27,7 +27,7 @@ final class MyKarrotHeaderView: UIView {
         
         return iv
     }()
-    private let soldListImageView: UIImageView = {
+    private let salesListImageView: UIImageView = {
         
         let iv = UIImageView(image: UIImage(named: "sold"))
         
@@ -36,19 +36,19 @@ final class MyKarrotHeaderView: UIView {
         
         return iv
     }()
-    private let soldListLabel: UILabel = {
+    private let salesListLabel: UILabel = {
         
         let lbl = UILabel()
         
-        lbl.text = "판매내역"
+        lbl.text = ItemList.sales.title
         lbl.textAlignment = .center
         lbl.font = UIFont.systemFont(ofSize: 15)
         
         return lbl
     }()
-    private lazy var soldListStackView: UIStackView = {
+    private lazy var salesListStackView: UIStackView = {
         
-        let sv = UIStackView(arrangedSubviews: [soldListImageView, soldListLabel])
+        let sv = UIStackView(arrangedSubviews: [salesListImageView, salesListLabel])
         
         sv.axis = .vertical
         sv.spacing = 10
@@ -70,7 +70,7 @@ final class MyKarrotHeaderView: UIView {
         
         let lbl = UILabel()
         
-        lbl.text = "구매내역"
+        lbl.text = ItemList.purchase.title
         lbl.textAlignment = .center
         lbl.font = UIFont.systemFont(ofSize: 15)
         
@@ -88,7 +88,7 @@ final class MyKarrotHeaderView: UIView {
         
         return sv
     }()
-    private let wishListImageView: UIImageView = {
+    private let favoriteListImageView: UIImageView = {
         
         let iv = UIImageView(image: UIImage(named: "wish"))
         
@@ -97,19 +97,19 @@ final class MyKarrotHeaderView: UIView {
         
         return iv
     }()
-    private let wishListLabel: UILabel = {
+    private let favoriteListLabel: UILabel = {
         
         let lbl = UILabel()
         
-        lbl.text = "관심목록"
+        lbl.text = ItemList.favorite.title
         lbl.textAlignment = .center
         lbl.font = UIFont.systemFont(ofSize: 15)
         
         return lbl
     }()
-    private lazy var wishListStackView: UIStackView = {
+    private lazy var favoriteListStackView: UIStackView = {
         
-        let sv = UIStackView(arrangedSubviews: [wishListImageView, wishListLabel])
+        let sv = UIStackView(arrangedSubviews: [favoriteListImageView, favoriteListLabel])
         
         sv.axis = .vertical
         sv.isUserInteractionEnabled = true
@@ -128,14 +128,15 @@ final class MyKarrotHeaderView: UIView {
     
     @objc func stackViewDidTapped(_ sender: UITapGestureRecognizer) {
         switch sender.view?.tag {
-            case 0:
-                delegate?.selectedItemTableVC(.selling)
-            case 1:
-                delegate?.selectedItemTableVC(.buy)
-            case 2:
-                delegate?.selectedItemTableVC(.wish)
-            default:
-                break
+        case 0:
+            delegate?.selectedItemTableVC(.sales)
+        case 1:
+            print("api가 아직 없음.")
+            //  delegate?.selectedItemTableVC(.buy)
+        case 2:
+            delegate?.selectedItemTableVC(.favorite)
+        default:
+            break
         }
     }
     
@@ -170,9 +171,9 @@ final class MyKarrotHeaderView: UIView {
         
         backgroundColor = .systemBackground
         addSubview(profileView)
-        addSubview(soldListStackView)
+        addSubview(salesListStackView)
         addSubview(purchaseListStackView)
-        addSubview(wishListStackView)
+        addSubview(favoriteListStackView)
         
         profileView.addSubview(indicatorImageView)
     }
@@ -205,10 +206,10 @@ final class MyKarrotHeaderView: UIView {
         
         let width = (self.frame.width - (60 * 3)) / 4
         
-        soldListImageView.centerX(inView: soldListStackView)
-        soldListImageView.anchor(height: 60)
-        soldListLabel.centerX(inView: soldListImageView)
-        soldListStackView.anchor(top: profileView.bottomAnchor, topConstant: 15,
+        salesListImageView.centerX(inView: salesListStackView)
+        salesListImageView.anchor(height: 60)
+        salesListLabel.centerX(inView: salesListImageView)
+        salesListStackView.anchor(top: profileView.bottomAnchor, topConstant: 15,
                                  bottom: self.safeAreaLayoutGuide.bottomAnchor,
                                  bottomConstant: 15,
                                  leading: self.safeAreaLayoutGuide.leadingAnchor,
@@ -218,17 +219,17 @@ final class MyKarrotHeaderView: UIView {
         purchaseListImageView.centerX(inView: purchaseListStackView)
         purchaseListImageView.anchor(height: 60)
         purchaseListLabel.centerX(inView: purchaseListImageView)
-        purchaseListStackView.anchor(top: soldListImageView.topAnchor,
+        purchaseListStackView.anchor(top: salesListImageView.topAnchor,
                                      bottom: self.safeAreaLayoutGuide.bottomAnchor,
                                      bottomConstant: 20,
-                                     leading: soldListStackView.trailingAnchor,
+                                     leading: salesListStackView.trailingAnchor,
                                      leadingConstant: width,
                                      width: 60)
         
-        wishListImageView.centerX(inView: wishListStackView)
-        wishListImageView.anchor(height: 60)
-        wishListLabel.centerX(inView: wishListImageView)
-        wishListStackView.anchor(top: soldListImageView.topAnchor,
+        favoriteListImageView.centerX(inView: favoriteListStackView)
+        favoriteListImageView.anchor(height: 60)
+        favoriteListLabel.centerX(inView: favoriteListImageView)
+        favoriteListStackView.anchor(top: salesListImageView.topAnchor,
                                  bottom: self.safeAreaLayoutGuide.bottomAnchor,
                                  bottomConstant: 20,
                                  leading: purchaseListStackView.trailingAnchor,
@@ -242,6 +243,6 @@ final class MyKarrotHeaderView: UIView {
 protocol ProfileViewDelegate: AnyObject {
     
     func goToMyProfileVC()
-    func selectedItemTableVC(_ title: ListTitle)
+    func selectedItemTableVC(_ title: ItemList)
     func configureUserInfo()
 }

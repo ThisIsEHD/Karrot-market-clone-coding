@@ -1,5 +1,5 @@
 //
-//  UserItemTableViewController.swift
+//  ItemTableViewController.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/10/05.
@@ -7,102 +7,92 @@
 
 import UIKit
 
-class UserItemTableViewController: UIViewController {
+class FavoritesTableViewController: UIViewController {
     // MARK: - Properties
+
+    var viewModel = FavoritesViewModel()
     
-    var viewModel = HomeTableViewModel()
-    var isViewBusy = true
-    
-    private var userId: ID?
-    private var navigationTitle: ListTitle?
     private var dataSource: TableViewDataSource!
     private var snapshot = TableViewSnapshot()
+    private var cellProvider: TableViewCellProvider = { (tableView, indexPath, item) in
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: FavoritesTableViewCell.reuseIdentifier, for: indexPath) as! FavoritesTableViewCell
+        
+        cell.item = item
+        
+        return cell
+    }
+    
+    var isViewBusy = true
     
     private let itemTableView : UITableView = {
         
         let tv = UITableView(frame:CGRect.zero, style: .plain)
         
-        tv.register(HomeTableViewCell.self, forCellReuseIdentifier: HomeTableViewCell.reuseIdentifier)
+        tv.register(FavoritesTableViewCell.self, forCellReuseIdentifier: FavoritesTableViewCell.reuseIdentifier)
         tv.separatorColor = .systemGray5
         tv.separatorInset = UIEdgeInsets(top: 0, left: 15, bottom: 0, right: 15)
         
         return tv
     }()
-    
+
     // MARK: - Life Cycle
-    
-    convenience init(userId: String?, navigationTitle: ListTitle?) {
-        self.init()
-        self.userId = userId
-        self.navigationTitle = navigationTitle
-    }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        view.backgroundColor = .systemBackground
-        
-        configureNavigationBar()
-        setupNavigation()
-        configureItemTableView()
-        configureTableViewDiffableDataSource()
-        reloadTableViewData()
-        
-        setConstraints()
+
+        setupTableView()
+        fetchFavoriteItems()
+        configureViews()
     }
     
     // MARK: - DiffableDataSource
     
-    func configureTableViewDiffableDataSource() {
+    func setupTableView() {
         
-//        viewModel.dataSource = UITableViewDiffableDataSource(tableView: self.itemTableView, cellProvider: { tableView, indexPath, item in
-//
-//            let cell = tableView.dequeueReusableCell(withIdentifier: HomeTableViewCell.reuseIdentifier, for: indexPath) as! HomeTableViewCell
-//
-//            cell.item = item
-//
-//            return cell
-//        })
-    }
-    
-    func reloadTableViewData() {
-        
-//        viewModel.isViewBusy = false
-//        switch navigationTitle {
-//            case .selling
-//            case .buy:
-//                return
-//            case .wish:
-//            case .none:
-//                return
-//        }
-    }
-    
-    // MARK: - Configure UI
-    
-    private func configureItemTableView() {
+        dataSource = TableViewDataSource(tableView: itemTableView, cellProvider: cellProvider)
         
         itemTableView.delegate = self
-//        itemTableView.dataSource = viewModel.dataSource
-        view.addSubview(itemTableView)
+        itemTableView.backgroundColor = .systemGray6
+        itemTableView.dataSource = dataSource
     }
     
-    private func configureNavigationBar() {
-//        let appearance = UINavigationBarAppearance()
-//        appearance.configureWithOpaqueBackground()
-//        appearance.backgroundColor = .white
-//        self.navigationItem.standardAppearance = appearance
-//        self.navigationItem.scrollEdgeAppearance = appearance
-    }
+    func fetchFavoriteItems() {
         
-    // MARK: - Setup NavigationItems
-    
-    private func setupNavigation() {
-        navigationItem.title = navigationTitle?.rawValue
+        isViewBusy = true
+        
+        Task {
+            
+            let result = await viewModel.fetchFavoriteItems()
+            
+            switch result {
+            case .success(let fetchedItemListData):
+                var snapshot = TableViewSnapshot()
+                
+                let content = fetchedItemListData.content
+                snapshot.appendSections([Section.main])
+                snapshot.appendItems(content)
+                
+                await self.dataSource.apply(snapshot, animatingDifferences: true)
+                self.isViewBusy = false
+                
+            case .failure(let error):
+                switch error {
+                case .unauthorized:
+                    SceneController.shared.logout()
+                default:
+                    return presentError(error: error)
+                }
+            }
+        }
     }
+
+    // MARK: - Configure Views
     
-    // MARK: - Setting Constraints
-    private func setConstraints() {
+    private func configureViews() {
+        
+        title = "관심목록"
+        view.addSubview(itemTableView)
         
         itemTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
     }
@@ -110,12 +100,12 @@ class UserItemTableViewController: UIViewController {
 
 // MARK: - UITableViewDelegate
 
-extension UserItemTableViewController: UITableViewDelegate {
-    
+extension FavoritesTableViewController: UITableViewDelegate {
+
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        
+
         if !scrollView.frame.isEmpty && scrollView.contentOffset.y >= scrollView.frame.size.height {
-            
+
             let contentHeight = scrollView.contentSize.height
             ///스크롤 하기전엔 0
             ///스크롤 하면서 증가
@@ -127,14 +117,14 @@ extension UserItemTableViewController: UITableViewDelegate {
             ///
             let heightRemainFromBottom = contentHeight - yOffset
             let frameHeight = scrollView.frame.size.height
-            
+
 //            if heightRemainFromBottom < frameHeight, heightRemainFromBottom > 0, viewModel.lastItemID != nil {
 //
 //                viewModel.loadData(lastID: viewModel.lastItemID)
 //            }
         }
     }
-    
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 //        guard let userId = userId else { return }
 //        let productId = viewModel.dataSource?.itemIdentifier(for: indexPath)?.id
@@ -142,9 +132,9 @@ extension UserItemTableViewController: UITableViewDelegate {
 //        navigationController?.pushViewController(vc, animated: true)
 //        tableView.deselectRow(at: indexPath, animated: true)
     }
-    
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        
+
         return 150
     }
 }

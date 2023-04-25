@@ -1,5 +1,5 @@
 //
-//  MyPageViewModel.swift
+//  SettingViewModel.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 3/22/23.
@@ -8,7 +8,7 @@
 import Foundation
 import Alamofire
 
-struct MyPageViewModel {
+struct SettingViewModel {
     
     func logout() async -> Result<Bool, KarrotError> {
         

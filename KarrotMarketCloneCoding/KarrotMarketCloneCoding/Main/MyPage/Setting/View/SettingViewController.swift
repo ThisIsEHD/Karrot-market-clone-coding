@@ -9,7 +9,7 @@ import UIKit
 
 final class SettingViewController: UITableViewController {
     
-    let settingViewModel = MyPageViewModel()
+    let settingViewModel = SettingViewModel()
     
     private let titles = ["로그아웃", "회원탈퇴"]
     

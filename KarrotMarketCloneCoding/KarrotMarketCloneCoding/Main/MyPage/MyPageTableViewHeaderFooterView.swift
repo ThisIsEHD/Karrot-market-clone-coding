@@ -1,5 +1,5 @@
 //
-//  MyKarrotTableViewHeaderFooterView.swift
+//  MyPageTableViewHeaderFooterView.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/07/12.
@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-final class MyKarrotTableViewHeaderFooterView: UITableViewHeaderFooterView {
+final class MyPageTableViewHeaderFooterView: UITableViewHeaderFooterView {
     
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)

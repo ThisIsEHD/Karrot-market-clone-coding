@@ -47,7 +47,9 @@ enum KarrotRequest: Requestable {
     case registerUser
     
     // Item
-    case fetchItems([String : Any])
+    case fetchItems([String: Any])
+    case fetchFavoriteItems
+    case fetchSellItems([String: Any])
     case fetchItemDetail(ProductID)
     case registerItem
 }
@@ -63,6 +65,10 @@ extension KarrotRequest {
             // get
         case .fetchItems:
             return "/post/home-list"
+        case .fetchFavoriteItems:
+            return "/favorites"
+        case .fetchSellItems:
+            return "/post/my-sales-list"
         case .logout:
             return "/logout"
         case .fetchItemDetail(let productID):
@@ -90,6 +96,8 @@ extension KarrotRequest {
             // get
         case .fetchItems,
              .fetchItemDetail,
+             .fetchFavoriteItems,
+             .fetchSellItems,
              .logout:
         return .get
             
@@ -111,7 +119,7 @@ extension KarrotRequest {
             return .json
         case .registerUser, .registerItem:
             return .multipart
-        case .fetchItems, .fetchItemDetail, .logout:
+        case .fetchItems, .fetchFavoriteItems, .fetchSellItems, .fetchItemDetail, .logout:
             return .none
         }
     }
@@ -123,8 +131,9 @@ extension KarrotRequest {
         case .login(let user): return .body(user)
             // query
         case .fetchItems(let queryItem): return .query(queryItem)
+        case .fetchSellItems(let queryItem): return .query(queryItem)
             // none
-        case .registerUser, .registerItem, .logout, .fetchItemDetail: return .none
+        case .registerUser, .registerItem, .fetchFavoriteItems, .logout, .fetchItemDetail: return .none
         }
     }
     
@@ -136,7 +145,6 @@ extension KarrotRequest {
         
         guard let cookies = HTTPCookieStorage.shared.cookies else { fatalError("cookie 없음")}
         let cookiesHeader = HTTPCookie.requestHeaderFields(with: cookies)
-        print(cookiesHeader)
         
         switch header {
         case .json:

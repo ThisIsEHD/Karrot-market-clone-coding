@@ -38,4 +38,8 @@ enum KarrotError: Error {
     case imageError
     case unwrappingError
     case unknownError(statusCode: Int)
+    
+    var description: String {
+        return String(describing: self)
+    }
 }

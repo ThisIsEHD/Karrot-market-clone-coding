@@ -1,5 +1,5 @@
 //
-//  MyKarrotVC.swift
+//  MyPageViewController.swift
 //  KarrotMarketCloneCoding
 //
 //  Created by 서동운 on 2022/07/15.
@@ -8,7 +8,7 @@
 import UIKit
 import Alamofire
 
-final class MyKarrotViewController: UIViewController {
+final class MyPageViewController: UIViewController {
     // MARK: - Properties
     
     private var userId: ID = UserDefaults.standard.object(forKey: Constant.userId) as? String ?? ""
@@ -23,8 +23,7 @@ final class MyKarrotViewController: UIViewController {
                                            ["writing", "file", "messenger", "bookmark", "shop", "voucher"],
                                            ["shop", "megaphone"],
                                            ["email", "microphone", "support", "setting"]]
-    private let statusBarView = UIView(frame: CGRect(x:0, y:0, width: UIScreen.main.bounds.width, height: UIApplication.shared.statusBarFrame.height))
-    private lazy var profileView = MyKarrotHeaderView(width: self.view.bounds.width, height: 230)
+    private lazy var profileView = MyPageHeaderView(width: self.view.bounds.width, height: 230)
     private let titleLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = "나의 당근"
@@ -68,16 +67,13 @@ final class MyKarrotViewController: UIViewController {
     
     private func configureViews() {
         view.addSubview(tableView)
-        view.addSubview(statusBarView)
         
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(MyKarrotTableViewCell.self, forCellReuseIdentifier: "Cell")
-        tableView.register(MyKarrotTableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "Header")
+        tableView.register(MyPageTableViewCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(MyPageTableViewHeaderFooterView.self, forHeaderFooterViewReuseIdentifier: "Header")
         tableView.separatorStyle = .none
         tableView.tableHeaderView = profileView
-        
-        statusBarView.backgroundColor = .systemBackground
     }
     
     // MARK: - Setting TableView Constraints
@@ -89,7 +85,7 @@ final class MyKarrotViewController: UIViewController {
 
 //MARK: - UITableViewDataSource
 
-extension MyKarrotViewController: UITableViewDataSource {
+extension MyPageViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 5
@@ -139,7 +135,7 @@ extension MyKarrotViewController: UITableViewDataSource {
 }
 
 //MARK: - UITableViewDelegate
-extension MyKarrotViewController: UITableViewDelegate {
+extension MyPageViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         if section == 0 {
@@ -161,19 +157,22 @@ extension MyKarrotViewController: UITableViewDelegate {
         
         return header
     }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        let vc = UIViewController()
-        
-        vc.view.backgroundColor = .systemBackground
-        navigationController?.pushViewController(vc, animated: true)
-        tableView.deselectRow(at: indexPath, animated: false)
-    }
 }
 
 
-extension MyKarrotViewController: ProfileViewDelegate {
+extension MyPageViewController: ProfileViewDelegate {
+    func selectedItemTableVC(_ title: ItemList) {
+        switch title {
+        case .favorite:
+            let nextVC = FavoritesTableViewController()
+            navigationController?.pushViewController(nextVC, animated: true)
+        case .sales:
+            let nextVC = SalesItemViewController()
+            navigationController?.pushViewController(nextVC, animated: true)
+        case .purchase:
+            break
+        }
+    }
     
     func configureUserInfo() {
         
@@ -227,19 +226,5 @@ extension MyKarrotViewController: ProfileViewDelegate {
 //        }
 ////>>>>>>> main
 //        navigationController?.pushViewController(profileEditingVC, animated: true)
-    }
-    
-    func selectedItemTableVC(_ title: ListTitle) {
-        switch title {
-        case .selling:
-            let itemTableVC = UserItemTableViewController(userId: userId, navigationTitle: title)
-            navigationController?.pushViewController(itemTableVC, animated: true)
-        case .buy:
-            let itemTableVC = UserItemTableViewController(userId: userId, navigationTitle: title)
-            navigationController?.pushViewController(itemTableVC, animated: true)
-        case .wish:
-            let itemTableVC = UserItemTableViewController(userId: userId, navigationTitle: title)
-            navigationController?.pushViewController(itemTableVC, animated: true)
-        }
     }
 }
