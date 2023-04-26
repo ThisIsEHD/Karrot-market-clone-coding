@@ -185,6 +185,7 @@ func handleResponse<T: Codable>(_ response: DataResponse<T, AFError>) -> Result<
     
     switch httpResponse.statusCode {
     case (200...299):
+        
         guard let responseBody = response.data,
               let responseData = jsonDecode(type: T.self, data: responseBody) else {
             return .failure(.decodingError)

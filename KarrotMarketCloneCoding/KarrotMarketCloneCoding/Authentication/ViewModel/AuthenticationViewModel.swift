@@ -50,7 +50,8 @@ struct AuthenticationViewModel {
                         fileName: "image.png",
                         mimeType: "image/png")
             
-        }, with: KarrotRequest.registerUser).serializingDecodable(Bool.self).response
+        }, with: KarrotRequest.registerUser).serializingDecodable(KarrotResponse<Bool>.self).response
+        
         let result = handleResponse(dataResponse)
         
         switch result {
