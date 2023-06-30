@@ -35,7 +35,6 @@ struct NewPostViewModel {
             
             if images.count != 0 {
                 for image in images {
-                    print(image.description)
                     data.append(image.jpegData(compressionQuality: 1) ?? Data(),
                                 withName: "images",
                                 fileName: "images.png",

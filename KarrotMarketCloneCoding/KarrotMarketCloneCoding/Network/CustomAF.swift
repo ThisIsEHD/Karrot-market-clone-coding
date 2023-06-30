@@ -52,6 +52,8 @@ enum KarrotRequest: Requestable {
     case fetchSellItems([String: Any])
     case fetchItemDetail(ProductID)
     case registerItem
+    case toggleFavoriteItem(ProductID)
+
 }
 
 extension KarrotRequest {
@@ -83,6 +85,8 @@ extension KarrotRequest {
             return "/members"
         case .registerItem:
             return "/post"
+        case .toggleFavoriteItem:
+            return "/favorites"
             
             // put
             
@@ -105,7 +109,8 @@ extension KarrotRequest {
         case .registerFCMToken,
              .login,
              .registerUser,
-             .registerItem:
+             .registerItem,
+             .toggleFavoriteItem:
         return .post
          
             // delete
@@ -115,7 +120,7 @@ extension KarrotRequest {
     var header: RequestHeaders {
         switch self {
             
-        case .registerFCMToken, .login:
+        case .registerFCMToken, .login, .toggleFavoriteItem:
             return .json
         case .registerUser, .registerItem:
             return .multipart
@@ -129,9 +134,12 @@ extension KarrotRequest {
             // body
         case .registerFCMToken(let token): return .body(token)
         case .login(let user): return .body(user)
+        case .toggleFavoriteItem(let productID): return .body(["postId": productID])
+            
             // query
         case .fetchItems(let queryItem): return .query(queryItem)
         case .fetchSellItems(let queryItem): return .query(queryItem)
+            
             // none
         case .registerUser, .registerItem, .fetchFavoriteItems, .logout, .fetchItemDetail: return .none
         }
@@ -185,9 +193,9 @@ func handleResponse<T: Codable>(_ response: DataResponse<T, AFError>) -> Result<
     
     switch httpResponse.statusCode {
     case (200...299):
-        
         guard let responseBody = response.data,
               let responseData = jsonDecode(type: T.self, data: responseBody) else {
+            
             return .failure(.decodingError)
         }
         

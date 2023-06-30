@@ -141,11 +141,17 @@ class ItemDetailViewController: UIViewController, UITableViewDelegate, FavoriteB
     }
     
     func addFavoriteList() {
-        
+        Task {
+            await viewModel.toggleFavorites(productID: productID)
+        }
+        itemDetailViewBottomStickyView.getFavoriteButton().isSelected = true
     }
     
     func deleteFavoriteList() {
-        
+        Task {
+            await viewModel.toggleFavorites(productID: productID)
+        }
+        itemDetailViewBottomStickyView.getFavoriteButton().isSelected = false
     }
     
     // MARK: - Configure Views

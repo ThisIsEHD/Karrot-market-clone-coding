@@ -24,12 +24,16 @@ class ItemDetailViewModel {
             guard let fetchedItemDetail = response.data else {
                 return .unwrappingError
             }
-            
             item = fetchedItemDetail
-            
             return nil
         case .failure(let error):
             return error
         }
+    }
+    
+    func toggleFavorites(productID: ProductID) async -> Result<KarrotResponse<Bool>, KarrotError> {
+        let dataResponse = await AF.request(KarrotRequest.toggleFavoriteItem(productID)).serializingDecodable(KarrotResponse<Bool>.self).response
+        let result = handleResponse(dataResponse)
+        return result
     }
 }

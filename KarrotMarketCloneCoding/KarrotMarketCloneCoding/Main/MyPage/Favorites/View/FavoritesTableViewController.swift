@@ -53,7 +53,7 @@ class FavoritesTableViewController: UIViewController {
         dataSource = TableViewDataSource(tableView: itemTableView, cellProvider: cellProvider)
         
         itemTableView.delegate = self
-        itemTableView.backgroundColor = .systemGray6
+        itemTableView.backgroundColor = .white
         itemTableView.dataSource = dataSource
     }
     
@@ -80,6 +80,8 @@ class FavoritesTableViewController: UIViewController {
                 switch error {
                 case .unauthorized:
                     SceneController.shared.logout()
+                case .unwrappingError:
+                    return
                 default:
                     return presentError(error: error)
                 }

@@ -23,7 +23,7 @@ final class MyPageViewController: UIViewController {
                                            ["writing", "file", "messenger", "bookmark", "shop", "voucher"],
                                            ["shop", "megaphone"],
                                            ["email", "microphone", "support", "setting"]]
-    private lazy var profileView = MyPageHeaderView(width: self.view.bounds.width, height: 230)
+    private lazy var profileView = MyPageHeaderView(width: self.view.bounds.width, height: 135)
     private let titleLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = "나의 당근"
@@ -49,13 +49,7 @@ final class MyPageViewController: UIViewController {
         configureViews()
         setTableViewConstraints()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        configureUserInfo()
-    }
-    
+
     // MARK: - Setup NavigationItems
     
     private func setupNavigationItems() {
@@ -172,59 +166,5 @@ extension MyPageViewController: ProfileViewDelegate {
         case .purchase:
             break
         }
-    }
-    
-    func configureUserInfo() {
-        
-//        Network.shared.fetchUser(id: userId) { result in
-//            switch result {
-//            case .success(let user):
-//                self.profileView.configureUser(nickname: user.nickname)
-//
-//                guard let url = user.profileImageUrl else { return }
-//
-//                Network.shared.fetchImage(url: url) { result in
-//                    switch result {
-//                        case .success(let image):
-//                            self.profileView.configureUser(image: image)
-//                        case .failure(let error):
-//                            /// 에러별 다른처리?
-//                            print(error)
-//                    }
-//                }
-//            case .failure(let error):
-//
-//                print(error)
-//            }
-//        }
-    }
-    
-    func goToMyProfileVC() {
-        
-//        let profileEditingVC = ProfileEditingViewController(email: String(), password: String())
-        
-//<<<<<<< HEAD
-//        profileEditingVC.userId = userId
-
-//========
-//        profileEditingVC.nickName = user?.nickname
-//        profileEditingVC.profileImage = userImage
-        
-//        guard let url = user?.profileImageUrl else {
-//            navigationController?.pushViewController(profileEditingVC, animated: true)
-//            return
-//        }
-//
-//        Network.shared.fetchImage(url: url) { result in
-//            switch result {
-//            case .success(let image):
-//                profileEditingVC.profileView.imagePickerView.image = image
-//            case .failure(let error):
-//                /// 에러별 다른처리?
-//                print(error)
-//            }
-//        }
-////>>>>>>> main
-//        navigationController?.pushViewController(profileEditingVC, animated: true)
     }
 }

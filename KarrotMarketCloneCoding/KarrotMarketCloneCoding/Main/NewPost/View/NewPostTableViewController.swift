@@ -31,11 +31,13 @@ final class NewPostTableViewController: UIViewController {
     internal var doneButtonTapped: () -> () = { }
     
     private let newPostTableView = NewPostTableView()
+    private lazy var activityIndicator = UIActivityIndicatorView(style: .large)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.addSubview(newPostTableView)
+        view.addSubview(activityIndicator)
         
         newPostTableView.delegate = self
         newPostTableView.dataSource = self
@@ -51,8 +53,14 @@ final class NewPostTableViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         view.backgroundColor = .systemBackground
+        
         setupNaviBar()
         setupNewPostTableView()
+        
+        activityIndicator.snp.makeConstraints { make in
+            make.center.equalTo(view)
+            make.height.equalTo(50)
+        }
     }
     
     private func setupNaviBar() {
@@ -136,9 +144,11 @@ extension NewPostTableViewController {
         }
         
         Task {
+            activityIndicator.startAnimating()
             let result = await newPostViewModel.registerItem(item: item, images: selectedImages)
             switch result {
             case .success:
+                activityIndicator.stopAnimating()
                 NotificationCenter.default.post(name: .updateItemList, object: nil)
                 self.dismiss(animated: true)
             case .failure(let error):

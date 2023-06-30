@@ -8,25 +8,10 @@
 import UIKit
 
 final class MyPageHeaderView: UIView {
-    
     // MARK: Properties
     
     weak var delegate: ProfileViewDelegate?
     
-    private lazy var profileView: ReusableProfileView = {
-        
-        let v = ReusableProfileView(imageSize: 80)
-        
-        v.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(profileViewDidTapped)))
-        
-        return v
-    }()
-    private let indicatorImageView: UIImageView = {
-        
-        let iv = UIImageView(image: UIImage(named: "indicator"))
-        
-        return iv
-    }()
     private let salesListImageView: UIImageView = {
         
         let iv = UIImageView(image: UIImage(named: "sold"))
@@ -122,9 +107,7 @@ final class MyPageHeaderView: UIView {
     
     // MARK: Actions
     
-    @objc func profileViewDidTapped() {
-        self.delegate?.goToMyProfileVC()
-    }
+    
     
     @objc func stackViewDidTapped(_ sender: UITapGestureRecognizer) {
         switch sender.view?.tag {
@@ -138,14 +121,6 @@ final class MyPageHeaderView: UIView {
         default:
             break
         }
-    }
-    
-    func configureUser(nickname: String?) {
-        profileView.configure(nickname: nickname)
-    }
-    
-    func configureUser(image: UIImage?) {
-        profileView.configure(image: image)
     }
     
     // MARK: - Life Cycle
@@ -169,37 +144,16 @@ final class MyPageHeaderView: UIView {
     
     private func configureViews() {
         
-        backgroundColor = .systemBackground
-        addSubview(profileView)
+        backgroundColor = .white
         addSubview(salesListStackView)
         addSubview(purchaseListStackView)
         addSubview(favoriteListStackView)
-        
-        profileView.addSubview(indicatorImageView)
     }
     
     // MARK: Setting Constraints
     
     private func setConstraints() {
-        
-        setProfileViewConstraints()
-        setIndicatorViewConstraints()
         setProfileStackViewConstraints()
-    }
-    
-    private func setProfileViewConstraints() {
-        
-        profileView.anchor(top: self.safeAreaLayoutGuide.topAnchor,
-                           leading: self.safeAreaLayoutGuide.leadingAnchor,
-                           trailing: self.safeAreaLayoutGuide.trailingAnchor)
-    }
-    
-    private func setIndicatorViewConstraints() {
-        
-        indicatorImageView.anchor(trailing: profileView.trailingAnchor,
-                                  trailingConstant: 20,
-                                  width: 15, height: 15)
-        indicatorImageView.centerY(inView: profileView)
     }
     
     private func setProfileStackViewConstraints() {
@@ -209,12 +163,13 @@ final class MyPageHeaderView: UIView {
         salesListImageView.centerX(inView: salesListStackView)
         salesListImageView.anchor(height: 60)
         salesListLabel.centerX(inView: salesListImageView)
-        salesListStackView.anchor(top: profileView.bottomAnchor, topConstant: 15,
-                                 bottom: self.safeAreaLayoutGuide.bottomAnchor,
-                                 bottomConstant: 15,
-                                 leading: self.safeAreaLayoutGuide.leadingAnchor,
-                                 leadingConstant: width,
-                                 width: 60)
+        salesListStackView.anchor(top: self.safeAreaLayoutGuide.topAnchor,
+                                  topConstant: 15,
+                                  bottom: self.safeAreaLayoutGuide.bottomAnchor,
+                                  bottomConstant: 15,
+                                  leading: self.safeAreaLayoutGuide.leadingAnchor,
+                                  leadingConstant: width,
+                                  width: 60)
         
         purchaseListImageView.centerX(inView: purchaseListStackView)
         purchaseListImageView.anchor(height: 60)
@@ -230,19 +185,16 @@ final class MyPageHeaderView: UIView {
         favoriteListImageView.anchor(height: 60)
         favoriteListLabel.centerX(inView: favoriteListImageView)
         favoriteListStackView.anchor(top: salesListImageView.topAnchor,
-                                 bottom: self.safeAreaLayoutGuide.bottomAnchor,
-                                 bottomConstant: 20,
-                                 leading: purchaseListStackView.trailingAnchor,
-                                 leadingConstant: width,
-                                 width: 60)
+                                     bottom: self.safeAreaLayoutGuide.bottomAnchor,
+                                     bottomConstant: 20,
+                                     leading: purchaseListStackView.trailingAnchor,
+                                     leadingConstant: width,
+                                     width: 60)
     }
 }
 
 // MARK: - ProfileViewDelegate
 
 protocol ProfileViewDelegate: AnyObject {
-    
-    func goToMyProfileVC()
     func selectedItemTableVC(_ title: ItemList)
-    func configureUserInfo()
 }

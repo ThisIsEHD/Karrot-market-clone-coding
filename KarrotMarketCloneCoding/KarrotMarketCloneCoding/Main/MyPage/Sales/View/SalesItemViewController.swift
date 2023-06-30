@@ -200,9 +200,7 @@ extension SalesItemViewController: UICollectionViewDataSource, UICollectionViewD
         
         switch indexPath.section {
         case 0:
-            break
-            // domb: 중복데이터 때문에 호출시 diffableDataSource Dupicated 런타임 에러
-//            cell.fetchSellItems(isHide: false, salesState: nil)
+            cell.fetchSellItems(isHide: false, salesState: nil)
         case 1:
             cell.fetchSellItems(isHide: false, salesState: .COMPLETE)
         case 2:

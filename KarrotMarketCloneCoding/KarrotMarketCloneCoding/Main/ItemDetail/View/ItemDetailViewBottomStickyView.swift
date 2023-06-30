@@ -24,7 +24,7 @@ class ItemDetailViewBottomStickyView: UIView {
         
         let btn = UIButton()
         
-        btn.setImage(UIImage(named: "wish-gray"), for: .normal)
+        btn.setImage(UIImage(named: "wish-gray")?.resize(to: CGSize(width: 30, height: 30)), for: .normal)
         btn.setImage(UIImage(named: "wish-karrot"), for: .selected)
         
         return btn

@@ -84,7 +84,7 @@ class HomeTableViewController: UIViewController {
 
                 weakSelf.viewModel.latestPage = nil
                 
-                await weakSelf.fetchItems()
+                weakSelf.fetchItems()
             }
         }
         
@@ -161,8 +161,6 @@ class HomeTableViewController: UIViewController {
         itemTableView.delegate = self
         itemTableView.dataSource = dataSource
         itemTableView.backgroundColor = .white
-        
-//        itemTableView.prefetchDataSource = self
     }
     
     // MARK: - Configure UI
@@ -174,14 +172,6 @@ class HomeTableViewController: UIViewController {
         
         itemTableView.anchor(top: view.safeAreaLayoutGuide.topAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, leading: view.leadingAnchor, trailing: view.trailingAnchor)
         addPostButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, bottomConstant: 20, trailing: view.trailingAnchor, trailingConstant: 20)
-    }
-
-    private func configureNavigationBar() {
-//        let appearance = UINavigationBarAppearance()
-//        appearance.configureWithOpaqueBackground()
-//        appearance.backgroundColor = .white
-//        self.navigationItem.standardAppearance = appearance
-//        self.navigationItem.scrollEdgeAppearance = appearance
     }
 }
 
@@ -219,29 +209,3 @@ extension HomeTableViewController: UITableViewDelegate {
         return 150
     }
 }
-
-//extension HomeTableViewController: UITableViewDataSourcePrefetching {
-    // prefetch 어떻게 하더라...
-//    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-//        for indexPath in indexPaths {
-//            let imageURLs = indexPaths.compactMap { getImageURL(at: $0) }
-//            imageURLs.forEach { url in
-//                AF.download(url).responseData { response in
-//                    guard let data = response.value else {
-//                        return
-//                    }
-//                    let image = UIImage(data: data)
-//                    DispatchQueue.main.async {
-//                        let cell = tableView.cellForRow(at: indexPath) as? HomeTableViewCell
-//                        cell?.thumbnailImageView.image = image
-//                    }
-//                }
-//            }
-//        }
-//    }
-//    func getImageURL(at indexPath: IndexPath) -> URL? {
-//        let fetchedItemList = snapshot.itemIdentifiers(inSection: .main)
-//        guard let stringURL = fetchedItemList[indexPath.row].imageURL else { return nil }
-//        return URL(string: stringURL)
-//    }
-//}
